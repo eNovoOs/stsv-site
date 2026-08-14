@@ -1,0 +1,83 @@
+---
+import Base from '../layouts/Base.astro';
+import PageHero from './PageHero.astro';
+import FareTable from './FareTable.astro';
+import { useTranslations, path, type Locale } from '../i18n/ui';
+import { lines, fares, contact } from '../data/site';
+import { services as c } from '../data/content';
+import hero from '../assets/images/hero-services.jpg';
+
+interface Props { locale: Locale }
+const { locale } = Astro.props;
+const t = useTranslations(locale);
+const lineLabel = { fr: 'Ligne', en: 'Line', es: 'Línea' }[locale];
+---
+<Base locale={locale} page="services" title={c.meta.title[locale]} description={c.meta.description[locale]}>
+  <PageHero
+    eyebrow={t('nav.services')}
+    title={c.h1[locale]}
+    lead={c.lead[locale]}
+    image={hero}
+    imageAlt={{ fr: 'Usagers à bord d’un véhicule de la STSV', en: 'Passengers aboard an STSV vehicle', es: 'Usuarios a bordo de un vehículo de la STSV' }[locale]}
+  />
+
+  <section class="section">
+    <div class="wrap">
+      <p class="lead-p">{c.network[locale]}</p>
+
+      <h2 id="lignes">{c.linesTitle[locale]}</h2>
+      <ul class="lines">
+        {lines.filter((l) => l.number !== '338').map((l) => (
+          <li class="card line">
+            <span class="line__num mono">{lineLabel} {l.number}</span>
+            <div>
+              <h3 class="line__name">{l.name[locale]}</h3>
+              <p class="line__route">{l.route[locale]}</p>
+              <p class="line__freq">{l.frequency[locale]}</p>
+            </div>
+            <a class="btn btn--ghost" href={l.schedule}>{t('cta.schedule')}</a>
+          </li>
+        ))}
+      </ul>
+      <ul class="notes">
+        {c.notes[locale].map((n) => <li>{n}</li>)}
+      </ul>
+    </div>
+  </section>
+
+  <section class="section section--air">
+    <div class="wrap">
+      <h2 id="tarifs">{c.faresTitle[locale]}</h2>
+      {fares.map((f) => <FareTable table={f} locale={locale} />)}
+      <a class="btn btn--ghost" href="/documents/Politique-qualite-de-services.pdf">
+        {{ fr: 'Politique de qualité de service', en: 'Service quality policy', es: 'Política de calidad de servicio' }[locale]}
+      </a>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="wrap">
+      <h2>{c.transitTitle[locale]}</h2>
+      <p>{c.transitBody[locale]}</p>
+      <div class="apps">
+        <a class="btn btn--primary" href={contact.transitIos} target="_blank" rel="noopener">App Store</a>
+        <a class="btn btn--ghost" href={contact.transitAndroid} target="_blank" rel="noopener">Google Play</a>
+        <a class="btn btn--ghost" href="/documents/Application-Transit.pdf">{t('cta.open')}</a>
+      </div>
+      <p class="mt"><a href={path('reservation', locale)}>{t('nav.reservation')}</a></p>
+    </div>
+  </section>
+</Base>
+<style>
+  .lead-p { font-size: var(--step-1); margin-bottom: var(--sp-7); }
+  .lines { list-style: none; margin: 0 0 var(--sp-5); padding: 0; display: grid; gap: var(--sp-4); }
+  .line { display: grid; gap: var(--sp-3); align-items: start; }
+  .line__num { display: inline-block; background: var(--blue); color: var(--white); font-weight: 700; font-size: var(--step--1); padding: .3rem .7rem; border-radius: 6px; justify-self: start; }
+  .line__name { margin-bottom: .3rem; font-size: var(--step-1); }
+  .line__route { margin-bottom: .3rem; font-size: var(--step--1); color: var(--gray-600); }
+  .line__freq { margin: 0; font-size: var(--step--1); }
+  @media (min-width: 820px) { .line { grid-template-columns: 120px 1fr auto; align-items: center; gap: var(--sp-5); } }
+  .notes { color: var(--gray-600); font-size: var(--step--1); padding-left: 1.1rem; }
+  .apps { display: flex; flex-wrap: wrap; gap: var(--sp-3); margin-bottom: var(--sp-4); }
+  .mt { margin-top: var(--sp-5); }
+</style>

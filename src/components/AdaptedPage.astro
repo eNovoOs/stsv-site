@@ -1,0 +1,107 @@
+---
+import Base from '../layouts/Base.astro';
+import PageHero from './PageHero.astro';
+import FareTable from './FareTable.astro';
+import DocList from './DocList.astro';
+import { useTranslations, type Locale } from '../i18n/ui';
+import { adapted as c, adaptedFares, adaptedFareNote } from '../data/content';
+import hero from '../assets/images/hero-transport-adapte.jpg';
+
+interface Props { locale: Locale }
+const { locale } = Astro.props;
+const t = useTranslations(locale);
+---
+<Base locale={locale} page="adapted" title={c.meta.title[locale]} description={c.meta.description[locale]}>
+  <PageHero
+    eyebrow={t('nav.adapted')}
+    title={c.h1[locale]}
+    lead={c.lead[locale]}
+    image={hero}
+    imageAlt={{ fr: 'Véhicule de transport adapté de la STSV', en: 'STSV adapted transportation vehicle', es: 'Vehículo de transporte adaptado de la STSV' }[locale]}
+  />
+
+  <section class="section" id="formulaires">
+    <div class="wrap">
+      <h2>{c.formsTitle[locale]}</h2>
+      <p class="note">{c.formsNote[locale]}</p>
+      <p class="note">
+        {c.emailNote[locale]}
+        {c.emails.map((e, i) => (
+          <>{i > 0 && ' · '}<a href={`mailto:${e}`} class="mono">{e}</a></>
+        ))}
+      </p>
+      <DocList locale={locale} only={['adapted']} />
+    </div>
+  </section>
+
+  <section class="section section--air" id="territoires">
+    <div class="wrap">
+      <h2>{c.territoryTitle[locale]}</h2>
+      <div class="grid grid--2">
+        <div class="card">
+          <h3>{c.onTerritory.label[locale]}</h3>
+          <ul class="muni">{c.onTerritory.list.map((m) => <li>{m}</li>)}</ul>
+        </div>
+        <div class="card">
+          <h3>{c.offTerritory.label[locale]}</h3>
+          <ul class="muni">{c.offTerritory.list.map((m) => <li>{m}</li>)}</ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section" id="reservations">
+    <div class="wrap">
+      <h2>{c.bookingTitle[locale]}</h2>
+      <p>{c.bookingBody[locale]}</p>
+      <ul class="files">
+        {c.bookingFiles.map((f) => (
+          <li><a class="btn btn--ghost" href={`/documents/${f.file}`}>{f.label[locale]} <span class="mono ext">XLS</span></a></li>
+        ))}
+      </ul>
+    </div>
+  </section>
+
+  <section class="section section--air" id="criteres">
+    <div class="wrap">
+      <h2>{c.criteriaTitle[locale]}</h2>
+      <p>{c.criteriaLead[locale]}</p>
+      <ul class="crit">{c.criteria[locale].map((x) => <li>{x}</li>)}</ul>
+      <a class="btn btn--ghost" href={c.policyUrl} target="_blank" rel="noopener">
+        {c.policyLabel[locale]}<span class="visually-hidden"> {t('a11y.newTab')}</span>
+      </a>
+    </div>
+  </section>
+
+  <section class="section" id="tarifs">
+    <div class="wrap">
+      <h2>{{ fr: 'Grille tarifaire', en: 'Fare table', es: 'Tabla de tarifas' }[locale]}</h2>
+      {adaptedFares.map((f) => <FareTable table={f} locale={locale} />)}
+      <p class="note">{adaptedFareNote[locale]}</p>
+
+      <h2 class="mt">{c.offScheduleTitle[locale]}</h2>
+      <p class="note">{c.offScheduleNote[locale]}</p>
+      <div class="table-scroll narrow">
+        <table>
+          <thead>
+            <tr>{c.offScheduleHead[locale].map((h) => <th scope="col" class="num">{h}</th>)}</tr>
+          </thead>
+          <tbody>
+            {c.offSchedule.map((r) => <tr>{r.map((cell) => <td class="num">{cell}</td>)}</tr>)}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </section>
+</Base>
+<style>
+  .note { color: var(--gray-600); font-size: var(--step--1); }
+  .muni { columns: 2; column-gap: var(--sp-5); padding-left: 1.1rem; margin: 0; font-size: var(--step--1); }
+  .muni li { break-inside: avoid; margin-bottom: .3rem; }
+  .files { list-style: none; margin: var(--sp-4) 0 0; padding: 0; display: flex; flex-wrap: wrap; gap: var(--sp-3); }
+  .ext { font-size: .65rem; background: var(--gray-100); color: var(--gray-600); padding: .1rem .35rem; border-radius: 4px; margin-left: .4rem; }
+  .crit { display: grid; gap: .6rem; padding-left: 1.1rem; margin-bottom: var(--sp-5); color: var(--gray-600); }
+  .narrow { max-width: 520px; }
+  .mt { margin-top: var(--sp-8); }
+  .card h3 { font-size: var(--step-1); }
+</style>

@@ -1,0 +1,58 @@
+---
+import { documents, docCategories, type DocCategory } from '../data/site';
+import { useTranslations, type Locale } from '../i18n/ui';
+interface Props { locale: Locale; only?: DocCategory[] }
+const { locale, only } = Astro.props;
+const t = useTranslations(locale);
+const cats = (only ?? (Object.keys(docCategories) as DocCategory[]));
+---
+<div class="docs">
+  {cats.map((cat) => {
+    const items = documents.filter((d) => d.category === cat);
+    if (!items.length) return null;
+    return (
+      <section class="docs__group">
+        <h2 class="docs__cat">{docCategories[cat][locale]}</h2>
+        <ul class="docs__list">
+          {items.map((d) => (
+            <li>
+              <a class="doc" href={`/documents/${d.file}`}>
+                <span class="doc__icon mono" aria-hidden="true">PDF</span>
+                <span class="doc__text">
+                  <span class="doc__title">{d.title[locale]}</span>
+                  {d.note && <span class="doc__note">{d.note[locale]}</span>}
+                </span>
+                <span class="doc__action">{t('cta.open')}</span>
+              </a>
+            </li>
+          ))}
+        </ul>
+      </section>
+    );
+  })}
+</div>
+<style>
+  .docs__group { margin-bottom: var(--sp-7); }
+  .docs__cat { font-size: var(--step-2); margin-bottom: var(--sp-4); }
+  .docs__list { list-style: none; margin: 0; padding: 0; display: grid; gap: var(--sp-3); }
+  .doc {
+    display: grid; grid-template-columns: auto 1fr; gap: var(--sp-4); align-items: center;
+    padding: var(--sp-4); background: var(--white); border: 1px solid var(--gray-100);
+    border-radius: var(--radius); text-decoration: none; color: inherit;
+    transition: border-color .15s ease, box-shadow .15s ease;
+  }
+  .doc:hover { border-color: var(--blue); box-shadow: var(--shadow-sm); }
+  .doc__icon {
+    display: inline-flex; align-items: center; justify-content: center;
+    width: 46px; height: 46px; border-radius: 10px;
+    background: var(--gray-air); color: var(--blue); font-size: .7rem; font-weight: 700; letter-spacing: .06em;
+  }
+  .doc__text { display: grid; gap: .15rem; }
+  .doc__title { font-weight: 600; }
+  .doc__note { font-size: var(--step--1); color: var(--gray-600); }
+  .doc__action { display: none; font-weight: 600; font-size: var(--step--1); color: var(--blue); }
+  @media (min-width: 700px) {
+    .doc { grid-template-columns: auto 1fr auto; }
+    .doc__action { display: block; }
+  }
+</style>

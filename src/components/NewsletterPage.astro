@@ -1,0 +1,41 @@
+---
+import Base from '../layouts/Base.astro';
+import PageHero from './PageHero.astro';
+import Form from './Form.astro';
+import { type Locale } from '../i18n/ui';
+import { newsletterPage as c } from '../data/content';
+
+interface Props { locale: Locale }
+const { locale } = Astro.props;
+---
+<Base locale={locale} page="newsletter" title={c.meta.title[locale]} description={c.meta.description[locale]}>
+  <PageHero eyebrow="Infolettre" title={c.h1[locale]} lead={c.lead[locale]} />
+
+  <section class="section">
+    <div class="wrap nl">
+      <div class="card nl__form">
+        <h2>{c.formTitle[locale]}</h2>
+        <p class="nl__note">{c.formNote[locale]}</p>
+        <Form locale={locale} kind="newsletter" />
+      </div>
+      <ul class="nl__benefits">
+        {c.benefits.map((b) => (
+          <li>
+            <h3>{b.title[locale]}</h3>
+            <p>{b.body[locale]}</p>
+          </li>
+        ))}
+      </ul>
+    </div>
+  </section>
+</Base>
+<style>
+  .nl { display: grid; gap: var(--sp-6); align-items: start; }
+  .nl__form { background: var(--gray-air); }
+  .nl__form h2 { font-size: var(--step-2); margin-bottom: .3rem; }
+  .nl__note { font-size: var(--step--1); color: var(--gray-600); margin-bottom: var(--sp-5); }
+  .nl__benefits { list-style: none; margin: 0; padding: 0; display: grid; gap: var(--sp-5); }
+  .nl__benefits h3 { font-size: var(--step-1); margin-bottom: .3rem; }
+  .nl__benefits p { margin: 0; color: var(--gray-600); font-size: var(--step--1); }
+  @media (min-width: 900px) { .nl { grid-template-columns: 1.1fr 1fr; gap: var(--sp-7); } }
+</style>

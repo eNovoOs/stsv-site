@@ -1,0 +1,41 @@
+---
+import Base from '../layouts/Base.astro';
+import PageHero from './PageHero.astro';
+import { useTranslations, path, type Locale } from '../i18n/ui';
+import { accessCard as c } from '../data/content';
+
+interface Props { locale: Locale }
+const { locale } = Astro.props;
+const t = useTranslations(locale);
+---
+<Base locale={locale} page="accessCard" title={c.meta.title[locale]} description={c.meta.description[locale]}>
+  <PageHero eyebrow="Communobus" title={c.h1[locale]} tone="light" />
+
+  <section class="section">
+    <div class="wrap prose">
+      <h2>{c.s1Title[locale]}</h2>
+      <p>{c.s1Body[locale]}</p>
+
+      <h2>{c.s2Title[locale]}</h2>
+      <p>{c.s2Lead[locale]}</p>
+      <ol class="rules">
+        {c.prohibitions[locale].map((p) => <li>{p}</li>)}
+      </ol>
+
+      <div class="card autonomy">
+        <h2>{c.autonomyTitle[locale]}</h2>
+        <p>{c.autonomyBody[locale]}</p>
+        <a class="btn btn--ghost" href={path('reservation', locale)}>{t('nav.reservation')}</a>
+      </div>
+    </div>
+  </section>
+</Base>
+<style>
+  .prose { max-width: 78ch; }
+  .prose h2 { font-size: var(--step-2); margin-top: var(--sp-7); }
+  .prose h2:first-child { margin-top: 0; }
+  .rules { display: grid; gap: .7rem; padding-left: 1.3rem; color: var(--gray-600); }
+  .rules li { padding-left: .2rem; }
+  .autonomy { margin-top: var(--sp-7); background: var(--gray-air); }
+  .autonomy h2 { margin-top: 0; }
+</style>

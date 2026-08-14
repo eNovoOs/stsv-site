@@ -1,0 +1,73 @@
+---
+import { Image } from 'astro:assets';
+import Base from '../layouts/Base.astro';
+import PageHero from './PageHero.astro';
+import { useTranslations, type Locale } from '../i18n/ui';
+import { tutorials as c } from '../data/content';
+
+interface Props { locale: Locale }
+const { locale } = Astro.props;
+const t = useTranslations(locale);
+
+const thumbs = import.meta.glob<{ default: ImageMetadata }>('../assets/tutoriels/*.jpg', { eager: true });
+const thumbOf = (id: string) => thumbs[`../assets/tutoriels/${id}.jpg`]?.default;
+---
+<Base locale={locale} page="tutorials" title={c.meta.title[locale]} description={c.meta.description[locale]}>
+  <PageHero eyebrow={t('nav.tutorials')} title={c.h1[locale]} lead={c.lead[locale]} tone="light" />
+
+  <section class="section">
+    <div class="wrap">
+      <ul class="tuts grid grid--2">
+        {c.items.map((it) => {
+          const id = it.id[locale];
+          const thumb = thumbOf(id);
+          return (
+            <li class="tut card">
+              <button class="tut__btn" type="button" data-video={id} aria-label={`${c.playLabel[locale]} — ${it.title[locale]}`}>
+                {thumb && <Image src={thumb} alt="" widths={[400, 720]} sizes="(min-width: 700px) 45vw, 100vw" loading="lazy" />}
+                <span class="tut__play" aria-hidden="true">
+                  <svg width="26" height="26" viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>
+                </span>
+              </button>
+              <h2 class="tut__title">{it.title[locale]}</h2>
+            </li>
+          );
+        })}
+      </ul>
+      <p class="privacy">{c.privacyNote[locale]}</p>
+    </div>
+  </section>
+</Base>
+<style>
+  .tuts { list-style: none; margin: 0; padding: 0; }
+  .tut { padding: 0; overflow: hidden; }
+  .tut__btn {
+    display: block; position: relative; width: 100%; padding: 0; border: 0; cursor: pointer;
+    background: var(--gray-100); line-height: 0;
+  }
+  .tut__btn :global(img), .tut__btn :global(iframe) { display: block; width: 100%; aspect-ratio: 16 / 9; object-fit: cover; border: 0; }
+  .tut__play {
+    position: absolute; inset: 0; margin: auto; width: 64px; height: 64px;
+    display: flex; align-items: center; justify-content: center;
+    background: var(--blue); color: var(--white); border-radius: 999px;
+    box-shadow: 0 6px 20px rgba(0, 0, 0, .3); transition: transform .18s ease, background-color .18s ease;
+  }
+  .tut__btn:hover .tut__play { transform: scale(1.08); background: var(--blue-dark); }
+  .tut__title { font-size: var(--step-1); margin: 0; padding: var(--sp-4) var(--sp-5) var(--sp-5); }
+  .privacy { margin-top: var(--sp-5); font-size: var(--step--1); color: var(--gray-600); }
+</style>
+<script>
+  document.querySelectorAll<HTMLButtonElement>('.tut__btn').forEach((btn) => {
+    btn.addEventListener('click', () => {
+      const id = btn.dataset.video;
+      if (!id) return;
+      const f = document.createElement('iframe');
+      f.src = `https://www.youtube-nocookie.com/embed/${id}?autoplay=1&rel=0`;
+      f.title = btn.getAttribute('aria-label') ?? '';
+      f.allow = 'accelerometer; autoplay; clipboard-write; encrypted-media; picture-in-picture';
+      f.allowFullscreen = true;
+      btn.replaceWith(f);
+      f.focus();
+    });
+  });
+</script>

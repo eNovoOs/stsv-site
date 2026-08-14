@@ -1,0 +1,45 @@
+---
+import Base from '../layouts/Base.astro';
+import PageHero from './PageHero.astro';
+import { useTranslations, type Locale } from '../i18n/ui';
+import { contact } from '../data/site';
+import { stops as c } from '../data/content';
+import illus from '../assets/images/illus-carte-arrets.png';
+import { Image } from 'astro:assets';
+
+interface Props { locale: Locale }
+const { locale } = Astro.props;
+const t = useTranslations(locale);
+---
+<Base locale={locale} page="stops" title={c.meta.title[locale]} description={c.meta.description[locale]}>
+  <PageHero eyebrow={t('nav.stops')} title={c.h1[locale]} lead={c.lead[locale]} />
+
+  <section class="section">
+    <div class="wrap grid grid--3">
+      {c.features.map((f) => (
+        <article class="card">
+          <h2 class="feat__title">{f.title[locale]}</h2>
+          <p>{f.body[locale]}</p>
+        </article>
+      ))}
+    </div>
+  </section>
+
+  <section class="section section--air">
+    <div class="wrap cta2">
+      <div>
+        <h2>{c.ctaTitle[locale]}</h2>
+        <p>{c.ctaBody[locale]}</p>
+        <a class="btn btn--primary" href={contact.bookingUrl} target="_blank" rel="noopener">{t('cta.bookLong')}</a>
+      </div>
+      <Image src={illus} alt="" widths={[280, 420]} sizes="(min-width: 800px) 30vw, 60vw" loading="lazy" />
+    </div>
+  </section>
+</Base>
+<style>
+  .feat__title { font-size: var(--step-1); margin-bottom: var(--sp-2); }
+  .card p { margin: 0; color: var(--gray-600); font-size: var(--step--1); }
+  .cta2 { display: grid; gap: var(--sp-6); align-items: center; }
+  .cta2 :global(img) { justify-self: center; max-width: 320px; height: auto; }
+  @media (min-width: 800px) { .cta2 { grid-template-columns: 1.4fr 1fr; } }
+</style>

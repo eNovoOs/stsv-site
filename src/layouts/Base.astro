@@ -1,0 +1,64 @@
+---
+import '../styles/global.css';
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
+import Banner from '../components/Banner.astro';
+import { htmlLang, locales, useTranslations, type Locale, type RouteKey, path } from '../i18n/ui';
+
+interface Props {
+  locale: Locale;
+  page: RouteKey;
+  title: string;
+  description: string;
+}
+
+const { locale, page, title, description } = Astro.props;
+const t = useTranslations(locale);
+const canonical = new URL(path(page, locale), Astro.site ?? 'https://stsv.ca').href;
+---
+
+<!doctype html>
+<html lang={htmlLang[locale]}>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{title}</title>
+    <meta name="description" content={description} />
+    <link rel="canonical" href={canonical} />
+    {
+      locales.map((l) => (
+        <link
+          rel="alternate"
+          hreflang={htmlLang[l]}
+          href={new URL(path(page, l), Astro.site ?? 'https://stsv.ca').href}
+        />
+      ))
+    }
+    <link rel="alternate" hreflang="x-default" href={new URL(path(page, 'fr'), Astro.site ?? 'https://stsv.ca').href} />
+
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={canonical} />
+    <meta property="og:locale" content={htmlLang[locale].replace('-', '_')} />
+    <meta property="og:image" content={new URL('/brand/logo-stsv.png', Astro.site ?? 'https://stsv.ca').href} />
+    <meta name="twitter:card" content="summary_large_image" />
+
+    <link rel="icon" href="/brand/logo-stsv.svg" type="image/svg+xml" />
+    <meta name="theme-color" content="#135EEF" />
+
+    <link rel="preload" href="/fonts/poppins-latin-700-normal.woff2" as="font" type="font/woff2" crossorigin />
+    <link rel="preload" href="/fonts/poppins-latin-400-normal.woff2" as="font" type="font/woff2" crossorigin />
+
+    <slot name="head" />
+  </head>
+  <body>
+    <a class="skip-link" href="#main">{t('a11y.skip')}</a>
+    <Banner locale={locale} />
+    <Header locale={locale} page={page} />
+    <main id="main">
+      <slot />
+    </main>
+    <Footer locale={locale} />
+  </body>
+</html>

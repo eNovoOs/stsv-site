@@ -1,0 +1,48 @@
+---
+import { useTranslations, path, type Locale } from '../i18n/ui';
+import { contact, privacyDoc } from '../data/site';
+interface Props { locale: Locale }
+const { locale } = Astro.props;
+const t = useTranslations(locale);
+const year = new Date().getFullYear();
+---
+<footer class="ftr">
+  <div class="wrap ftr__inner">
+    <div class="ftr__brand">
+      <img src="/brand/logo-stsv.svg" alt="STSV" width="152" height="37" />
+      <a class="ftr__phone mono" href={contact.phoneHref}>{contact.phoneDisplay}</a>
+    </div>
+    <nav class="ftr__links" aria-label={t('home.quickLinks')}>
+      <a href={path('services', locale)}>{t('nav.services')}</a>
+      <a href={path('adapted', locale)}>{t('nav.adapted')}</a>
+      <a href={path('documents', locale)}>{t('nav.documents')}</a>
+      <a href={path('tutorials', locale)}>{t('nav.tutorials')}</a>
+      <a href={path('contact', locale)}>{t('nav.contact')}</a>
+      <a href={path('newsletter', locale)}>{t('nav.newsletter')}</a>
+      <a href={privacyDoc}>{t('footer.privacy')}</a>
+    </nav>
+    <div class="ftr__social">
+      <a href={contact.facebook} target="_blank" rel="noopener" aria-label={t('footer.social')}>
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M22 12.06C22 6.5 17.52 2 12 2S2 6.5 2 12.06c0 5 3.66 9.15 8.44 9.94v-7.03H7.9v-2.9h2.54V9.85c0-2.52 1.5-3.91 3.77-3.91 1.1 0 2.24.2 2.24.2v2.46h-1.26c-1.24 0-1.63.78-1.63 1.57v1.89h2.78l-.45 2.9h-2.33V22c4.78-.79 8.44-4.94 8.44-9.94Z"/></svg>
+      </a>
+    </div>
+  </div>
+  <div class="wrap ftr__legal">
+    <p>© {year} STSV. {t('footer.rights')}</p>
+  </div>
+</footer>
+<style>
+  .ftr { background: var(--gray-air); border-top: 1px solid var(--gray-100); padding-block: var(--sp-7) var(--sp-5); margin-top: var(--sp-8); }
+  .ftr__inner { display: grid; gap: var(--sp-6); align-items: start; }
+  .ftr__brand img { width: 140px; height: auto; display: block; }
+  .ftr__phone { display: inline-block; margin-top: var(--sp-3); font-size: var(--step-2); font-weight: 700; color: var(--blue); text-decoration: none; }
+  .ftr__phone:hover { color: var(--blue-dark); text-decoration: underline; }
+  .ftr__links { display: grid; gap: .6rem; }
+  .ftr__links a { color: var(--ink); text-decoration: none; font-size: var(--step--1); }
+  .ftr__links a:hover { color: var(--blue); text-decoration: underline; }
+  .ftr__social a { display: inline-flex; width: 44px; height: 44px; align-items: center; justify-content: center; border-radius: 999px; background: var(--white); border: 1px solid var(--gray-100); color: var(--ink); }
+  .ftr__social a:hover { background: var(--blue); color: var(--white); border-color: var(--blue); }
+  .ftr__legal { margin-top: var(--sp-6); padding-top: var(--sp-4); border-top: 1px solid var(--gray-100); }
+  .ftr__legal p { margin: 0; font-size: var(--step--1); color: var(--gray-600); }
+  @media (min-width: 800px) { .ftr__inner { grid-template-columns: 1.2fr 2fr auto; gap: var(--sp-7); } .ftr__links { grid-template-columns: 1fr 1fr; } }
+</style>

@@ -1,0 +1,54 @@
+---
+import Base from '../layouts/Base.astro';
+import PageHero from './PageHero.astro';
+import { useTranslations, path, type Locale } from '../i18n/ui';
+import { about as c } from '../data/content';
+import { privacyDoc } from '../data/site';
+import hero from '../assets/images/hero-qui-sommes-nous.jpg';
+
+interface Props { locale: Locale }
+const { locale } = Astro.props;
+const t = useTranslations(locale);
+---
+<Base locale={locale} page="about" title={c.meta.title[locale]} description={c.meta.description[locale]}>
+  <PageHero
+    eyebrow="STSV"
+    title={c.h1[locale]}
+    image={hero}
+    imageAlt={{ fr: 'Autobus de la STSV dans les rues de Salaberry-de-Valleyfield', en: 'STSV bus in the streets of Salaberry-de-Valleyfield', es: 'Autobús de la STSV en las calles de Salaberry-de-Valleyfield' }[locale]}
+  />
+
+  <section class="section">
+    <div class="wrap">
+      <ul class="facts">
+        {c.facts[locale].map((f) => <li class="card">{f}</li>)}
+      </ul>
+    </div>
+  </section>
+
+  <section class="section section--air">
+    <div class="wrap">
+      <h2>{c.bookingTitle[locale]}</h2>
+      <p>{c.bookingLead[locale]}</p>
+      <ul class="modes">
+        {c.bookingModes[locale].map((m) => <li class="card mode">{m}</li>)}
+      </ul>
+      <a class="btn btn--ghost" href={path('reservation', locale)}>{t('nav.reservation')}</a>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="wrap">
+      <h2>{c.soonTitle[locale]}</h2>
+      <p>{c.soonBody[locale]}</p>
+      <p><a href={privacyDoc}>{t('footer.privacy')}</a></p>
+    </div>
+  </section>
+</Base>
+<style>
+  .facts { list-style: none; margin: 0; padding: 0; display: grid; gap: var(--sp-4); }
+  .facts li { border-left: 4px solid var(--cyan); }
+  .modes { list-style: none; margin: var(--sp-4) 0 var(--sp-5); padding: 0; display: grid; gap: var(--sp-3); }
+  .mode { font-weight: 600; text-align: center; }
+  @media (min-width: 700px) { .modes { grid-template-columns: repeat(3, 1fr); } .facts { grid-template-columns: 1fr 1fr; } }
+</style>

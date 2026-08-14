@@ -1,0 +1,40 @@
+{
+  "$schema": "https://openapi.vercel.sh/vercel.json",
+  "framework": "astro",
+  "cleanUrls": true,
+  "trailingSlash": false,
+  "redirects": [
+    { "source": "/home", "destination": "/", "permanent": true },
+    { "source": "/description-of-service", "destination": "/services", "permanent": true },
+    { "source": "/mapofourstops", "destination": "/carte-des-arrets", "permanent": true },
+    { "source": "/reservation-information", "destination": "/infos-reservation", "permanent": true },
+    { "source": "/access-card-policy", "destination": "/carte-acces", "permanent": true },
+    { "source": "/adapted-transportation", "destination": "/transport-adapte", "permanent": true },
+    { "source": "/about", "destination": "/qui-sommes-nous", "permanent": true },
+    { "source": "/tutorials", "destination": "/tutoriels", "permanent": true },
+    { "source": "/newsletter", "destination": "/infolettre", "permanent": true },
+    { "source": "/en/description-of-service", "destination": "/en/services", "permanent": true },
+    { "source": "/es/description-of-service", "destination": "/es/servicios", "permanent": true }
+  ],
+  "headers": [
+    {
+      "source": "/fonts/(.*)",
+      "headers": [{ "key": "Cache-Control", "value": "public, max-age=31536000, immutable" }]
+    },
+    {
+      "source": "/documents/(.*).pdf",
+      "headers": [
+        { "key": "Cache-Control", "value": "public, max-age=3600, must-revalidate" },
+        { "key": "Content-Type", "value": "application/pdf" }
+      ]
+    },
+    {
+      "source": "/(.*)",
+      "headers": [
+        { "key": "X-Content-Type-Options", "value": "nosniff" },
+        { "key": "Referrer-Policy", "value": "strict-origin-when-cross-origin" },
+        { "key": "X-Frame-Options", "value": "SAMEORIGIN" }
+      ]
+    }
+  ]
+}

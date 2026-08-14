@@ -1,0 +1,30 @@
+---
+interface Props { items: { q: string; a: string }[] }
+const { items } = Astro.props;
+---
+<div class="acc">
+  {items.map((it) => (
+    <details class="acc__item">
+      <summary>
+        <span>{it.q}</span>
+        <svg width="14" height="9" viewBox="0 0 12 8" aria-hidden="true"><path d="M1 1.5 6 6.5 11 1.5" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </summary>
+      <div class="acc__body"><p>{it.a}</p></div>
+    </details>
+  ))}
+</div>
+<style>
+  .acc { display: grid; gap: var(--sp-3); }
+  .acc__item { background: var(--white); border: 1px solid var(--gray-100); border-radius: var(--radius); overflow: hidden; }
+  summary {
+    display: flex; align-items: center; justify-content: space-between; gap: var(--sp-4);
+    padding: var(--sp-4) var(--sp-5); cursor: pointer; font-weight: 600; list-style: none; min-height: 56px;
+  }
+  summary::-webkit-details-marker { display: none; }
+  summary:hover { background: var(--gray-air); color: var(--blue); }
+  summary svg { flex: 0 0 auto; transition: transform .2s ease; }
+  details[open] summary svg { transform: rotate(180deg); }
+  details[open] summary { color: var(--blue); }
+  .acc__body { padding: 0 var(--sp-5) var(--sp-5); }
+  .acc__body p { margin: 0; color: var(--gray-600); }
+</style>

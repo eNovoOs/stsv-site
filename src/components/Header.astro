@@ -1,0 +1,246 @@
+---
+import { useTranslations, path, locales, localeNames, type Locale, type RouteKey } from '../i18n/ui';
+import { contact } from '../data/site';
+
+interface Props {
+  locale: Locale;
+  page: RouteKey;
+}
+const { locale, page } = Astro.props;
+const t = useTranslations(locale);
+
+const primary: { key: RouteKey; label: string }[] = [
+  { key: 'services', label: t('nav.services') },
+  { key: 'stops', label: t('nav.stops') },
+  { key: 'adapted', label: t('nav.adapted') },
+  { key: 'about', label: t('nav.about') },
+  { key: 'documents', label: t('nav.documents') },
+  { key: 'tutorials', label: t('nav.tutorials') },
+];
+
+const communobus = [
+  { label: t('nav.booking'), href: contact.bookingUrl, external: true },
+  { label: t('nav.reservation'), href: path('reservation', locale), external: false },
+  { label: t('nav.accessCard'), href: path('accessCard', locale), external: false },
+  { label: t('nav.line338'), href: '/documents/Horaire-ligne-338_v2.pdf', external: false },
+  { label: t('nav.sainteMartine'), href: '/documents/Horaire-Sainte-Martine_des-17-aout-2026.pdf', external: false },
+  { label: t('nav.schedules'), href: '/documents/Horaires-lignes-10-30-99_du-3-nov-2025_v2.pdf', external: false },
+];
+---
+
+<header class="hdr">
+  <div class="wrap hdr__inner">
+    <a class="hdr__logo" href={path('home', locale)}>
+      <img src="/brand/logo-stsv.svg" alt="STSV" width="152" height="37" />
+    </a>
+
+    <nav class="hdr__nav" aria-label={t('nav.menu')}>
+      <ul class="hdr__list">
+        {
+          primary.slice(0, 2).map((item) => (
+            <li>
+              <a href={path(item.key, locale)} aria-current={page === item.key ? 'page' : undefined}>
+                {item.label}
+              </a>
+            </li>
+          ))
+        }
+        <li class="has-sub">
+          <button type="button" aria-expanded="false" aria-controls="sub-communobus">
+            {t('nav.communobus')}
+            <svg width="12" height="8" viewBox="0 0 12 8" aria-hidden="true"><path d="M1 1.5 6 6.5 11 1.5" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </button>
+          <ul id="sub-communobus" class="hdr__sub">
+            {
+              communobus.map((c) => (
+                <li>
+                  <a href={c.href} {...(c.external ? { target: '_blank', rel: 'noopener' } : {})}>
+                    {c.label}
+                    {c.external && <span class="visually-hidden"> {t('a11y.newTab')}</span>}
+                  </a>
+                </li>
+              ))
+            }
+          </ul>
+        </li>
+        {
+          primary.slice(2).map((item) => (
+            <li>
+              <a href={path(item.key, locale)} aria-current={page === item.key ? 'page' : undefined}>
+                {item.label}
+              </a>
+            </li>
+          ))
+        }
+      </ul>
+    </nav>
+
+    <div class="hdr__end">
+      <nav class="lang" aria-label={t('nav.language')}>
+        {
+          locales.map((l) => (
+            <a
+              href={path(page, l)}
+              hreflang={l}
+              class={l === locale ? 'is-active' : ''}
+              aria-current={l === locale ? 'true' : undefined}
+            >
+              <abbr title={localeNames[l]}>{l.toUpperCase()}</abbr>
+            </a>
+          ))
+        }
+      </nav>
+      <a class="btn btn--primary hdr__cta" href={contact.bookingUrl} target="_blank" rel="noopener">
+        {t('cta.book')}
+      </a>
+      <button class="hdr__burger" type="button" aria-expanded="false" aria-controls="mobile-nav">
+        <span class="visually-hidden">{t('nav.menu')}</span>
+        <span aria-hidden="true"></span><span aria-hidden="true"></span><span aria-hidden="true"></span>
+      </button>
+    </div>
+  </div>
+
+  <div class="mnav" id="mobile-nav" hidden>
+    <ul class="wrap">
+      {primary.map((item) => (
+        <li><a href={path(item.key, locale)}>{item.label}</a></li>
+      ))}
+      <li class="mnav__group">{t('nav.communobus')}</li>
+      {communobus.map((c) => (
+        <li class="mnav__child">
+          <a href={c.href} {...(c.external ? { target: '_blank', rel: 'noopener' } : {})}>{c.label}</a>
+        </li>
+      ))}
+      <li><a href={path('contact', locale)}>{t('nav.contact')}</a></li>
+      <li><a class="btn btn--primary" href={contact.bookingUrl} target="_blank" rel="noopener">{t('cta.book')}</a></li>
+    </ul>
+  </div>
+</header>
+
+<style>
+  .hdr {
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    background: var(--white);
+    border-bottom: 1px solid var(--gray-100);
+  }
+  .hdr__inner {
+    display: flex;
+    align-items: center;
+    gap: var(--sp-5);
+    min-height: var(--header-h);
+  }
+  .hdr__logo { display: flex; align-items: center; flex: 0 0 auto; }
+  .hdr__logo img { width: 132px; height: auto; display: block; }
+
+  .hdr__nav { display: none; flex: 1 1 auto; }
+  .hdr__list { list-style: none; display: flex; gap: var(--sp-2); margin: 0; padding: 0; flex-wrap: wrap; }
+  .hdr__list > li > a,
+  .hdr__list > li > button {
+    display: inline-flex; align-items: center; gap: .35rem;
+    font: inherit; font-size: var(--step--1); font-weight: 500;
+    color: var(--ink); text-decoration: none;
+    padding: .55rem .7rem; border-radius: 8px; border: 0; background: none; cursor: pointer;
+    transition: background-color .15s ease, color .15s ease;
+  }
+  .hdr__list > li > a:hover,
+  .hdr__list > li > button:hover { background: var(--gray-air); color: var(--blue); }
+  .hdr__list a[aria-current='page'] { color: var(--blue); font-weight: 600; }
+
+  .has-sub { position: relative; }
+  .hdr__sub {
+    position: absolute; top: calc(100% + .4rem); left: 0; min-width: 260px;
+    list-style: none; margin: 0; padding: var(--sp-2);
+    background: var(--white); border: 1px solid var(--gray-100);
+    border-radius: var(--radius); box-shadow: var(--shadow-md);
+    display: none;
+  }
+  .has-sub[data-open='true'] .hdr__sub { display: block; }
+  .hdr__sub a {
+    display: block; padding: .6rem .7rem; border-radius: 8px;
+    font-size: var(--step--1); color: var(--ink); text-decoration: none;
+  }
+  .hdr__sub a:hover { background: var(--gray-air); color: var(--blue); }
+
+  .hdr__end { display: flex; align-items: center; gap: var(--sp-3); margin-left: auto; }
+  .lang { display: flex; gap: .15rem; }
+  .lang a {
+    font-family: var(--font-mono); font-size: .78rem; font-weight: 500;
+    color: var(--gray-600); text-decoration: none;
+    padding: .35rem .45rem; border-radius: 6px;
+  }
+  .lang a:hover { background: var(--gray-air); color: var(--blue); }
+  .lang .is-active { background: var(--blue); color: var(--white); }
+  .lang abbr { text-decoration: none; }
+
+  .hdr__cta { display: none; padding: .6rem 1.15rem; min-height: 42px; font-size: var(--step--1); }
+
+  .hdr__burger {
+    display: inline-flex; flex-direction: column; justify-content: center; gap: 5px;
+    width: 44px; height: 44px; padding: 0 10px;
+    background: none; border: 1px solid var(--gray-100); border-radius: 10px; cursor: pointer;
+  }
+  .hdr__burger span[aria-hidden] { display: block; height: 2px; background: var(--ink); border-radius: 2px; }
+  .hdr__burger[aria-expanded='true'] { background: var(--gray-air); }
+
+  .mnav { border-top: 1px solid var(--gray-100); background: var(--white); }
+  .mnav ul { list-style: none; margin: 0; padding: var(--sp-4) 0 var(--sp-6); }
+  .mnav li { margin: 0; }
+  .mnav a {
+    display: block; padding: .8rem 0; font-size: var(--step-0); font-weight: 500;
+    color: var(--ink); text-decoration: none; border-bottom: 1px solid var(--gray-100);
+  }
+  .mnav a.btn { border-bottom: 0; margin-top: var(--sp-4); justify-content: center; color: var(--white); }
+  .mnav__group {
+    font-family: var(--font-mono); font-size: var(--step--1); text-transform: uppercase;
+    letter-spacing: .1em; color: var(--gray-600); padding: var(--sp-4) 0 .4rem;
+  }
+  .mnav__child a { padding-left: var(--sp-4); font-weight: 400; }
+
+  @media (min-width: 1080px) {
+    .hdr__nav { display: block; }
+    .hdr__cta { display: inline-flex; }
+    .hdr__burger { display: none; }
+    .mnav { display: none !important; }
+  }
+</style>
+
+<script>
+  const burger = document.querySelector<HTMLButtonElement>('.hdr__burger');
+  const mnav = document.getElementById('mobile-nav');
+  burger?.addEventListener('click', () => {
+    const open = burger.getAttribute('aria-expanded') === 'true';
+    burger.setAttribute('aria-expanded', String(!open));
+    if (mnav) mnav.hidden = open;
+  });
+
+  document.querySelectorAll<HTMLLIElement>('.has-sub').forEach((li) => {
+    const btn = li.querySelector('button');
+    const close = () => {
+      li.dataset.open = 'false';
+      btn?.setAttribute('aria-expanded', 'false');
+    };
+    btn?.addEventListener('click', () => {
+      const open = li.dataset.open === 'true';
+      li.dataset.open = String(!open);
+      btn.setAttribute('aria-expanded', String(!open));
+    });
+    li.addEventListener('mouseenter', () => {
+      li.dataset.open = 'true';
+      btn?.setAttribute('aria-expanded', 'true');
+    });
+    li.addEventListener('mouseleave', close);
+    li.addEventListener('focusout', (e) => {
+      if (!li.contains(e.relatedTarget as Node)) close();
+    });
+  });
+
+  document.addEventListener('keydown', (e) => {
+    if (e.key !== 'Escape') return;
+    document.querySelectorAll<HTMLLIElement>('.has-sub').forEach((li) => {
+      li.dataset.open = 'false';
+      li.querySelector('button')?.setAttribute('aria-expanded', 'false');
+    });
+  });
+</script>

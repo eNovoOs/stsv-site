@@ -1,0 +1,100 @@
+---
+import Base from '../layouts/Base.astro';
+import PageHero from './PageHero.astro';
+import FareTable from './FareTable.astro';
+import { useTranslations, path, type Locale } from '../i18n/ui';
+import { contact, fares } from '../data/site';
+import { reservation as c } from '../data/content';
+import hero from '../assets/images/hero-communobus.jpg';
+
+interface Props { locale: Locale }
+const { locale } = Astro.props;
+const t = useTranslations(locale);
+---
+<Base locale={locale} page="reservation" title={c.meta.title[locale]} description={c.meta.description[locale]}>
+  <PageHero
+    eyebrow="Communobus"
+    title={c.h1[locale]}
+    lead={c.lead[locale]}
+    image={hero}
+    imageAlt={{ fr: 'Véhicule Communobus de la STSV', en: 'STSV Communobus vehicle', es: 'Vehículo Communobus de la STSV' }[locale]}
+  />
+
+  <section class="section">
+    <div class="wrap">
+      <ol class="steps">
+        {c.methods.map((m) => (
+          <li class="card step">
+            <span class="step__n mono">{m.n}</span>
+            <div>
+              <h2 class="step__t">{m.title[locale]}</h2>
+              <p>{m.body[locale]}</p>
+              {m.n === '3'
+                ? <a class="btn btn--primary" href={contact.bookingUrl} target="_blank" rel="noopener">{t('cta.bookLong')}</a>
+                : <a class="btn btn--ghost mono" href={contact.phoneHref}>{contact.phoneDisplay}</a>}
+            </div>
+          </li>
+        ))}
+      </ol>
+    </div>
+  </section>
+
+  <section class="section section--air">
+    <div class="wrap">
+      <h2>{c.smsTitle[locale]}</h2>
+      <div class="table-scroll">
+        <table>
+          <thead>
+            <tr>
+              <th scope="col">{{ fr: 'Commande', en: 'Command', es: 'Comando' }[locale]}</th>
+              <th scope="col">{{ fr: 'Syntaxe', en: 'Syntax', es: 'Sintaxis' }[locale]}</th>
+              <th scope="col">{{ fr: 'Exemple', en: 'Example', es: 'Ejemplo' }[locale]}</th>
+            </tr>
+          </thead>
+          <tbody>
+            {c.smsCommands.map((s) => (
+              <tr>
+                <th scope="row"><span class="mono cmd">{s.cmd}</span><span class="cmd__lbl">{s.label[locale]}</span></th>
+                <td class="mono small">{s.syntax}</td>
+                <td class="mono small">{s.example}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="wrap">
+      <h2>{c.needTitle[locale]}</h2>
+      <ul class="need">
+        {c.need[locale].map((n) => <li>{n}</li>)}
+      </ul>
+      <p class="note">{c.needNote[locale]}</p>
+      <a class="btn btn--ghost" href={path('stops', locale)}>{t('nav.stops')}</a>
+    </div>
+  </section>
+
+  <section class="section section--air">
+    <div class="wrap">
+      <h2>{{ fr: 'Grille tarifaire', en: 'Fare table', es: 'Tabla de tarifas' }[locale]}</h2>
+      {fares.map((f) => <FareTable table={f} locale={locale} />)}
+    </div>
+  </section>
+</Base>
+<style>
+  .steps { list-style: none; margin: 0; padding: 0; display: grid; gap: var(--sp-4); }
+  .step { display: grid; grid-template-columns: auto 1fr; gap: var(--sp-4); align-items: start; }
+  .step__n {
+    display: inline-flex; align-items: center; justify-content: center;
+    width: 44px; height: 44px; border-radius: 999px;
+    background: var(--blue); color: var(--white); font-weight: 700;
+  }
+  .step__t { font-size: var(--step-1); margin-bottom: var(--sp-2); }
+  .cmd { display: block; font-weight: 700; color: var(--blue); }
+  .cmd__lbl { display: block; font-size: var(--step--1); color: var(--gray-600); font-weight: 400; }
+  .small { font-size: .82rem; }
+  .need { display: grid; gap: .5rem; padding-left: 1.1rem; margin-bottom: var(--sp-4); }
+  .note { color: var(--gray-600); font-size: var(--step--1); }
+</style>

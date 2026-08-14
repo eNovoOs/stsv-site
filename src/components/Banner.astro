@@ -1,0 +1,25 @@
+---
+import { banner } from '../data/site';
+import type { Locale } from '../i18n/ui';
+interface Props { locale: Locale }
+const { locale } = Astro.props;
+---
+{banner.active && (
+  <div class="banner" role="region" aria-label={banner.eyebrow[locale]}>
+    <div class="wrap banner__inner">
+      <span class="banner__tag">{banner.eyebrow[locale]}</span>
+      <p>{banner.title[locale]}</p>
+    </div>
+  </div>
+)}
+<style>
+  .banner { background: var(--black); color: var(--white); }
+  .banner__inner { display: flex; align-items: center; gap: var(--sp-3); padding-block: .7rem; flex-wrap: wrap; }
+  .banner__tag {
+    font-family: var(--font-mono); font-size: .7rem; font-weight: 500;
+    text-transform: uppercase; letter-spacing: .12em;
+    background: var(--lime); color: var(--black);
+    padding: .18rem .5rem; border-radius: 4px; flex: 0 0 auto;
+  }
+  .banner p { margin: 0; font-size: var(--step--1); max-width: none; }
+</style>

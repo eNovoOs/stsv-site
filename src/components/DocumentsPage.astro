@@ -1,0 +1,20 @@
+---
+import Base from '../layouts/Base.astro';
+import PageHero from './PageHero.astro';
+import DocList from './DocList.astro';
+import { useTranslations, type Locale } from '../i18n/ui';
+import { documentsPage as c } from '../data/content';
+import { documents } from '../data/site';
+
+interface Props { locale: Locale }
+const { locale } = Astro.props;
+const t = useTranslations(locale);
+const count = documents.length;
+const countLabel = { fr: 'documents', en: 'documents', es: 'documentos' }[locale];
+---
+<Base locale={locale} page="documents" title={c.meta.title[locale]} description={c.meta.description[locale]}>
+  <PageHero eyebrow={`${count} ${countLabel}`} title={c.h1[locale]} lead={c.lead[locale]} tone="light" />
+  <section class="section">
+    <div class="wrap"><DocList locale={locale} /></div>
+  </section>
+</Base>

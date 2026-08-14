@@ -1,0 +1,155 @@
+---
+import { useTranslations, type Locale } from '../i18n/ui';
+interface Props {
+  locale: Locale;
+  kind: 'contact' | 'newsletter';
+}
+const { locale, kind } = Astro.props;
+const t = useTranslations(locale);
+
+const copy = {
+  fr: {
+    name: 'Nom complet', email: 'Courriel', phone: 'Téléphone (facultatif)',
+    subject: 'Sujet', message: 'Message', submit: 'Soumettre',
+    subscribe: 'S’abonner', required: 'Champ obligatoire',
+    consent: 'J’accepte que la STSV utilise ces renseignements pour répondre à ma demande.',
+    consentNews: 'J’accepte de recevoir l’infolettre de la STSV. Désabonnement en tout temps.',
+    ok: 'Merci. Votre message a été envoyé.',
+    okNews: 'Merci. Votre abonnement est confirmé.',
+    err: 'Envoi impossible pour le moment. Réessayez ou appelez le 450 370-0600.',
+    sending: 'Envoi en cours…',
+  },
+  en: {
+    name: 'Full name', email: 'Email', phone: 'Phone (optional)',
+    subject: 'Subject', message: 'Message', submit: 'Submit',
+    subscribe: 'Subscribe', required: 'Required field',
+    consent: 'I agree that STSV may use this information to answer my request.',
+    consentNews: 'I agree to receive the STSV newsletter. Unsubscribe anytime.',
+    ok: 'Thank you. Your message has been sent.',
+    okNews: 'Thank you. Your subscription is confirmed.',
+    err: 'Could not send right now. Try again or call 450 370-0600.',
+    sending: 'Sending…',
+  },
+  es: {
+    name: 'Nombre completo', email: 'Correo electrónico', phone: 'Teléfono (opcional)',
+    subject: 'Asunto', message: 'Mensaje', submit: 'Enviar',
+    subscribe: 'Suscribirse', required: 'Campo obligatorio',
+    consent: 'Acepto que la STSV use esta información para responder a mi solicitud.',
+    consentNews: 'Acepto recibir el boletín de la STSV. Puedo cancelar cuando quiera.',
+    ok: 'Gracias. Tu mensaje fue enviado.',
+    okNews: 'Gracias. Tu suscripción está confirmada.',
+    err: 'No se pudo enviar ahora. Inténtalo de nuevo o llama al 450 370-0600.',
+    sending: 'Enviando…',
+  },
+}[locale];
+
+const isContact = kind === 'contact';
+---
+
+<form class="frm" data-form={kind} action={`/api/${kind}`} method="POST" novalidate>
+  <input type="hidden" name="locale" value={locale} />
+  <p class="frm__hp" aria-hidden="true">
+    <label>Ne pas remplir<input type="text" name="company" tabindex="-1" autocomplete="off" /></label>
+  </p>
+
+  <div class="frm__row">
+    <label class="field">
+      <span class="field__label">{copy.name} <em aria-hidden="true">*</em></span>
+      <input type="text" name="name" required autocomplete="name" />
+    </label>
+    <label class="field">
+      <span class="field__label">{copy.email} <em aria-hidden="true">*</em></span>
+      <input type="email" name="email" required autocomplete="email" inputmode="email" />
+    </label>
+  </div>
+
+  {isContact && (
+    <>
+      <div class="frm__row">
+        <label class="field">
+          <span class="field__label">{copy.phone}</span>
+          <input type="tel" name="phone" autocomplete="tel" inputmode="tel" />
+        </label>
+        <label class="field">
+          <span class="field__label">{copy.subject} <em aria-hidden="true">*</em></span>
+          <input type="text" name="subject" required />
+        </label>
+      </div>
+      <label class="field">
+        <span class="field__label">{copy.message} <em aria-hidden="true">*</em></span>
+        <textarea name="message" rows="6" required></textarea>
+      </label>
+    </>
+  )}
+
+  <label class="check">
+    <input type="checkbox" name="consent" required />
+    <span>{isContact ? copy.consent : copy.consentNews}</span>
+  </label>
+
+  <button class="btn btn--primary frm__submit" type="submit">
+    {isContact ? copy.submit : copy.subscribe}
+  </button>
+
+  <p class="frm__status" role="status" aria-live="polite"
+     data-ok={isContact ? copy.ok : copy.okNews}
+     data-err={copy.err}
+     data-sending={copy.sending}></p>
+</form>
+
+<style>
+  .frm { display: grid; gap: var(--sp-4); max-width: 720px; }
+  .frm__hp { position: absolute; left: -9999px; width: 1px; height: 1px; overflow: hidden; }
+  .frm__row { display: grid; gap: var(--sp-4); }
+  @media (min-width: 640px) { .frm__row { grid-template-columns: 1fr 1fr; } }
+  .field { display: grid; gap: .4rem; }
+  .field__label { font-size: var(--step--1); font-weight: 600; }
+  .field__label em { color: var(--blue); font-style: normal; }
+  input[type='text'], input[type='email'], input[type='tel'], textarea {
+    font: inherit; font-size: var(--step-0); color: var(--ink);
+    padding: .8rem 1rem; min-height: 50px;
+    background: var(--white); border: 1px solid var(--gray-100); border-radius: var(--radius);
+    transition: border-color .15s ease, box-shadow .15s ease;
+  }
+  input:focus, textarea:focus { border-color: var(--blue); outline: none; box-shadow: 0 0 0 3px rgba(19, 94, 239, .18); }
+  input:user-invalid, textarea:user-invalid { border-color: #C6362F; }
+  textarea { resize: vertical; }
+  .check { display: flex; gap: .7rem; align-items: flex-start; font-size: var(--step--1); color: var(--gray-600); }
+  .check input { width: 20px; height: 20px; margin-top: .15rem; accent-color: var(--blue); flex: 0 0 auto; }
+  .frm__submit { justify-self: start; }
+  .frm__submit[disabled] { opacity: .6; cursor: progress; }
+  .frm__status { margin: 0; font-weight: 600; }
+  .frm__status[data-state='ok'] { color: #17794A; }
+  .frm__status[data-state='err'] { color: #C6362F; }
+  .frm__status[data-state='sending'] { color: var(--gray-600); font-weight: 500; }
+</style>
+
+<script>
+  document.querySelectorAll<HTMLFormElement>('form[data-form]').forEach((form) => {
+    const status = form.querySelector<HTMLParagraphElement>('.frm__status')!;
+    const btn = form.querySelector<HTMLButtonElement>('.frm__submit')!;
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      if (!form.reportValidity()) return;
+      btn.disabled = true;
+      status.dataset.state = 'sending';
+      status.textContent = status.dataset.sending ?? '';
+      try {
+        const res = await fetch(form.action, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(Object.fromEntries(new FormData(form))),
+        });
+        if (!res.ok) throw new Error(String(res.status));
+        status.dataset.state = 'ok';
+        status.textContent = status.dataset.ok ?? '';
+        form.reset();
+      } catch {
+        status.dataset.state = 'err';
+        status.textContent = status.dataset.err ?? '';
+      } finally {
+        btn.disabled = false;
+      }
+    });
+  });
+</script>
