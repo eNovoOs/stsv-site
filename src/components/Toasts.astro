@@ -1,9 +1,8 @@
 ---
 /**
- * Avis de service en cartes flottantes, comme sur le site d'origine.
- * Corrections apportées : chaque carte est fermable au clavier, l'ensemble
- * passe en bas de l'écran sur mobile pour ne pas masquer le contenu,
- * et rien n'est annoncé de force aux lecteurs d'écran.
+ * Avis de service en cartes flottantes, coin inférieur droit.
+ * Une seule apparition par session, pour tout le site : changer de page ou
+ * de langue ne les fait pas revenir. Chaque carte est fermable au clavier.
  */
 import { notices, banner } from '../data/site';
 import { useTranslations, path, type Locale } from '../i18n/ui';
@@ -13,12 +12,16 @@ const { locale } = Astro.props;
 const t = useTranslations(locale);
 const live = notices.filter((n) => n.active);
 
+/* Clé de session : change automatiquement si un avis est ajouté, retiré ou modifié,
+   pour que les nouveaux avis réapparaissent même si la session est déjà ouverte. */
+const noticeVersion = live.map((n) => n.id).join('|') + '#' + (banner.active ? banner.id : '');
+
 const closeLabel = { fr: 'Fermer cet avis', en: 'Dismiss this notice', es: 'Cerrar este aviso' }[locale];
 const panelLabel = { fr: 'Avis de service', en: 'Service notices', es: 'Avisos de servicio' }[locale];
 ---
 
 {(live.length > 0 || banner.active) && (
-  <aside class="toasts" aria-label={panelLabel}>
+  <aside class="toasts" aria-label={panelLabel} data-version={noticeVersion} hidden>
     {live.map((n) => (
       <article class="toast" data-toast={n.id}>
         <button class="toast__x" type="button" aria-label={closeLabel} data-close={n.id}>
@@ -64,12 +67,13 @@ const panelLabel = { fr: 'Avis de service', en: 'Service notices', es: 'Avisos d
 )}
 
 <style>
-  .toasts {
-    position: fixed; z-index: 90;
-    right: var(--sp-4); top: calc(var(--topbar-h) + var(--header-h) + var(--sp-4));
-    width: min(340px, calc(100vw - 2rem));
+  .toasts { display: none; }
+  .toasts[data-ready] {
     display: grid; gap: var(--sp-3);
-    max-height: calc(100vh - var(--header-h) - var(--topbar-h) - 2rem);
+    position: fixed; z-index: 90;
+    right: var(--sp-5); bottom: var(--sp-5);
+    width: min(340px, calc(100vw - 2rem));
+    max-height: min(70vh, 640px);
     overflow-y: auto; overscroll-behavior: contain;
     pointer-events: none;
   }
@@ -132,33 +136,52 @@ const panelLabel = { fr: 'Avis de service', en: 'Service notices', es: 'Avisos d
 
   /* Sur mobile : en bas, empilé, sans masquer la lecture */
   @media (max-width: 900px) {
-    .toasts {
-      top: auto; bottom: var(--sp-3); right: var(--sp-3); left: var(--sp-3);
+    .toasts[data-ready] {
+      bottom: var(--sp-3); right: var(--sp-3); left: var(--sp-3);
       width: auto; max-height: 60vh;
     }
   }
-  @media print { .toasts { display: none; } }
+  @media print { .toasts[data-ready] { display: none; } }
 </style>
 
 <script>
-  document.querySelectorAll<HTMLButtonElement>('[data-close]').forEach((btn) => {
-    btn.addEventListener('click', () => {
-      const card = btn.closest<HTMLElement>('.toast');
-      if (!card) return;
-      card.hidden = true;
-      try {
-        sessionStorage.setItem('stsv-toast-' + btn.dataset.close, 'off');
-      } catch {
-        /* mode privé : on ignore */
-      }
-    });
-  });
+  /**
+   * Les avis n'apparaissent qu'une fois par session, pour l'ensemble du site :
+   * changer de page ou de langue ne les fait pas revenir. Ils réapparaissent
+   * si le contenu des avis change (nouvelle version) ou à la session suivante.
+   */
+  const panel = document.querySelector<HTMLElement>('.toasts');
 
-  document.querySelectorAll<HTMLElement>('[data-toast]').forEach((card) => {
-    try {
-      if (sessionStorage.getItem('stsv-toast-' + card.dataset.toast) === 'off') card.hidden = true;
-    } catch {
-      /* mode privé : on ignore */
+  if (panel) {
+    const version = panel.dataset.version ?? '';
+    const KEY = 'stsv-notices';
+
+    const store = {
+      get(): string | null {
+        try { return sessionStorage.getItem(KEY); } catch { return null; }
+      },
+      set(v: string) {
+        try { sessionStorage.setItem(KEY, v); } catch { /* navigation privée */ }
+      },
+    };
+
+    const alreadySeen = store.get() === version;
+
+    if (!alreadySeen) {
+      panel.hidden = false;
+      panel.setAttribute('data-ready', '');
+      // Marqué comme vu dès l'affichage : la page suivante ne les remontrera pas.
+      store.set(version);
     }
-  });
+
+    panel.querySelectorAll<HTMLButtonElement>('[data-close]').forEach((btn) => {
+      btn.addEventListener('click', () => {
+        const card = btn.closest<HTMLElement>('.toast');
+        if (!card) return;
+        card.hidden = true;
+        const remaining = panel.querySelectorAll('.toast:not([hidden])').length;
+        if (remaining === 0) panel.hidden = true;
+      });
+    });
+  }
 </script>
