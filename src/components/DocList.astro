@@ -1,58 +1,157 @@
 ---
+/**
+ * Grille de documents avec filtres, reprise de stsv.ca :
+ * catégorie en capitales bleues, titre, bouton de téléchargement.
+ * Le filtrage et la recherche se font côté client, sans dépendance.
+ */
 import { documents, docCategories, type DocCategory } from '../data/site';
-import { useTranslations, type Locale } from '../i18n/ui';
+import { type Locale } from '../i18n/ui';
+
 interface Props { locale: Locale; only?: DocCategory[] }
 const { locale, only } = Astro.props;
-const t = useTranslations(locale);
-const cats = (only ?? (Object.keys(docCategories) as DocCategory[]));
+
+const items = only ? documents.filter((d) => only.includes(d.category)) : documents;
+const cats = [...new Set(items.map((d) => d.category))];
+const showFilters = !only && items.length > 6;
+
+const ui = {
+  fr: { filter: 'Filtrer les documents', search: 'Rechercher par nom…', all: 'Tous les documents',
+        allPdf: 'Tous les PDF', found: 'documents trouvés', none: 'Aucun document trouvé',
+        tryAgain: 'Essayez d’ajuster votre recherche ou vos filtres.', dl: 'Télécharger le PDF' },
+  en: { filter: 'Filter documents', search: 'Search by name…', all: 'All documents',
+        allPdf: 'All PDFs', found: 'documents found', none: 'No document found',
+        tryAgain: 'Try adjusting your search or filters.', dl: 'Download the PDF' },
+  es: { filter: 'Filtrar documentos', search: 'Buscar por nombre…', all: 'Todos los documentos',
+        allPdf: 'Todos los PDF', found: 'documentos encontrados', none: 'Ningún documento encontrado',
+        tryAgain: 'Prueba a ajustar tu búsqueda o tus filtros.', dl: 'Descargar el PDF' },
+}[locale];
 ---
+
 <div class="docs">
-  {cats.map((cat) => {
-    const items = documents.filter((d) => d.category === cat);
-    if (!items.length) return null;
-    return (
-      <section class="docs__group">
-        <h2 class="docs__cat">{docCategories[cat][locale]}</h2>
-        <ul class="docs__list">
-          {items.map((d) => (
-            <li>
-              <a class="doc" href={`/documents/${d.file}`}>
-                <span class="doc__icon mono" aria-hidden="true">PDF</span>
-                <span class="doc__text">
-                  <span class="doc__title">{d.title[locale]}</span>
-                  {d.note && <span class="doc__note">{d.note[locale]}</span>}
-                </span>
-                <span class="doc__action">{t('cta.open')}</span>
-              </a>
-            </li>
-          ))}
-        </ul>
-      </section>
-    );
-  })}
+  {showFilters && (
+    <div class="filters">
+      <div class="filters__top">
+        <h2 class="filters__title">{ui.filter}</h2>
+        <label class="search">
+          <span class="visually-hidden">{ui.search}</span>
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
+          <input type="search" id="doc-search" placeholder={ui.search} autocomplete="off" />
+        </label>
+      </div>
+      <div class="chips" role="group" aria-label={ui.filter}>
+        <button type="button" class="chip is-active" data-cat="all" aria-pressed="true">{ui.all}</button>
+        {cats.map((c) => (
+          <button type="button" class="chip" data-cat={c} aria-pressed="false">{docCategories[c][locale]}</button>
+        ))}
+      </div>
+    </div>
+  )}
+
+  <h2 class="docs__count-title">{ui.allPdf}</h2>
+  <p class="docs__count"><span id="doc-count">{items.length}</span> {ui.found}</p>
+
+  <ul class="docs__grid" id="doc-grid">
+    {items.map((d) => (
+      <li class="doc" data-cat={d.category} data-name={d.title[locale].toLowerCase()}>
+        <p class="doc__cat">{docCategories[d.category][locale]}</p>
+        <h3 class="doc__title">{d.title[locale]}</h3>
+        {d.note && <p class="doc__note">{d.note[locale]}</p>}
+        <a class="btn btn--file doc__dl" href={`/documents/${d.file}`}>
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M12 3v12m0 0 4-4m-4 4-4-4M4 19h16"/></svg>
+          {ui.dl}
+        </a>
+      </li>
+    ))}
+  </ul>
+
+  <p class="docs__empty" id="doc-empty" hidden>
+    <strong>{ui.none}</strong><br />{ui.tryAgain}
+  </p>
 </div>
+
 <style>
-  .docs__group { margin-bottom: var(--sp-7); }
-  .docs__cat { font-size: var(--step-2); margin-bottom: var(--sp-4); }
-  .docs__list { list-style: none; margin: 0; padding: 0; display: grid; gap: var(--sp-3); }
+  .filters {
+    border: 1px solid #E8ECF3; border-radius: 14px; padding: var(--sp-5);
+    margin-bottom: var(--sp-6); background: var(--white);
+  }
+  .filters__top { display: grid; gap: var(--sp-4); margin-bottom: var(--sp-4); }
+  .filters__title { font-size: 1.05rem; margin: 0; }
+  .search { position: relative; display: flex; align-items: center; }
+  .search svg { position: absolute; left: .8rem; color: var(--gray-400); pointer-events: none; }
+  .search input {
+    width: 100%; font: inherit; font-size: .9rem; padding: .7rem .9rem .7rem 2.3rem; min-height: 46px;
+    border: 1px solid #E3E8F0; border-radius: 8px; background: var(--white); color: var(--ink);
+  }
+  .search input:focus { border-color: var(--blue); outline: none; box-shadow: 0 0 0 3px rgba(19,94,239,.15); }
+  @media (min-width: 800px) { .filters__top { grid-template-columns: 1fr 340px; align-items: center; } }
+
+  .chips { display: flex; flex-wrap: wrap; gap: .5rem; }
+  .chip {
+    font: inherit; font-size: .82rem; font-weight: 500; cursor: pointer;
+    padding: .5rem 1rem; min-height: 40px; border-radius: 999px;
+    border: 1px solid #E3E8F0; background: var(--white); color: var(--ink-900);
+  }
+  .chip:hover { border-color: var(--blue); color: var(--blue); }
+  .chip.is-active { background: var(--blue); border-color: var(--blue); color: var(--white); }
+
+  .docs__count-title { font-size: 1.1rem; margin-bottom: .2rem; }
+  .docs__count { font-size: .85rem; color: var(--gray-600); margin-bottom: var(--sp-5); }
+
+  .docs__grid { list-style: none; margin: 0; padding: 0; display: grid; gap: var(--sp-4); }
+  @media (min-width: 700px) { .docs__grid { grid-template-columns: repeat(2, 1fr); } }
+  @media (min-width: 1050px) { .docs__grid { grid-template-columns: repeat(3, 1fr); } }
+
   .doc {
-    display: grid; grid-template-columns: auto 1fr; gap: var(--sp-4); align-items: center;
-    padding: var(--sp-4); background: var(--white); border: 1px solid var(--gray-100);
-    border-radius: var(--radius); text-decoration: none; color: inherit;
-    transition: border-color .15s ease, box-shadow .15s ease;
+    display: flex; flex-direction: column;
+    border: 1px solid #E8ECF3; border-radius: 12px; padding: var(--sp-5);
+    background: var(--white);
   }
-  .doc:hover { border-color: var(--blue); box-shadow: var(--shadow-sm); }
-  .doc__icon {
-    display: inline-flex; align-items: center; justify-content: center;
-    width: 46px; height: 46px; border-radius: 10px;
-    background: var(--gray-air); color: var(--blue); font-size: .7rem; font-weight: 700; letter-spacing: .06em;
+  .doc[hidden] { display: none; }
+  .doc__cat {
+    margin: 0 0 .5rem; font-size: .64rem; font-weight: 700;
+    text-transform: uppercase; letter-spacing: .1em; color: var(--blue);
   }
-  .doc__text { display: grid; gap: .15rem; }
-  .doc__title { font-weight: 600; }
-  .doc__note { font-size: var(--step--1); color: var(--gray-600); }
-  .doc__action { display: none; font-weight: 600; font-size: var(--step--1); color: var(--blue); }
-  @media (min-width: 700px) {
-    .doc { grid-template-columns: auto 1fr auto; }
-    .doc__action { display: block; }
-  }
+  .doc__title { font-size: 1rem; font-weight: 700; margin: 0 0 .4rem; line-height: 1.35; }
+  .doc__note { font-size: .8rem; color: var(--gray-600); margin: 0 0 var(--sp-4); }
+  .doc__dl { margin-top: auto; width: 100%; justify-content: center; }
+
+  .docs__empty { text-align: center; color: var(--gray-600); padding: var(--sp-7) 0; }
 </style>
+
+<script>
+  const grid = document.getElementById('doc-grid');
+  if (grid) {
+    const cards = [...grid.querySelectorAll<HTMLElement>('.doc')];
+    const count = document.getElementById('doc-count');
+    const empty = document.getElementById('doc-empty');
+    const search = document.getElementById('doc-search') as HTMLInputElement | null;
+    const chips = [...document.querySelectorAll<HTMLButtonElement>('.chip')];
+    let cat = 'all';
+
+    const apply = () => {
+      const q = (search?.value ?? '').trim().toLowerCase();
+      let shown = 0;
+      cards.forEach((c) => {
+        const okCat = cat === 'all' || c.dataset.cat === cat;
+        const okText = !q || (c.dataset.name ?? '').includes(q);
+        const show = okCat && okText;
+        c.hidden = !show;
+        if (show) shown++;
+      });
+      if (count) count.textContent = String(shown);
+      if (empty) empty.hidden = shown > 0;
+    };
+
+    chips.forEach((chip) => {
+      chip.addEventListener('click', () => {
+        chips.forEach((c) => {
+          c.classList.toggle('is-active', c === chip);
+          c.setAttribute('aria-pressed', String(c === chip));
+        });
+        cat = chip.dataset.cat ?? 'all';
+        apply();
+      });
+    });
+    search?.addEventListener('input', apply);
+  }
+</script>

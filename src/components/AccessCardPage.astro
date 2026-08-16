@@ -9,7 +9,7 @@ const { locale } = Astro.props;
 const t = useTranslations(locale);
 ---
 <Base locale={locale} page="accessCard" title={c.meta.title[locale]} description={c.meta.description[locale]}>
-  <PageHero eyebrow="Communobus" title={c.h1[locale]} tone="light" />
+  <PageHero title={c.h1[locale]} />
 
   <section class="section">
     <div class="wrap prose">

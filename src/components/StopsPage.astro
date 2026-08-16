@@ -12,7 +12,7 @@ const { locale } = Astro.props;
 const t = useTranslations(locale);
 ---
 <Base locale={locale} page="stops" title={c.meta.title[locale]} description={c.meta.description[locale]}>
-  <PageHero eyebrow={t('nav.stops')} title={c.h1[locale]} lead={c.lead[locale]} />
+  <PageHero title={c.h1[locale]} lead={c.lead[locale]} />
 
   <section class="section">
     <div class="wrap grid grid--3">

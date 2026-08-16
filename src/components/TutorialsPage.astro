@@ -13,7 +13,7 @@ const thumbs = import.meta.glob<{ default: ImageMetadata }>('../assets/tutoriels
 const thumbOf = (id: string) => thumbs[`../assets/tutoriels/${id}.jpg`]?.default;
 ---
 <Base locale={locale} page="tutorials" title={c.meta.title[locale]} description={c.meta.description[locale]}>
-  <PageHero eyebrow={t('nav.tutorials')} title={c.h1[locale]} lead={c.lead[locale]} tone="light" />
+  <PageHero title={c.h1[locale]} lead={c.lead[locale]} />
 
   <section class="section">
     <div class="wrap">

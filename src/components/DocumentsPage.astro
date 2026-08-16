@@ -13,7 +13,7 @@ const count = documents.length;
 const countLabel = { fr: 'documents', en: 'documents', es: 'documentos' }[locale];
 ---
 <Base locale={locale} page="documents" title={c.meta.title[locale]} description={c.meta.description[locale]}>
-  <PageHero eyebrow={`${count} ${countLabel}`} title={c.h1[locale]} lead={c.lead[locale]} tone="light" />
+  <PageHero title={c.h1[locale]} lead={c.lead[locale]} />
   <section class="section">
     <div class="wrap"><DocList locale={locale} /></div>
   </section>

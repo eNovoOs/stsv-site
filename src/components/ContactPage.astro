@@ -11,7 +11,7 @@ const { locale } = Astro.props;
 const t = useTranslations(locale);
 ---
 <Base locale={locale} page="contact" title={c.meta.title[locale]} description={c.meta.description[locale]}>
-  <PageHero eyebrow={t('nav.contact')} title={c.h1[locale]} lead={c.lead[locale]} tone="light" />
+  <PageHero title={c.h1[locale]} lead={c.lead[locale]} />
 
   <section class="section">
     <div class="wrap ct">

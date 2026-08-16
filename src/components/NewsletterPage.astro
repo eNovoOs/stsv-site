@@ -9,7 +9,7 @@ interface Props { locale: Locale }
 const { locale } = Astro.props;
 ---
 <Base locale={locale} page="newsletter" title={c.meta.title[locale]} description={c.meta.description[locale]}>
-  <PageHero eyebrow="Infolettre" title={c.h1[locale]} lead={c.lead[locale]} />
+  <PageHero title={c.h1[locale]} lead={c.lead[locale]} />
 
   <section class="section">
     <div class="wrap nl">

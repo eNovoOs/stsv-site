@@ -13,7 +13,6 @@ const t = useTranslations(locale);
 ---
 <Base locale={locale} page="adapted" title={c.meta.title[locale]} description={c.meta.description[locale]}>
   <PageHero
-    eyebrow={t('nav.adapted')}
     title={c.h1[locale]}
     lead={c.lead[locale]}
     image={hero}
@@ -54,9 +53,14 @@ const t = useTranslations(locale);
     <div class="wrap">
       <h2>{c.bookingTitle[locale]}</h2>
       <p>{c.bookingBody[locale]}</p>
-      <ul class="files">
+      <ul class="file-grid">
         {c.bookingFiles.map((f) => (
-          <li><a class="btn btn--ghost" href={`/documents/${f.file}`}>{f.label[locale]} <span class="mono ext">XLS</span></a></li>
+          <li>
+            <a class="btn btn--file" href={`/documents/${f.file}`}>
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6"/></svg>
+              {f.label[locale]}
+            </a>
+          </li>
         ))}
       </ul>
     </div>
@@ -67,7 +71,7 @@ const t = useTranslations(locale);
       <h2>{c.criteriaTitle[locale]}</h2>
       <p>{c.criteriaLead[locale]}</p>
       <ul class="crit">{c.criteria[locale].map((x) => <li>{x}</li>)}</ul>
-      <a class="btn btn--ghost" href={c.policyUrl} target="_blank" rel="noopener">
+      <a class="btn btn--file" href={c.policyUrl} target="_blank" rel="noopener">
         {c.policyLabel[locale]}<span class="visually-hidden"> {t('a11y.newTab')}</span>
       </a>
     </div>

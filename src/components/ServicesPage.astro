@@ -14,7 +14,6 @@ const lineLabel = { fr: 'Ligne', en: 'Line', es: 'Línea' }[locale];
 ---
 <Base locale={locale} page="services" title={c.meta.title[locale]} description={c.meta.description[locale]}>
   <PageHero
-    eyebrow={t('nav.services')}
     title={c.h1[locale]}
     lead={c.lead[locale]}
     image={hero}
@@ -35,7 +34,10 @@ const lineLabel = { fr: 'Ligne', en: 'Line', es: 'Línea' }[locale];
               <p class="line__route">{l.route[locale]}</p>
               <p class="line__freq">{l.frequency[locale]}</p>
             </div>
-            <a class="btn btn--ghost" href={l.schedule}>{t('cta.schedule')}</a>
+            <a class="btn btn--file" href={l.schedule}>
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M12 3v12m0 0 4-4m-4 4-4-4M4 19h16"/></svg>
+              {t('cta.schedule')}
+            </a>
           </li>
         ))}
       </ul>
@@ -49,7 +51,7 @@ const lineLabel = { fr: 'Ligne', en: 'Line', es: 'Línea' }[locale];
     <div class="wrap">
       <h2 id="tarifs">{c.faresTitle[locale]}</h2>
       {fares.map((f) => <FareTable table={f} locale={locale} />)}
-      <a class="btn btn--ghost" href="/documents/Politique-qualite-de-services.pdf">
+      <a class="btn btn--file" href="/documents/Politique-qualite-de-services.pdf">
         {{ fr: 'Politique de qualité de service', en: 'Service quality policy', es: 'Política de calidad de servicio' }[locale]}
       </a>
     </div>
@@ -61,8 +63,8 @@ const lineLabel = { fr: 'Ligne', en: 'Line', es: 'Línea' }[locale];
       <p>{c.transitBody[locale]}</p>
       <div class="apps">
         <a class="btn btn--primary" href={contact.transitIos} target="_blank" rel="noopener">App Store</a>
-        <a class="btn btn--ghost" href={contact.transitAndroid} target="_blank" rel="noopener">Google Play</a>
-        <a class="btn btn--ghost" href="/documents/Application-Transit.pdf">{t('cta.open')}</a>
+        <a class="btn btn--file" href={contact.transitAndroid} target="_blank" rel="noopener">Google Play</a>
+        <a class="btn btn--file" href="/documents/Application-Transit.pdf">{t('cta.open')}</a>
       </div>
       <p class="mt"><a href={path('reservation', locale)}>{t('nav.reservation')}</a></p>
     </div>
