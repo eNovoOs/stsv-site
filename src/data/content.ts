@@ -740,9 +740,9 @@ export const contactPage = {
 export const newsletterPage = {
   meta: {
     title: {
-      fr: 'Infolettre — STSV',
-      en: 'Newsletter — STSV',
-      es: 'Boletín — STSV',
+      fr: 'Infolettre — Avis de service et horaires — STSV',
+      en: 'Newsletter — Service alerts and schedules — STSV',
+      es: 'Boletín — Avisos de servicio y horarios — STSV',
     },
     description: {
       fr: 'Changements d’horaire, avis de service et nouveaux trajets, directement dans votre boîte courriel.',

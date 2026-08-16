@@ -6,6 +6,7 @@ document.documentElement.lang = LANG;
 
 const I18N = {
   fr: {
+    pageTitle: 'Carte des arrêts — STSV',
     lignes: '🚌 Lignes fixes', poiWalmart: '🛒 Walmarts', poiSante: '🏥 Santé / CLSC',
     poiRes: '🏠 Résidences', poiLoisirs: '🛍️ Loisirs / Autres',
     legend: 'Légende', ref: 'Lieu de référence', sel: 'Arrêt sélectionné', stop: 'Arrêt de bus',
@@ -25,6 +26,7 @@ const I18N = {
     depFrom: 'Heures de départ depuis', arrivalAt: 'arrivée à', ofStops: 'de',
   },
   en: {
+    pageTitle: 'Map of our stops — STSV',
     lignes: '🚌 Fixed lines', poiWalmart: '🛒 Walmarts', poiSante: '🏥 Health / CLSC',
     poiRes: '🏠 Residences', poiLoisirs: '🛍️ Leisure / Other',
     legend: 'Legend', ref: 'Reference place', sel: 'Selected stop', stop: 'Bus stop',
@@ -44,6 +46,7 @@ const I18N = {
     depFrom: 'Departure times from', arrivalAt: 'arriving at', ofStops: 'of',
   },
   es: {
+    pageTitle: 'Mapa de nuestras paradas — STSV',
     lignes: '🚌 Líneas fijas', poiWalmart: '🛒 Walmarts', poiSante: '🏥 Salud / CLSC',
     poiRes: '🏠 Residencias', poiLoisirs: '🛍️ Ocio / Otros',
     legend: 'Leyenda', ref: 'Lugar de referencia', sel: 'Parada seleccionada', stop: 'Parada de autobús',
@@ -64,6 +67,10 @@ const I18N = {
   },
 };
 const L = I18N[LANG] || I18N.fr;
+
+/* Le <title> du document suit la langue : la carte s'ouvre aussi en plein
+   écran dans un onglet, pas seulement dans l'iframe. */
+document.title = L.pageTitle;
 
 /* Libellés statiques */
 document.getElementById('btn-lignes-fixes').textContent = L.lignes;

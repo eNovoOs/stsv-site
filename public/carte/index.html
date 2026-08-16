@@ -19,6 +19,14 @@
 
 * { margin: 0; padding: 0; box-sizing: border-box; }
 body { font-family: Poppins, 'Segoe UI', system-ui, sans-serif; background: white; -webkit-text-size-adjust: 100%; }
+
+/* Visible seulement pour les lecteurs d'écran : retire l'élément du flux
+   sans le retirer de l'arbre d'accessibilité. */
+.sr-only {
+  position: absolute; width: 1px; height: 1px;
+  padding: 0; margin: -1px; overflow: hidden;
+  clip: rect(0 0 0 0); clip-path: inset(50%); white-space: nowrap; border: 0;
+}
 html, body { overflow-x: hidden; }
 button, input { font: inherit; }
 button { touch-action: manipulation; }
@@ -148,6 +156,12 @@ button { touch-action: manipulation; }
 </style>
 </head>
 <body>
+<!--
+  Titre de page pour les lecteurs d'écran. La carte occupe tout l'écran et
+  n'a pas d'en-tête visible : sans ce titre, la page n'a aucun point d'entrée
+  annonçable. Traduit par app.js selon le paramètre ?lang=.
+-->
+<h1 class="sr-only" data-i18n="pageTitle">Carte des arrêts — STSV</h1>
 <div class="main-container">
   <div class="map-wrapper" id="map-wrapper-id">
     <div id="map"></div>
