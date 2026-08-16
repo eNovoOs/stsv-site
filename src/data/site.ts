@@ -18,20 +18,19 @@ export const contact = {
 
 /* ------------------------------------------------------------------
    Sujets du formulaire de contact.
-   `value` est envoyé tel quel dans le champ `subject` du webhook :
-   il ne change pas d'une langue à l'autre, pour que le routage
-   eNovoOs reste stable. Modifier ici si le workflow attend
-   d'autres chaînes exactes.
+   `value` est la clé technique envoyée dans le champ `subject` du webhook.
+   Elle est en anglais et ne change jamais d'une langue à l'autre, pour que
+   le routage eNovoOs reste stable. Seul `label` est traduit.
    ------------------------------------------------------------------ */
 export type ContactSubject = { value: string; label: L10n };
 
 export const contactSubjects: ContactSubject[] = [
   {
-    value: 'ventes',
+    value: 'sales',
     label: { fr: 'Ventes', en: 'Sales', es: 'Ventas' },
   },
   {
-    value: 'soutien',
+    value: 'support',
     label: { fr: 'Soutien', en: 'Support', es: 'Soporte' },
   },
 ];
@@ -53,7 +52,7 @@ export type Notice = {
 
 /** Bandeau rouge en haut de page. Laisser `active: false` s'il n'y a rien. */
 export const banner: Notice = {
-  id: 'rue-main',
+  id: 'main-street-closure',
   active: true,
   tone: 'alert',
   eyebrow: { fr: 'Détour', en: 'Detour', es: 'Desvío' },
@@ -67,7 +66,7 @@ export const banner: Notice = {
 
 export const notices: Notice[] = [
   {
-    id: 'ligne-30',
+    id: 'line-30-new-route',
     active: true,
     tone: 'info',
     eyebrow: { fr: 'Ligne 30', en: 'Line 30', es: 'Línea 30' },
@@ -89,7 +88,7 @@ export const notices: Notice[] = [
     ctaHref: '/documents/Horaires-lignes-10-30-99_du-3-nov-2025_v2.pdf',
   },
   {
-    id: 'sainte-martine',
+    id: 'sainte-martine-service',
     active: true,
     tone: 'info',
     eyebrow: { fr: 'Nouveau service', en: 'New service', es: 'Nuevo servicio' },
@@ -192,7 +191,7 @@ const commonRows = (): FareRow[] => [];
 
 export const fares: FareTable[] = [
   {
-    id: 'titre-a',
+    id: 'fare-a',
     title: {
       fr: 'Déplacement dans la même municipalité — Titre A',
       en: 'Travel within the same municipality — Fare A',
@@ -224,7 +223,7 @@ export const fares: FareTable[] = [
     ],
   },
   {
-    id: 'titre-b',
+    id: 'fare-b',
     title: {
       fr: 'Intermunicipal — Titre B',
       en: 'Intermunicipal — Fare B',

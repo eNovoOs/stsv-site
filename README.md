@@ -70,10 +70,15 @@ l'usager voit un message d'erreur avec le numéro de téléphone plutôt qu'une 
 Charge utile envoyée :
 
 Le champ `subject` du formulaire de contact est une liste déroulante.
-La valeur envoyée est stable quelle que soit la langue (`ventes` ou `soutien`),
-pour que le routage eNovoOs ne dépende pas de la langue de l'usager.
+La valeur envoyée est une clé technique en anglais (`sales` ou `support`),
+identique dans les trois langues, pour que le routage eNovoOs ne dépende
+pas de la langue de l'usager. Seuls les libellés affichés sont traduits.
 Les options se modifient dans `contactSubjects` (`src/data/site.ts`) ;
 toute valeur hors liste est refusée côté serveur.
+
+Convention du projet : toutes les clés techniques (identifiants d'avis,
+catégories de documents, valeurs de formulaire) sont en anglais. Le français
+et l'espagnol n'apparaissent que dans les libellés destinés aux usagers.
 
 ```json
 {
@@ -82,7 +87,7 @@ toute valeur hors liste est refusée côté serveur.
   "name": "…",
   "email": "…",
   "phone": "…",
-  "subject": "ventes",
+  "subject": "sales",
   "message": "…",
   "source": "stsv.ca",
   "receivedAt": "2026-08-14T14:00:00.000Z"

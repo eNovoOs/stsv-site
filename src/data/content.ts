@@ -123,9 +123,9 @@ export const stops = {
     es: 'Encontrar una parada',
   },
   ctaBody: {
-    fr: 'La carte des arrêts est disponible sur le site de réservation. Le numéro d’arrêt affiché est celui à donner lors d’une réservation.',
-    en: 'The stop map is available on the booking site. The stop number shown is the one to give when booking.',
-    es: 'El mapa de paradas está disponible en el sitio de reservas. El número de parada que aparece es el que debes dar al reservar.',
+    fr: 'Cliquez sur un arrêt de la carte pour voir son numéro : c’est celui à donner au moment de réserver, par téléphone, par texto ou en ligne.',
+    en: 'Click a stop on the map to see its number: that is the one to give when booking, by phone, by text or online.',
+    es: 'Haz clic en una parada del mapa para ver su número: es el que debes dar al reservar, por teléfono, por mensaje o en línea.',
   },
 };
 
@@ -487,7 +487,7 @@ export const adapted = {
 /* ---------------------- Grilles tarifaires TA --------------------- */
 export const adaptedFares = [
   {
-    id: 'ta-a',
+    id: 'adapted-fare-a',
     title: {
       fr: 'Déplacement dans la même municipalité — Titre A',
       en: 'Travel within the same municipality — Fare A',
@@ -501,7 +501,7 @@ export const adaptedFares = [
     ],
   },
   {
-    id: 'ta-b',
+    id: 'adapted-fare-b',
     title: {
       fr: 'Intermunicipal — Titre B',
       en: 'Intermunicipal — Fare B',
@@ -515,7 +515,7 @@ export const adaptedFares = [
     ],
   },
   {
-    id: 'ta-hors',
+    id: 'adapted-fare-outside',
     title: {
       fr: 'Transport adapté hors territoire',
       en: 'Out-of-territory adapted transportation',
