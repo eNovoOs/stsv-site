@@ -3,6 +3,7 @@ import '../styles/global.css';
 import Header from '../components/Header.astro';
 import Footer from '../components/Footer.astro';
 import Banner from '../components/Banner.astro';
+import Schema from '../components/Schema.astro';
 import { htmlLang, locales, useTranslations, type Locale, type RouteKey, path } from '../i18n/ui';
 
 interface Props {
@@ -10,11 +11,15 @@ interface Props {
   page: RouteKey;
   title: string;
   description: string;
+  faq?: { question: string; answer: string }[];
+  noindex?: boolean;
 }
 
-const { locale, page, title, description } = Astro.props;
+const { locale, page, title, description, faq, noindex = false } = Astro.props;
 const t = useTranslations(locale);
-const canonical = new URL(path(page, locale), Astro.site ?? 'https://stsv.ca').href;
+const site = Astro.site ?? new URL('https://stsv.ca');
+const canonical = new URL(path(page, locale), site).href;
+const ogImage = new URL(`/brand/og-${locale}.png`, site).href;
 ---
 
 <!doctype html>
@@ -25,31 +30,41 @@ const canonical = new URL(path(page, locale), Astro.site ?? 'https://stsv.ca').h
     <title>{title}</title>
     <meta name="description" content={description} />
     <link rel="canonical" href={canonical} />
+    {noindex && <meta name="robots" content="noindex, follow" />}
+
     {
-      locales.map((l) => (
-        <link
-          rel="alternate"
-          hreflang={htmlLang[l]}
-          href={new URL(path(page, l), Astro.site ?? 'https://stsv.ca').href}
-        />
-      ))
+      !noindex &&
+        locales.map((l) => (
+          <link rel="alternate" hreflang={htmlLang[l]} href={new URL(path(page, l), site).href} />
+        ))
     }
-    <link rel="alternate" hreflang="x-default" href={new URL(path(page, 'fr'), Astro.site ?? 'https://stsv.ca').href} />
+    {!noindex && <link rel="alternate" hreflang="x-default" href={new URL(path(page, 'fr'), site).href} />}
 
     <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="STSV" />
     <meta property="og:title" content={title} />
     <meta property="og:description" content={description} />
     <meta property="og:url" content={canonical} />
     <meta property="og:locale" content={htmlLang[locale].replace('-', '_')} />
-    <meta property="og:image" content={new URL('/brand/logo-stsv.png', Astro.site ?? 'https://stsv.ca').href} />
+    <meta property="og:image" content={ogImage} />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt" content={title} />
     <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={title} />
+    <meta name="twitter:description" content={description} />
+    <meta name="twitter:image" content={ogImage} />
 
-    <link rel="icon" href="/brand/logo-stsv.svg" type="image/svg+xml" />
+    <link rel="icon" href="/favicon.ico" sizes="48x48" />
+    <link rel="icon" href="/brand/symbole-stsv.png" type="image/png" sizes="133x112" />
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+    <link rel="manifest" href="/site.webmanifest" />
     <meta name="theme-color" content="#135EEF" />
 
     <link rel="preload" href="/fonts/poppins-latin-700-normal.woff2" as="font" type="font/woff2" crossorigin />
     <link rel="preload" href="/fonts/poppins-latin-400-normal.woff2" as="font" type="font/woff2" crossorigin />
 
+    <Schema locale={locale} page={page} pageTitle={title} pageDescription={description} faq={faq} />
     <slot name="head" />
   </head>
   <body>

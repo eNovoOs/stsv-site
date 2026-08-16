@@ -1,0 +1,137 @@
+---
+/**
+ * Page 404 unique pour tout le site.
+ * Vercel la sert quelle que soit l'URL, donc la langue ne peut pas venir
+ * de la route : les trois versions sont rendues et un court script affiche
+ * la bonne selon le préfixe du chemin. Sans JavaScript, le français reste visible.
+ */
+import '../styles/global.css';
+import { locales, localeNames, path, type Locale } from '../i18n/ui';
+import { contact } from '../data/site';
+
+const copy: Record<Locale, {
+  code: string; title: string; lead: string; back: string; links: string; call: string;
+}> = {
+  fr: {
+    code: 'Erreur 404',
+    title: 'Cette page n’existe pas',
+    lead: 'Le lien est peut-être périmé, ou l’adresse comporte une erreur. Voici par où continuer.',
+    back: 'Retour à l’accueil',
+    links: 'Pages les plus consultées',
+    call: 'Nous joindre',
+  },
+  en: {
+    code: 'Error 404',
+    title: 'This page does not exist',
+    lead: 'The link may be out of date, or the address contains a typo. Here is where to go next.',
+    back: 'Back to home',
+    links: 'Most visited pages',
+    call: 'Contact us',
+  },
+  es: {
+    code: 'Error 404',
+    title: 'Esta página no existe',
+    lead: 'El enlace puede estar caducado o la dirección tiene un error. Aquí puedes continuar.',
+    back: 'Volver al inicio',
+    links: 'Páginas más consultadas',
+    call: 'Contáctenos',
+  },
+};
+
+const quick = [
+  { key: 'services' as const, label: { fr: 'Description des services', en: 'Description of services', es: 'Descripción de los servicios' } },
+  { key: 'reservation' as const, label: { fr: 'Infos réservation', en: 'Reservation information', es: 'Información de reserva' } },
+  { key: 'adapted' as const, label: { fr: 'Transport adapté', en: 'Adapted transportation', es: 'Transporte adaptado' } },
+  { key: 'documents' as const, label: { fr: 'Documents à consulter', en: 'Documents', es: 'Documentos' } },
+  { key: 'stops' as const, label: { fr: 'Carte de nos arrêts', en: 'Map of our stops', es: 'Mapa de nuestras paradas' } },
+  { key: 'contact' as const, label: { fr: 'Nous joindre', en: 'Contact us', es: 'Contáctenos' } },
+];
+---
+
+<!doctype html>
+<html lang="fr-CA">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>404 — STSV</title>
+    <meta name="robots" content="noindex, follow" />
+    <link rel="icon" href="/favicon.ico" sizes="48x48" />
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+    <meta name="theme-color" content="#135EEF" />
+  </head>
+  <body>
+    <div class="nf">
+      <div class="wrap nf__inner">
+        <a class="nf__logo" href="/"><img src="/brand/logo-stsv.svg" alt="STSV" width="152" height="37" /></a>
+
+        {
+          locales.map((l) => (
+            <section class="nf__block" data-locale={l} hidden={l !== 'fr'} lang={l}>
+              <p class="eyebrow nf__code mono">{copy[l].code}</p>
+              <h1>{copy[l].title}</h1>
+              <p class="nf__lead">{copy[l].lead}</p>
+
+              <div class="nf__cta">
+                <a class="btn btn--primary" href={path('home', l)}>{copy[l].back}</a>
+                <a class="btn btn--ghost mono" href={contact.phoneHref}>{contact.phoneDisplay}</a>
+              </div>
+
+              <h2 class="nf__h2">{copy[l].links}</h2>
+              <ul class="nf__links">
+                {quick.map((q) => (
+                  <li><a href={path(q.key, l)}>{q.label[l]}</a></li>
+                ))}
+              </ul>
+
+              <nav class="nf__lang" aria-label="Langue">
+                {locales.map((other) => (
+                  <button type="button" data-switch={other} class={other === l ? 'is-active' : ''}>
+                    {localeNames[other]}
+                  </button>
+                ))}
+              </nav>
+            </section>
+          ))
+        }
+      </div>
+    </div>
+
+    <style>
+      body { background: var(--gray-air); }
+      .nf { min-height: 100vh; display: flex; align-items: center; padding-block: var(--sp-7); }
+      .nf__inner { width: min(100% - 2.5rem, 780px); }
+      .nf__logo { display: inline-block; margin-bottom: var(--sp-7); }
+      .nf__logo img { width: 132px; height: auto; display: block; }
+      .nf__code { color: var(--blue); }
+      .nf h1 { font-size: var(--step-4); margin-bottom: var(--sp-4); }
+      .nf__lead { font-size: var(--step-1); color: var(--gray-600); max-width: 48ch; }
+      .nf__cta { display: flex; flex-wrap: wrap; gap: var(--sp-3); margin: var(--sp-5) 0 var(--sp-8); }
+      .nf__h2 { font-size: var(--step-0); text-transform: uppercase; letter-spacing: .08em; color: var(--gray-600); margin-bottom: var(--sp-3); }
+      .nf__links { list-style: none; margin: 0 0 var(--sp-7); padding: 0; display: grid; gap: .1rem; }
+      .nf__links a { display: block; padding: .75rem 0; border-bottom: 1px solid var(--gray-100); text-decoration: none; font-weight: 500; color: var(--ink); }
+      .nf__links a:hover { color: var(--blue); padding-left: .35rem; transition: padding-left .15s ease; }
+      .nf__lang { display: flex; gap: .4rem; flex-wrap: wrap; }
+      .nf__lang button {
+        font: inherit; font-size: var(--step--1); cursor: pointer;
+        padding: .45rem .9rem; border-radius: 999px;
+        border: 1px solid var(--gray-100); background: var(--white); color: var(--gray-600);
+      }
+      .nf__lang button:hover { border-color: var(--blue); color: var(--blue); }
+      .nf__lang .is-active { background: var(--blue); border-color: var(--blue); color: var(--white); }
+      @media (min-width: 560px) { .nf__links { grid-template-columns: 1fr 1fr; gap: 0 var(--sp-5); } }
+    </style>
+
+    <script>
+      const blocks = document.querySelectorAll<HTMLElement>('.nf__block');
+      const show = (loc: string) => {
+        blocks.forEach((b) => { b.hidden = b.dataset.locale !== loc; });
+        document.documentElement.lang = loc === 'fr' ? 'fr-CA' : loc === 'en' ? 'en-CA' : 'es';
+      };
+      const seg = location.pathname.split('/').filter(Boolean)[0];
+      show(seg === 'en' || seg === 'es' ? seg : 'fr');
+      document.querySelectorAll<HTMLButtonElement>('[data-switch]').forEach((b) => {
+        b.addEventListener('click', () => show(b.dataset.switch!));
+      });
+    </script>
+  </body>
+</html>

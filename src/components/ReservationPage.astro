@@ -10,8 +10,43 @@ import hero from '../assets/images/hero-communobus.jpg';
 interface Props { locale: Locale }
 const { locale } = Astro.props;
 const t = useTranslations(locale);
+
+const faq = [
+  {
+    question: { fr: 'Comment réserver un Communobus ?', en: 'How do I book a Communobus?', es: '¿Cómo reservar un Communobus?' }[locale],
+    answer: c.methods.map((m) => `${m.title[locale]} : ${m.body[locale]}`).join(' '),
+  },
+  {
+    question: {
+      fr: 'Combien de temps à l’avance faut-il réserver ?',
+      en: 'How far in advance must I book?',
+      es: '¿Con cuánta anticipación hay que reservar?',
+    }[locale],
+    answer: {
+      fr: 'Au moins une heure à l’avance, par téléphone comme par messagerie texte.',
+      en: 'At least one hour ahead, by phone or by text message.',
+      es: 'Al menos con una hora de anticipación, por teléfono o por mensaje de texto.',
+    }[locale],
+  },
+  {
+    question: {
+      fr: 'Quelles informations faut-il fournir pour réserver ?',
+      en: 'What information is needed to book?',
+      es: '¿Qué información hace falta para reservar?',
+    }[locale],
+    answer: c.need[locale].join(' · '),
+  },
+  {
+    question: {
+      fr: 'Quelles sont les heures du service de réservation ?',
+      en: 'What are the reservation service hours?',
+      es: '¿Cuál es el horario del servicio de reservas?',
+    }[locale],
+    answer: c.methods[0].body[locale],
+  },
+];
 ---
-<Base locale={locale} page="reservation" title={c.meta.title[locale]} description={c.meta.description[locale]}>
+<Base locale={locale} page="reservation" title={c.meta.title[locale]} description={c.meta.description[locale]} faq={faq}>
   <PageHero
     eyebrow="Communobus"
     title={c.h1[locale]}
