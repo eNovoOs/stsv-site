@@ -1,0 +1,164 @@
+---
+/**
+ * Avis de service en cartes flottantes, comme sur le site d'origine.
+ * Corrections apportées : chaque carte est fermable au clavier, l'ensemble
+ * passe en bas de l'écran sur mobile pour ne pas masquer le contenu,
+ * et rien n'est annoncé de force aux lecteurs d'écran.
+ */
+import { notices, banner } from '../data/site';
+import { useTranslations, path, type Locale } from '../i18n/ui';
+
+interface Props { locale: Locale }
+const { locale } = Astro.props;
+const t = useTranslations(locale);
+const live = notices.filter((n) => n.active);
+
+const closeLabel = { fr: 'Fermer cet avis', en: 'Dismiss this notice', es: 'Cerrar este aviso' }[locale];
+const panelLabel = { fr: 'Avis de service', en: 'Service notices', es: 'Avisos de servicio' }[locale];
+---
+
+{(live.length > 0 || banner.active) && (
+  <aside class="toasts" aria-label={panelLabel}>
+    {live.map((n) => (
+      <article class="toast" data-toast={n.id}>
+        <button class="toast__x" type="button" aria-label={closeLabel} data-close={n.id}>
+          <svg width="12" height="12" viewBox="0 0 14 14" aria-hidden="true"><path d="M1 1l12 12M13 1L1 13" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+        </button>
+        <div class="toast__head">
+          <span class="toast__icon" aria-hidden="true">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <circle cx="12" cy="10" r="3"></circle>
+              <path d="M12 21s-7-5.5-7-11a7 7 0 1 1 14 0c0 5.5-7 11-7 11z"></path>
+            </svg>
+          </span>
+          <div>
+            <p class="toast__eyebrow">{n.eyebrow[locale]}</p>
+            <h2 class="toast__title">{n.title[locale]}</h2>
+          </div>
+        </div>
+        <p class="toast__body">{n.body[locale]}</p>
+        {n.ctaHref && n.ctaLabel && (
+          <a class="toast__cta" href={n.ctaHref}>
+            {n.ctaLabel[locale]}
+            <svg width="14" height="10" viewBox="0 0 16 12" aria-hidden="true"><path d="M10 1l5 5-5 5M15 6H1" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </a>
+        )}
+      </article>
+    ))}
+
+    <a class="toast toast--news" href={path('newsletter', locale)}>
+      <span class="toast__icon" aria-hidden="true">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <rect x="2" y="4" width="20" height="16" rx="2"></rect><path d="m22 7-10 6L2 7"></path>
+        </svg>
+      </span>
+      <span class="toast__news-text">
+        <strong>{t('newsletter.hook')}</strong>
+        <span>{t('newsletter.cta')}</span>
+      </span>
+      <span class="toast__arrow" aria-hidden="true">
+        <svg width="13" height="10" viewBox="0 0 16 12"><path d="M10 1l5 5-5 5M15 6H1" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </span>
+    </a>
+  </aside>
+)}
+
+<style>
+  .toasts {
+    position: fixed; z-index: 90;
+    right: var(--sp-4); top: calc(var(--topbar-h) + var(--header-h) + var(--sp-4));
+    width: min(340px, calc(100vw - 2rem));
+    display: grid; gap: var(--sp-3);
+    max-height: calc(100vh - var(--header-h) - var(--topbar-h) - 2rem);
+    overflow-y: auto; overscroll-behavior: contain;
+    pointer-events: none;
+  }
+  .toasts > * { pointer-events: auto; }
+
+  .toast {
+    position: relative;
+    background: rgba(255, 255, 255, .97);
+    backdrop-filter: blur(6px);
+    border: 1px solid #E8ECF3; border-radius: 14px;
+    padding: var(--sp-4) var(--sp-4) var(--sp-4);
+    box-shadow: 0 8px 28px rgba(17, 24, 39, .12);
+  }
+  .toast[hidden] { display: none; }
+
+  .toast__x {
+    position: absolute; top: 8px; right: 8px;
+    width: 28px; height: 28px; display: inline-flex; align-items: center; justify-content: center;
+    border: 0; background: none; color: var(--gray-400); cursor: pointer; border-radius: 6px;
+  }
+  .toast__x:hover { color: var(--ink); background: var(--gray-air); }
+
+  .toast__head { display: flex; gap: .7rem; align-items: flex-start; padding-right: 1.2rem; }
+  .toast__icon {
+    flex: 0 0 auto; width: 32px; height: 32px; border-radius: 9px;
+    background: #EEF2FE; color: var(--blue);
+    display: inline-flex; align-items: center; justify-content: center;
+  }
+  .toast__eyebrow {
+    margin: 0 0 .1rem; font-size: .62rem; font-weight: 600;
+    text-transform: uppercase; letter-spacing: .09em; color: var(--gray-500);
+  }
+  .toast__title { margin: 0; font-size: .95rem; font-weight: 700; line-height: 1.25; }
+  .toast__body {
+    margin: .6rem 0 .9rem; font-size: .8rem; line-height: 1.5; color: var(--gray-600); max-width: none;
+  }
+  .toast__cta {
+    display: flex; align-items: center; justify-content: center; gap: .4rem;
+    background: var(--blue); color: var(--white); text-decoration: none;
+    font-size: .8rem; font-weight: 500; padding: .6rem 1rem; border-radius: 8px;
+    transition: background-color .15s ease;
+  }
+  .toast__cta:hover { background: var(--blue-dark); color: var(--white); }
+
+  /* Carte infolettre : liseré cyan/lime, flèche lime */
+  .toast--news {
+    display: flex; align-items: center; gap: .7rem;
+    text-decoration: none; color: inherit; padding: .8rem var(--sp-4);
+    border-bottom: 3px solid var(--cyan);
+  }
+  .toast--news:hover { color: inherit; border-bottom-color: var(--lime); }
+  .toast__news-text { display: grid; gap: .1rem; flex: 1 1 auto; }
+  .toast__news-text strong { font-size: .85rem; }
+  .toast__news-text span { font-size: .72rem; color: var(--gray-600); }
+  .toast__arrow {
+    flex: 0 0 auto; width: 30px; height: 30px; border-radius: 999px;
+    background: var(--lime); color: var(--black);
+    display: inline-flex; align-items: center; justify-content: center;
+  }
+
+  /* Sur mobile : en bas, empilé, sans masquer la lecture */
+  @media (max-width: 900px) {
+    .toasts {
+      top: auto; bottom: var(--sp-3); right: var(--sp-3); left: var(--sp-3);
+      width: auto; max-height: 60vh;
+    }
+  }
+  @media print { .toasts { display: none; } }
+</style>
+
+<script>
+  document.querySelectorAll<HTMLButtonElement>('[data-close]').forEach((btn) => {
+    btn.addEventListener('click', () => {
+      const card = btn.closest<HTMLElement>('.toast');
+      if (!card) return;
+      card.hidden = true;
+      try {
+        sessionStorage.setItem('stsv-toast-' + btn.dataset.close, 'off');
+      } catch {
+        /* mode privé : on ignore */
+      }
+    });
+  });
+
+  document.querySelectorAll<HTMLElement>('[data-toast]').forEach((card) => {
+    try {
+      if (sessionStorage.getItem('stsv-toast-' + card.dataset.toast) === 'off') card.hidden = true;
+    } catch {
+      /* mode privé : on ignore */
+    }
+  });
+</script>

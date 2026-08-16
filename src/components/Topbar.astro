@@ -1,0 +1,88 @@
+---
+/** Bandeau bleu supérieur : slogan à gauche, sélecteur de langue à droite. */
+import { locales, localeNames, path, useTranslations, type Locale, type RouteKey } from '../i18n/ui';
+
+interface Props { locale: Locale; page: RouteKey }
+const { locale, page } = Astro.props;
+const t = useTranslations(locale);
+
+const slogan = {
+  fr: 'Éliminez le stress de vos déplacements, appelez la STSV',
+  en: 'Take the stress out of your commute, call STSV',
+  es: 'Olvídate del estrés de tus traslados, llama a la STSV',
+}[locale];
+---
+
+<div class="topbar">
+  <div class="wrap topbar__inner">
+    <p class="topbar__slogan">{slogan}</p>
+
+    <div class="lang">
+      <button type="button" class="lang__btn" aria-expanded="false" aria-controls="lang-menu">
+        {t('nav.language')}
+        <svg width="10" height="7" viewBox="0 0 12 8" aria-hidden="true"><path d="M1 1.5 6 6.5 11 1.5" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </button>
+      <ul class="lang__menu" id="lang-menu">
+        {locales.map((l) => (
+          <li>
+            <a href={path(page, l)} hreflang={l} aria-current={l === locale ? 'true' : undefined}>
+              {localeNames[l]}
+            </a>
+          </li>
+        ))}
+      </ul>
+    </div>
+  </div>
+</div>
+
+<style>
+  .topbar { background: var(--blue); color: var(--white); }
+  .topbar__inner {
+    display: flex; align-items: center; justify-content: space-between; gap: var(--sp-4);
+    min-height: var(--topbar-h);
+  }
+  .topbar__slogan {
+    margin: 0; font-size: .75rem; font-weight: 600; line-height: 1.3;
+  }
+
+  .lang { position: relative; flex: 0 0 auto; }
+  .lang__btn {
+    display: inline-flex; align-items: center; gap: .4rem;
+    font: inherit; font-size: .75rem; font-weight: 500;
+    color: var(--white); background: none; border: 0; cursor: pointer;
+    padding: .5rem .25rem; min-height: 38px;
+  }
+  .lang__btn:hover { text-decoration: underline; }
+  .lang__menu {
+    position: absolute; right: 0; top: 100%; z-index: 120;
+    list-style: none; margin: 0; padding: .35rem;
+    min-width: 150px; background: var(--white);
+    border: 1px solid var(--gray-100); border-radius: var(--radius);
+    box-shadow: var(--shadow-md); display: none;
+  }
+  .lang[data-open='true'] .lang__menu { display: block; }
+  .lang__menu a {
+    display: block; padding: .55rem .7rem; border-radius: 6px;
+    font-size: .85rem; color: var(--ink); text-decoration: none;
+  }
+  .lang__menu a:hover { background: var(--gray-air); color: var(--blue); }
+  .lang__menu a[aria-current] { font-weight: 600; color: var(--blue); }
+
+  @media (max-width: 640px) {
+    .topbar__slogan { font-size: .7rem; }
+  }
+</style>
+
+<script>
+  const box = document.querySelector<HTMLElement>('.lang');
+  const btn = box?.querySelector('button');
+  const close = () => { if (box) box.dataset.open = 'false'; btn?.setAttribute('aria-expanded', 'false'); };
+  btn?.addEventListener('click', (e) => {
+    e.stopPropagation();
+    const open = box!.dataset.open === 'true';
+    box!.dataset.open = String(!open);
+    btn.setAttribute('aria-expanded', String(!open));
+  });
+  document.addEventListener('click', close);
+  document.addEventListener('keydown', (e) => { if (e.key === 'Escape') close(); });
+</script>

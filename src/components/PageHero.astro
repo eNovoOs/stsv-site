@@ -1,7 +1,7 @@
 ---
+/** En-tête de page interne : titre noir sur fond blanc, comme sur stsv.ca. */
 import { Image } from 'astro:assets';
 import type { ImageMetadata } from 'astro';
-
 interface Props {
   eyebrow?: string;
   title: string;
@@ -10,39 +10,29 @@ interface Props {
   imageAlt?: string;
   tone?: 'blue' | 'light';
 }
-const { eyebrow, title, lead, image, imageAlt = '', tone = 'blue' } = Astro.props;
+const { eyebrow, title, lead, image, imageAlt = '' } = Astro.props;
 ---
-
-<section class={`phero phero--${tone}${image ? ' phero--media' : ''}`}>
-  <div class="wrap phero__grid">
-    <div>
-      {eyebrow && <p class="eyebrow phero__eyebrow">{eyebrow}</p>}
-      <h1>{title}</h1>
-      {lead && <p class="phero__lead">{lead}</p>}
-      <slot name="cta" />
-    </div>
+<section class="phero">
+  <div class="wrap">
     {image && (
       <div class="phero__media">
-        <Image src={image} alt={imageAlt} widths={[520, 760, 1100]} sizes="(min-width: 960px) 45vw, 100vw" loading="eager" />
+        <Image src={image} alt={imageAlt} widths={[800, 1200, 1600]} sizes="(min-width: 1440px) 1380px, 100vw" loading="eager" />
       </div>
     )}
+    {eyebrow && <p class="phero__eyebrow">{eyebrow}</p>}
+    <h1>{title}</h1>
+    {lead && <p class="phero__lead">{lead}</p>}
+    <slot name="cta" />
   </div>
 </section>
-
 <style>
-  .phero--blue { background: var(--blue); color: var(--white); }
-  .phero--blue h1 { color: var(--white); }
-  .phero--blue .phero__eyebrow { color: var(--cyan-on-blue); }
-  .phero--blue .phero__lead { color: rgba(255, 255, 255, 0.92); }
-  .phero--light { background: var(--gray-air); border-bottom: 1px solid var(--gray-100); }
-
-  .phero__grid { display: grid; gap: var(--sp-6); align-items: center; padding-block: var(--sp-7); }
-  .phero h1 { max-width: 18ch; margin-bottom: var(--sp-4); }
-  .phero__lead { font-size: var(--step-1); max-width: 52ch; margin: 0; }
-  .phero__media { border-radius: var(--radius-lg); overflow: hidden; box-shadow: var(--shadow-md); }
-  .phero__media :global(img) { display: block; width: 100%; height: 100%; object-fit: cover; aspect-ratio: 16 / 10; }
-
-  @media (min-width: 960px) {
-    .phero--media .phero__grid { grid-template-columns: 1.1fr 1fr; gap: var(--sp-7); padding-block: var(--sp-8); }
+  .phero { padding-block: var(--sp-6) var(--sp-2); }
+  .phero__media { border-radius: var(--radius-hero); overflow: hidden; margin-bottom: var(--sp-6); }
+  .phero__media :global(img) { display: block; width: 100%; height: 100%; object-fit: cover; aspect-ratio: 21 / 7; }
+  .phero__eyebrow {
+    margin: 0 0 .4rem; font-size: .72rem; font-weight: 600; text-transform: uppercase;
+    letter-spacing: .1em; color: var(--gray-500);
   }
+  .phero h1 { margin-bottom: var(--sp-3); }
+  .phero__lead { font-size: 1.02rem; color: var(--gray-600); max-width: var(--wrap-text); margin: 0; }
 </style>

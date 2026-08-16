@@ -2,212 +2,220 @@
 import { Image } from 'astro:assets';
 import Base from '../layouts/Base.astro';
 import { useTranslations, path, type Locale } from '../i18n/ui';
-import { contact, notices, lines, communobusHours } from '../data/site';
+import { contact, banner } from '../data/site';
 
-import heroImg from '../assets/images/hero-accueil.jpg';
+import heroImg from '../assets/images/hero-valleyfield.jpg';
 import cardLignes from '../assets/images/card-lignes-fixes.jpg';
-import cardCommunobus from '../assets/images/card-communobus.jpg';
 import cardAdapte from '../assets/images/card-transport-adapte.jpg';
+import cardCommunobus from '../assets/images/card-communobus.jpg';
 
 interface Props { locale: Locale }
 const { locale } = Astro.props;
 const t = useTranslations(locale);
-const live = notices.filter((n) => n.active);
 
+/* Trois visuels de service : image + libellé dessous, comme sur stsv.ca */
 const services = [
   {
     img: cardLignes,
-    title: { fr: 'Lignes fixes', en: 'Fixed lines', es: 'Líneas fijas' }[locale],
-    body: {
-      fr: 'Trois lignes relient le centre-ville, le Cégep, l’hôpital, le parc industriel et la gare de Vaudreuil.',
-      en: 'Three lines connect downtown, the Cégep, the hospital, the industrial park and the Vaudreuil station.',
-      es: 'Tres líneas conectan el centro, el Cégep, el hospital, el parque industrial y la estación de Vaudreuil.',
-    }[locale],
+    label: { fr: 'Lignes Fixes', en: 'Fixed Lines', es: 'Líneas Fijas' }[locale],
     href: path('services', locale),
-  },
-  {
-    img: cardCommunobus,
-    title: 'Communobus',
-    body: {
-      fr: `Transport collectif à la demande, sur réservation. ${communobusHours.fr}`,
-      en: `On-demand public transit, by reservation. ${communobusHours.en}`,
-      es: `Transporte colectivo a demanda, con reserva. ${communobusHours.es}`,
+    alt: {
+      fr: 'Un minibus de la ligne 10 stationné au bord de l’eau',
+      en: 'A line 10 minibus parked by the water',
+      es: 'Un minibús de la línea 10 estacionado junto al agua',
     }[locale],
-    href: path('reservation', locale),
   },
   {
     img: cardAdapte,
-    title: { fr: 'Transport adapté', en: 'Adapted transportation', es: 'Transporte adaptado' }[locale],
-    body: {
-      fr: 'Service dédié aux personnes à mobilité réduite, avec formulaires d’admission et guide de l’usager.',
-      en: 'A service for people with reduced mobility, with eligibility forms and a user guide.',
-      es: 'Servicio para personas con movilidad reducida, con formularios de admisión y guía del usuario.',
-    }[locale],
+    label: { fr: 'Transport Adapté', en: 'Adapted Transportation', es: 'Transporte Adaptado' }[locale],
     href: path('adapted', locale),
+    alt: {
+      fr: 'Une chauffeuse accompagne une usagère en fauteuil roulant vers un véhicule adapté',
+      en: 'A driver helps a passenger in a wheelchair board an adapted vehicle',
+      es: 'Una conductora acompaña a una usuaria en silla de ruedas hacia un vehículo adaptado',
+    }[locale],
+  },
+  {
+    img: cardCommunobus,
+    label: 'Communobus',
+    href: path('reservation', locale),
+    alt: {
+      fr: 'Un usager consulte son téléphone à côté d’un véhicule Communobus',
+      en: 'A passenger checks their phone next to a Communobus vehicle',
+      es: 'Un usuario consulta su teléfono junto a un vehículo Communobus',
+    }[locale],
   },
 ];
 
-const heroAlt = {
-  fr: 'Un autobus de la STSV en service à Salaberry-de-Valleyfield',
-  en: 'An STSV bus in service in Salaberry-de-Valleyfield',
-  es: 'Un autobús de la STSV en servicio en Salaberry-de-Valleyfield',
-}[locale];
+/* Liens rapides : pastilles avec icône, reprises du site d'origine */
+const quick = [
+  { label: t('nav.adapted'), href: path('adapted', locale), icon: 'bus' },
+  { label: 'Communobus', href: contact.bookingUrl, icon: 'car', external: true },
+  { label: { fr: 'Documents', en: 'Documents', es: 'Documentos' }[locale], href: path('documents', locale), icon: 'doc' },
+  { label: t('nav.tutorials'), href: path('tutorials', locale), icon: 'play' },
+  { label: t('cta.call'), href: contact.phoneHref, icon: 'phone' },
+];
 
-const lineLabel = { fr: 'Ligne', en: 'Line', es: 'Línea' }[locale];
-const linesTitle = { fr: 'Nos lignes', en: 'Our lines', es: 'Nuestras líneas' }[locale];
-const cardCta = { fr: 'En savoir plus', en: 'Learn more', es: 'Saber más' }[locale];
+const heroAlt = {
+  fr: 'Vue aérienne de Salaberry-de-Valleyfield et de son pont',
+  en: 'Aerial view of Salaberry-de-Valleyfield and its bridge',
+  es: 'Vista aérea de Salaberry-de-Valleyfield y su puente',
+}[locale];
 ---
 
 <Base locale={locale} page="home" title={t('home.title')} description={t('home.description')}>
   <section class="hero">
-    <div class="wrap hero__grid">
-      <div class="hero__text">
-        <p class="eyebrow hero__eyebrow">STSV</p>
-        <h1>{t('home.heroTitle')}</h1>
-        <p class="hero__lead">{t('home.heroLead')}</p>
-        <div class="hero__cta">
-          <a class="btn btn--light" href={contact.bookingUrl} target="_blank" rel="noopener">{t('cta.bookLong')}</a>
-          <a class="btn btn--outline-light" href={path('services', locale)}>{t('cta.fares')}</a>
+    <div class="wrap">
+      <div class="hero__frame">
+        <Image
+          class="hero__img"
+          src={heroImg}
+          alt={heroAlt}
+          widths={[800, 1200, 1600]}
+          sizes="(min-width: 1440px) 1380px, 100vw"
+          loading="eager"
+          fetchpriority="high"
+        />
+        <div class="hero__overlay"></div>
+        <div class="hero__content">
+          <h1>{t('home.heroTitle')}</h1>
+          <p class="hero__lead">{t('home.heroLead')}</p>
+          <div class="hero__cta">
+            <a class="btn btn--glass" href={contact.bookingUrl} target="_blank" rel="noopener">{t('cta.bookLong')}</a>
+            <a class="btn btn--glass" href={path('services', locale)}>{t('cta.fares')}</a>
+          </div>
         </div>
       </div>
-      <div class="hero__media">
-        <Image src={heroImg} alt={heroAlt} widths={[520, 760, 1100]} sizes="(min-width: 960px) 50vw, 100vw" loading="eager" fetchpriority="high" />
-      </div>
+
+      {banner.active && (
+        <p class="hero__alert">
+          <span class="hero__alert-tag">{banner.eyebrow[locale]}</span>
+          {banner.title[locale]}
+        </p>
+      )}
     </div>
   </section>
 
-  {live.length > 0 && (
-    <section class="section">
-      <div class="wrap">
-        <h2 class="visually-hidden">{t('home.noticesTitle')}</h2>
-        <div class="grid grid--2">
-          {live.map((n) => (
-            <article class="card notice">
-              <p class="eyebrow">{n.eyebrow[locale]}</p>
-              <h3>{n.title[locale]}</h3>
-              <p>{n.body[locale]}</p>
-              {n.ctaHref && n.ctaLabel && (
-                <a class="notice__cta" href={n.ctaHref}>
-                  {n.ctaLabel[locale]}
-                  <span class="tag-pdf">{t('a11y.pdf')}</span>
-                </a>
-              )}
-            </article>
-          ))}
-        </div>
-      </div>
-    </section>
-  )}
-
-  <section class="section section--air">
+  <section class="section services">
     <div class="wrap">
-      <p class="eyebrow">{t('home.servicesEyebrow')}</p>
-      <div class="grid grid--3 svc">
+      <h2>{t('home.servicesEyebrow')}</h2>
+      <ul class="services__grid">
         {services.map((s) => (
-          <a class="svc__card" href={s.href}>
-            <span class="svc__media">
-              <Image src={s.img} alt="" widths={[380, 560]} sizes="(min-width: 900px) 33vw, 100vw" loading="lazy" />
-            </span>
-            <span class="svc__body">
-              <h3>{s.title}</h3>
-              <p>{s.body}</p>
-              <span class="svc__more">{cardCta}</span>
-            </span>
-          </a>
-        ))}
-      </div>
-    </div>
-  </section>
-
-  <section class="section">
-    <div class="wrap">
-      <h2>{linesTitle}</h2>
-      <ul class="lines">
-        {lines.map((l) => (
-          <li class="card line">
-            <span class="line__num mono">{lineLabel} {l.number}</span>
-            <div>
-              <h3 class="line__name">{l.name[locale]}</h3>
-              <p class="line__route">{l.route[locale]}</p>
-              <p class="line__freq">{l.frequency[locale]}</p>
-            </div>
-            <a class="btn btn--ghost line__btn" href={l.schedule}>{t('cta.schedule')}</a>
+          <li>
+            <a class="svc" href={s.href}>
+              <span class="svc__media">
+                <Image src={s.img} alt={s.alt} widths={[440, 660]} sizes="(min-width: 900px) 33vw, 100vw" loading="lazy" />
+              </span>
+              <span class="svc__label">{s.label}</span>
+            </a>
           </li>
         ))}
       </ul>
     </div>
   </section>
 
-  <section class="section newsletter">
-    <div class="wrap newsletter__inner">
-      <div>
-        <h2 class="newsletter__title">{t('newsletter.hook')}</h2>
-        <p class="newsletter__lead">{t('newsletter.cta')}</p>
-      </div>
-      <a class="btn btn--lime" href={path('newsletter', locale)}>{t('newsletter.cta')}</a>
+  <section class="section quick">
+    <div class="wrap">
+      <h2>{t('home.quickLinks')}</h2>
+      <ul class="quick__grid">
+        {quick.map((q) => (
+          <li>
+            <a class="pill" href={q.href} {...(q.external ? { target: '_blank', rel: 'noopener' } : {})}>
+              <span class="pill__icon" aria-hidden="true">
+                {q.icon === 'bus' && <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="4" y="3" width="16" height="14" rx="2"/><path d="M4 11h16M7 21v-2M17 21v-2"/><circle cx="8" cy="15" r="1"/><circle cx="16" cy="15" r="1"/></svg>}
+                {q.icon === 'car' && <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 13l1.5-5A2 2 0 0 1 8.4 6.5h7.2a2 2 0 0 1 1.9 1.5L19 13M4 13h16v5H4z"/><circle cx="7.5" cy="18" r="1.5"/><circle cx="16.5" cy="18" r="1.5"/></svg>}
+                {q.icon === 'doc' && <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6"/></svg>}
+                {q.icon === 'play' && <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M10 8.5l6 3.5-6 3.5z" fill="currentColor" stroke="none"/></svg>}
+                {q.icon === 'phone' && <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 16.9v3a2 2 0 0 1-2.2 2 19.8 19.8 0 0 1-8.6-3.1 19.5 19.5 0 0 1-6-6A19.8 19.8 0 0 1 2.1 4.2 2 2 0 0 1 4.1 2h3a2 2 0 0 1 2 1.7c.1.9.4 1.8.7 2.7a2 2 0 0 1-.5 2.1L8.1 9.8a16 16 0 0 0 6 6l1.3-1.2a2 2 0 0 1 2.1-.5c.9.3 1.8.6 2.7.7a2 2 0 0 1 1.8 2.1z"/></svg>}
+              </span>
+              {q.label}
+            </a>
+          </li>
+        ))}
+      </ul>
     </div>
   </section>
 </Base>
 
 <style>
-  .hero { background: var(--blue); color: var(--white); overflow: hidden; }
-  .hero__grid { display: grid; gap: var(--sp-6); align-items: center; padding-block: var(--sp-7); }
-  .hero__eyebrow { color: var(--cyan-on-blue); }
-  .hero h1 { color: var(--white); max-width: 15ch; }
-  .hero__lead { font-size: var(--step-1); max-width: 42ch; color: rgba(255, 255, 255, 0.92); }
-  .hero__cta { display: flex; flex-wrap: wrap; gap: var(--sp-3); margin-top: var(--sp-5); }
-  .hero__media { border-radius: var(--radius-lg); overflow: hidden; box-shadow: var(--shadow-md); }
-  .hero__media :global(img) { display: block; width: 100%; height: 100%; object-fit: cover; aspect-ratio: 16 / 10; }
-  .btn--outline-light { background: transparent; color: var(--white); border-color: rgba(255, 255, 255, 0.55); }
-  .btn--outline-light:hover { background: var(--white); color: var(--blue); border-color: var(--white); }
-  @media (min-width: 960px) {
-    .hero__grid { grid-template-columns: 1fr 1fr; gap: var(--sp-7); padding-block: var(--sp-8); }
+  /* ---------- Hero : image plein cadre, texte centré ---------- */
+  .hero { padding-top: var(--sp-5); }
+  .hero__frame {
+    position: relative; border-radius: var(--radius-hero); overflow: hidden;
+    min-height: 420px; display: grid;
+  }
+  .hero__frame > :global(.hero__img) {
+    grid-area: 1 / 1; width: 100%; height: 100%; object-fit: cover; display: block;
+  }
+  .hero__overlay {
+    grid-area: 1 / 1;
+    background: linear-gradient(180deg, rgba(10, 22, 44, .34) 0%, rgba(10, 22, 44, .52) 100%);
+  }
+  .hero__content {
+    grid-area: 1 / 1; position: relative;
+    display: flex; flex-direction: column; align-items: center; justify-content: center;
+    text-align: center; padding: var(--sp-8) var(--sp-5);
+  }
+  .hero h1 { color: var(--white); margin-bottom: var(--sp-3); max-width: none; text-wrap: balance; }
+  .hero__lead {
+    color: rgba(255, 255, 255, .94); font-size: 1.06rem; margin: 0 0 var(--sp-5); max-width: 62ch;
+  }
+  .hero__cta { display: flex; flex-wrap: wrap; gap: var(--sp-3); justify-content: center; }
+  .btn--glass {
+    background: rgba(255, 255, 255, .18);
+    border: 1px solid rgba(255, 255, 255, .45);
+    color: var(--white);
+    backdrop-filter: blur(6px);
+    min-width: 210px;
+  }
+  .btn--glass:hover { background: rgba(255, 255, 255, .95); color: var(--ink-900); border-color: transparent; }
+
+  .hero__alert {
+    margin: var(--sp-4) 0 0; text-align: center;
+    font-size: .88rem; color: var(--gray-600);
+    display: flex; flex-wrap: wrap; gap: .5rem; align-items: center; justify-content: center;
+  }
+  .hero__alert-tag {
+    font-family: var(--font-mono); font-size: .62rem; font-weight: 500;
+    text-transform: uppercase; letter-spacing: .1em;
+    background: var(--lime); color: var(--black); padding: .15rem .45rem; border-radius: 4px;
   }
 
-  .notice h3 { margin-bottom: var(--sp-2); }
-  .notice p { margin-bottom: var(--sp-4); }
-  .notice__cta { display: inline-flex; align-items: center; gap: .5rem; font-weight: 600; text-decoration: none; }
-  .notice__cta:hover { text-decoration: underline; }
-  .tag-pdf {
-    font-family: var(--font-mono); font-size: .65rem; letter-spacing: .08em;
-    background: var(--gray-100); color: var(--gray-600); padding: .1rem .35rem; border-radius: 4px;
-  }
+  /* ---------- Services : image + libellé dessous ---------- */
+  .services h2, .quick h2 { margin-bottom: var(--sp-5); }
+  .services__grid, .quick__grid { list-style: none; margin: 0; padding: 0; }
+  .services__grid { display: grid; gap: var(--sp-5); }
+  @media (min-width: 760px) { .services__grid { grid-template-columns: repeat(3, 1fr); } }
 
-  .svc__card {
-    display: flex; flex-direction: column; text-decoration: none; color: inherit;
-    background: var(--white); border: 1px solid var(--gray-100); border-radius: var(--radius-lg);
-    overflow: hidden; box-shadow: var(--shadow-sm);
-    transition: transform .18s ease, box-shadow .18s ease;
+  .svc { display: block; text-decoration: none; color: inherit; }
+  .svc__media { display: block; border-radius: var(--radius-lg); overflow: hidden; background: var(--gray-100); }
+  .svc__media :global(img) {
+    display: block; width: 100%; height: 100%; object-fit: cover;
+    aspect-ratio: 443 / 614; transition: transform .4s ease;
   }
-  .svc__card:hover { transform: translateY(-3px); box-shadow: var(--shadow-md); }
-  .svc__media { display: block; }
-  .svc__media :global(img) { display: block; width: 100%; height: 100%; object-fit: cover; aspect-ratio: 4 / 3; }
-  .svc__body { display: block; padding: var(--sp-5); }
-  .svc__card h3 { color: var(--blue); margin-bottom: var(--sp-2); }
-  .svc__card p { margin: 0 0 var(--sp-4); font-size: var(--step--1); color: var(--gray-600); }
-  .svc__more { font-weight: 600; font-size: var(--step--1); color: var(--blue); }
-  .svc__card:hover .svc__more { text-decoration: underline; }
+  .svc:hover .svc__media :global(img) { transform: scale(1.03); }
+  .svc__label {
+    display: block; margin-top: var(--sp-3);
+    font-family: var(--font-display); font-size: 1.05rem; font-weight: 700; color: var(--ink-900);
+  }
+  .svc:hover .svc__label { color: var(--blue); }
 
-  .lines { list-style: none; margin: 0; padding: 0; display: grid; gap: var(--sp-4); }
-  .line { display: grid; gap: var(--sp-3); align-items: start; }
-  .line__num {
-    display: inline-block; background: var(--blue); color: var(--white);
-    font-weight: 700; font-size: var(--step--1); padding: .3rem .7rem; border-radius: 6px; justify-self: start;
+  /* ---------- Liens rapides : pastilles ---------- */
+  .quick__grid { display: grid; gap: var(--sp-3); }
+  @media (min-width: 620px) { .quick__grid { grid-template-columns: repeat(auto-fit, minmax(190px, 1fr)); } }
+  .pill {
+    display: flex; align-items: center; justify-content: center; gap: .5rem;
+    padding: .85rem 1.2rem; min-height: 52px;
+    background: var(--white); border: 1px solid #E3E8F0; border-radius: 10px;
+    font-size: .88rem; font-weight: 500; color: var(--ink-900); text-decoration: none;
+    transition: border-color .15s ease, color .15s ease, box-shadow .15s ease;
   }
-  .line__name { margin-bottom: .3rem; font-size: var(--step-1); }
-  .line__route { margin-bottom: .3rem; font-size: var(--step--1); color: var(--gray-600); }
-  .line__freq { margin: 0; font-size: var(--step--1); }
-  .line__btn { justify-self: start; }
-  @media (min-width: 820px) {
-    .line { grid-template-columns: 130px 1fr auto; align-items: center; gap: var(--sp-5); }
-    .line__btn { justify-self: end; }
-  }
+  .pill:hover { border-color: var(--blue); color: var(--blue); box-shadow: var(--shadow-sm); }
+  .pill__icon { display: inline-flex; color: var(--gray-500); }
+  .pill:hover .pill__icon { color: var(--blue); }
 
-  .newsletter__inner {
-    background: var(--black); color: var(--white); border-radius: var(--radius-lg);
-    padding: var(--sp-6); display: grid; gap: var(--sp-5); align-items: center;
+  @media (min-width: 900px) {
+    .hero__frame { min-height: 500px; }
+    .hero__content { padding-inline: var(--sp-8); }
   }
-  .newsletter__title { color: var(--white); margin-bottom: .3rem; font-size: var(--step-3); }
-  .newsletter__lead { margin: 0; color: rgba(255, 255, 255, 0.85); }
-  @media (min-width: 760px) { .newsletter__inner { grid-template-columns: 1fr auto; padding: var(--sp-7); } }
 </style>
