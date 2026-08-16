@@ -50,18 +50,30 @@ export function validate(body: Payload, kind: Kind) {
   };
 }
 
+/**
+ * Lecture d'une variable d'environnement à l'exécution.
+ *
+ * `process.env` d'abord : sur Vercel, la valeur est lue à chaque requête.
+ * Changer l'URL dans le tableau de bord prend effet immédiatement, sans
+ * redéploiement — utile quand eNovoOs régénère un déclencheur.
+ * `import.meta.env` reste le repli pour `npm run dev` avec un fichier .env.
+ */
+function env(name: string): string | undefined {
+  const runtime = typeof process !== 'undefined' ? process.env?.[name] : undefined;
+  return runtime || (import.meta.env as Record<string, string | undefined>)[name];
+}
+
 function endpointFor(kind: Kind): string | undefined {
-  const env = import.meta.env;
-  const specific = kind === 'contact' ? env.STSV_WEBHOOK_CONTACT : env.STSV_WEBHOOK_NEWSLETTER;
+  const specific = kind === 'contact' ? env('STSV_WEBHOOK_CONTACT') : env('STSV_WEBHOOK_NEWSLETTER');
   // STSV_WEBHOOK_URL sert de repli si une seule URL est configurée.
-  return specific || env.STSV_WEBHOOK_URL;
+  return specific || env('STSV_WEBHOOK_URL');
 }
 
 export async function forward(kind: Kind, data: Payload) {
   const url = endpointFor(kind);
   if (!url) throw new Error(`Webhook non configuré pour « ${kind} »`);
 
-  const secret = import.meta.env.STSV_WEBHOOK_SECRET;
+  const secret = env('STSV_WEBHOOK_SECRET');
 
   // Le workflow ne doit pas rester bloqué si l'API tarde à répondre.
   const controller = new AbortController();
@@ -77,7 +89,12 @@ export async function forward(kind: Kind, data: Payload) {
       body: JSON.stringify({ ...data, source: 'stsv.ca', receivedAt: new Date().toISOString() }),
       signal: controller.signal,
     });
-    if (!res.ok) throw new Error(`webhook ${res.status}`);
+    if (!res.ok) {
+      // La réponse d'eNovoOs est reprise dans le message : elle apparaît dans
+      // les journaux Vercel et dit précisément ce qui a été refusé.
+      const detail = await res.text().catch(() => '');
+      throw new Error(`webhook ${res.status} ${detail.slice(0, 300)}`.trim());
+    }
   } finally {
     clearTimeout(timer);
   }
