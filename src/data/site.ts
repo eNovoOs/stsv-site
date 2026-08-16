@@ -15,6 +15,27 @@ export const contact = {
     'https://play.google.com/store/apps/details?id=com.thetransitapp.droid',
 };
 
+
+/* ------------------------------------------------------------------
+   Sujets du formulaire de contact.
+   `value` est envoyé tel quel dans le champ `subject` du webhook :
+   il ne change pas d'une langue à l'autre, pour que le routage
+   eNovoOs reste stable. Modifier ici si le workflow attend
+   d'autres chaînes exactes.
+   ------------------------------------------------------------------ */
+export type ContactSubject = { value: string; label: L10n };
+
+export const contactSubjects: ContactSubject[] = [
+  {
+    value: 'ventes',
+    label: { fr: 'Ventes', en: 'Sales', es: 'Ventas' },
+  },
+  {
+    value: 'soutien',
+    label: { fr: 'Soutien', en: 'Support', es: 'Soporte' },
+  },
+];
+
 /* ------------------------------------------------------------------
    Avis de service — modifier ici pour changer la bannière et les cartes
    Mettre `active: false` pour retirer un avis sans le supprimer.

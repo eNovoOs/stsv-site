@@ -69,6 +69,12 @@ l'usager voit un message d'erreur avec le numéro de téléphone plutôt qu'une 
 
 Charge utile envoyée :
 
+Le champ `subject` du formulaire de contact est une liste déroulante.
+La valeur envoyée est stable quelle que soit la langue (`ventes` ou `soutien`),
+pour que le routage eNovoOs ne dépende pas de la langue de l'usager.
+Les options se modifient dans `contactSubjects` (`src/data/site.ts`) ;
+toute valeur hors liste est refusée côté serveur.
+
 ```json
 {
   "kind": "contact",
@@ -76,7 +82,7 @@ Charge utile envoyée :
   "name": "…",
   "email": "…",
   "phone": "…",
-  "subject": "…",
+  "subject": "ventes",
   "message": "…",
   "source": "stsv.ca",
   "receivedAt": "2026-08-14T14:00:00.000Z"

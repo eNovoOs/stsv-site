@@ -7,7 +7,12 @@
  *   STSV_WEBHOOK_NEWSLETTER  → formulaire « Infolettre »
  *   STSV_WEBHOOK_SECRET      → optionnel, en-tête X-STSV-Signature
  */
+import { contactSubjects } from '../data/site';
+
 export type Kind = 'contact' | 'newsletter';
+
+/** Sujets acceptés : on refuse tout ce qui n'est pas dans la liste. */
+const SUBJECTS = contactSubjects.map((s) => s.value);
 export type Payload = Record<string, unknown>;
 
 const MAX = { name: 120, email: 160, phone: 40, subject: 160, message: 4000 };
@@ -37,7 +42,7 @@ export function validate(body: Payload, kind: Kind) {
 
   const subject = clean(body.subject, MAX.subject);
   const message = clean(body.message, MAX.message);
-  if (!subject || !message) return { ok: false as const, reason: 'invalid' };
+  if (!SUBJECTS.includes(subject) || !message) return { ok: false as const, reason: 'invalid' };
 
   return {
     ok: true as const,
