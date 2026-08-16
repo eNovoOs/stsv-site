@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Carte des arrêts — STSV</title>
+<meta name="robots" content="noindex">
+
+<link href='https://api.mapbox.com/mapbox-gl-js/v3.1.2/mapbox-gl.css' rel='stylesheet' />
+<script src='https://api.mapbox.com/mapbox-gl-js/v3.1.2/mapbox-gl.js'></script>
+<link rel="stylesheet" href="https://api.mapbox.com/mapbox-gl-js/plugins/mapbox-gl-geocoder/v5.0.0/mapbox-gl-geocoder.css">
+<script src="https://api.mapbox.com/mapbox-gl-js/plugins/mapbox-gl-geocoder/v5.0.0/mapbox-gl-geocoder.min.js"></script>
+
+<style>
+@font-face{font-family:Poppins;font-style:normal;font-weight:400;font-display:swap;src:url(/fonts/poppins-latin-400-normal.woff2) format('woff2')}
+@font-face{font-family:Poppins;font-style:normal;font-weight:500;font-display:swap;src:url(/fonts/poppins-latin-500-normal.woff2) format('woff2')}
+@font-face{font-family:Poppins;font-style:normal;font-weight:600;font-display:swap;src:url(/fonts/poppins-latin-600-normal.woff2) format('woff2')}
+@font-face{font-family:Poppins;font-style:normal;font-weight:700;font-display:swap;src:url(/fonts/poppins-latin-700-normal.woff2) format('woff2')}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body { font-family: Poppins, 'Segoe UI', system-ui, sans-serif; background: white; -webkit-text-size-adjust: 100%; }
+html, body { overflow-x: hidden; }
+button, input { font: inherit; }
+button { touch-action: manipulation; }
+
+.main-container { display: flex; flex-direction: column; height: 100vh; height: 100svh; min-height: 560px !important; width: 100%; position: relative; isolation: isolate; }
+.map-wrapper { position: relative; flex-grow: 1; width: 100% !important; height: 100% !important; min-height: 460px; background: #e5e5e5; }
+#map { position: absolute; top: 0; bottom: 0; left: 0; right: 0; width: 100%; height: 100%; }
+
+.result-box { position: absolute; top: 140px; left: 20px; background: white; padding: 22px 16px 16px 16px; border-radius: 12px; box-shadow: 0 8px 30px rgba(0,0,0,0.2); width: 320px; max-height: 400px; overflow-y: auto; overscroll-behavior: contain; z-index: 120; display: none; border-left: 6px solid #135EEF; }
+.close-result { position: absolute; top: 10px; right: 10px; width: 32px; height: 32px; background: #f0f0f0; border: 0; border-radius: 50%; display: flex; align-items: center; justify-content: center; cursor: pointer; font-weight: bold; color: #666; font-size: 16px; transition: 0.2s; z-index: 130; }
+.close-result:hover { background: #e0e0e0; color: #000; }
+.result-box::-webkit-scrollbar { width: 6px; }
+.result-box::-webkit-scrollbar-thumb { background: #ddd; border-radius: 10px; }
+.result-box.show { display: block; animation: slideIn 0.3s ease; }
+
+.poi-option-item { padding: 10px; border-bottom: 1px solid #f5f5f5; cursor: pointer; transition: background 0.2s; }
+.poi-option-item:hover { background: #f9f9f9; }
+.poi-option-item strong { display: block; color: #333; font-size: 13px; }
+.poi-option-item span { color: #999; font-size: 11px; }
+
+.map-legend { position: absolute; bottom: 20px; left: 20px; background: rgba(255,255,255,0.95); padding: 10px 14px; border-radius: 10px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); z-index: 10; font-size: 11px; border: 1px solid rgba(0,0,0,0.05); line-height: 1.5; transition: opacity 0.2s ease, transform 0.2s ease; }
+.legend-item { display: flex; align-items: center; gap: 8px; margin-bottom: 3px; }
+.dot { width: 10px; height: 10px; border-radius: 50%; display: inline-block; border: 1.5px solid white; }
+
+.geocoder-container { position: absolute; top: 20px; left: 20px; z-index: 110; width: fit-content; max-width: calc(100vw - 40px); }
+.poi-container { margin-top: 10px; display: flex; gap: 8px; overflow-x: auto; padding: 5px; scrollbar-width: none; -webkit-overflow-scrolling: touch; }
+.poi-container::after { content: ''; padding-right: 15px; }
+.poi-container::-webkit-scrollbar { display: none; }
+.poi-btn { background: white; border: 1px solid #ddd; padding: 8px 15px; border-radius: 20px; font-size: 12px; white-space: nowrap; cursor: pointer; box-shadow: 0 2px 5px rgba(0,0,0,0.1); display: flex; align-items: center; gap: 6px; transition: 0.2s; font-weight: 500; flex-shrink: 0; }
+.poi-btn:hover { background: #f0f7ff; border-color: #135EEF; }
+.poi-btn:focus-visible, .close-result:focus-visible, .ligne-dir-tab:focus-visible, .ligne-clear-btn:focus-visible, .ligne-reopen-btn:focus-visible, .horaires-tab:focus-visible, .stops-toggle:focus-visible { outline: 3px solid rgba(19,94,239,0.4); outline-offset: 2px; }
+.poi-btn.lignes-btn { background: #135EEF; color: white; border-color: transparent; box-shadow: 0 2px 8px rgba(19,94,239,0.35); font-weight: 600; }
+.poi-btn.lignes-btn:hover { background: #0B3FB4; border-color: transparent; }
+.poi-btn.lignes-btn.active { box-shadow: 0 0 0 3px rgba(19,94,239,0.25), 0 2px 8px rgba(19,94,239,0.35); }
+
+.ligne-card { display: flex; align-items: center; gap: 12px; padding: 12px 10px; border-radius: 10px; border: 1px solid #eee; margin-bottom: 8px; cursor: pointer; transition: 0.2s; background: white; }
+.ligne-card:hover { background: #f9fbff; border-color: #135EEF; transform: translateY(-1px); }
+.ligne-card.disabled { opacity: 0.55; cursor: not-allowed; }
+.ligne-card.disabled:hover { background: white; border-color: #eee; transform: none; }
+.ligne-badge { width: 44px; height: 44px; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; font-weight: 700; font-size: 14px; box-shadow: 0 2px 6px rgba(0,0,0,0.2); flex-shrink: 0; }
+.ligne-info strong { display: block; font-size: 13px; color: #222; }
+.ligne-info span { font-size: 11px; color: #777; }
+.result-box.ligne-mode { border-left-color: #135EEF; border-top-color: #135EEF; }
+
+.ligne-dir-tabs { display: flex; gap: 6px; margin-top: 4px; }
+.ligne-dir-tab { flex: 1; padding: 9px 10px; border-radius: 8px; border: 1px solid #ddd; background: white; font-size: 11px; font-weight: 600; cursor: pointer; transition: 0.15s; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.ligne-dir-tab:hover { transform: translateY(-1px); box-shadow: 0 2px 5px rgba(0,0,0,0.08); }
+
+.ligne-clear-btn { display: inline-flex; align-items: center; gap: 6px; margin-top: 10px; padding: 9px 14px; border-radius: 20px; background: #fff; border: 1px solid #135EEF; color: #135EEF; font-weight: 600; font-size: 12px; cursor: pointer; transition: 0.2s; }
+.ligne-clear-btn:hover { background: #135EEF; color: white; }
+.ligne-actions { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 8px; }
+.ligne-actions .ligne-clear-btn { margin-top: 0; }
+.ligne-reopen-btn { display: none; position: absolute; left: 50%; bottom: 18px; transform: translateX(-50%); z-index: 105; align-items: center; gap: 8px; min-height: 44px; padding: 10px 16px; border: 1px solid rgba(0,0,0,0.08); border-radius: 999px; background: rgba(255,255,255,0.96); color: #1f2937; box-shadow: 0 8px 24px rgba(0,0,0,0.18); font-size: 13px; font-weight: 600; cursor: pointer; }
+.ligne-reopen-btn.show { display: inline-flex; }
+
+.mapboxgl-ctrl-geocoder { min-width: 300px; width: 100%; font-family: Poppins, sans-serif; }
+.mapboxgl-ctrl-bottom-right { bottom: 14px; right: 14px; }
+@keyframes slideIn { from { opacity: 0; transform: translateY(-10px); } to { opacity: 1; transform: translateY(0); } }
+
+.horaires-section { background: #F6F9FB; border-top: 1px solid #E8ECF3; padding: 28px 20px; animation: slideIn 0.3s ease; }
+.horaires-inner { max-width: 1000px; margin: 0 auto; }
+.horaires-header { display: flex; align-items: center; gap: 12px; margin-bottom: 16px; flex-wrap: wrap; }
+.horaires-header .ligne-badge { width: 44px; height: 44px; font-size: 16px; }
+.horaires-title h3 { font-size: 17px; color: #111827; margin: 0; line-height: 1.25; }
+.horaires-title small { font-size: 11px; color: #777; display: block; margin-top: 2px; }
+.horaires-tabs { display: flex; gap: 8px; margin-left: auto; }
+.horaires-tab { padding: 10px 16px; border-radius: 20px; border: 1px solid #ddd; background: white; font-size: 12px; font-weight: 600; cursor: pointer; min-height: 40px; transition: 0.15s; }
+.horaires-tab:hover { border-color: #999; }
+.horaires-tab.active { background: #135EEF; color: white; border-color: #135EEF; }
+.horaires-tab.disabled { opacity: 0.4; cursor: not-allowed; }
+.horaires-summary { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-bottom: 12px; }
+.horaires-stat { background: white; border: 1px solid #eaeaea; border-radius: 10px; padding: 12px; text-align: center; }
+.horaires-stat-label { font-size: 10px; color: #999; text-transform: uppercase; letter-spacing: 0.5px; }
+.horaires-stat-value { font-size: 18px; color: #111827; font-weight: 700; margin-top: 4px; font-variant-numeric: tabular-nums; }
+.horaires-departures { margin-top: 10px; display: grid; grid-template-columns: repeat(auto-fill, minmax(70px, 1fr)); gap: 6px; }
+.horaires-time { background: white; border: 1px solid #e6e6e6; border-radius: 6px; padding: 8px 6px; text-align: center; font-size: 13px; font-weight: 600; color: #333; font-variant-numeric: tabular-nums; }
+.horaires-empty { background: #fff; border: 1px dashed #d0d0d0; padding: 18px; text-align: center; border-radius: 10px; color: #888; font-size: 12px; font-style: italic; }
+.horaires-note { background: #FFF8E1; border-left: 3px solid #FFC107; padding: 10px 12px; border-radius: 4px; font-size: 12px; color: #5D4037; margin-bottom: 12px; }
+
+@media (max-width: 768px) {
+  .geocoder-container { width: calc(100% - 24px); max-width: none; left: 12px; top: 12px; }
+  .mapboxgl-ctrl-geocoder { min-width: 100%; font-size: 14px; }
+  .result-box { top: auto; bottom: max(8px, env(safe-area-inset-bottom)); left: 8px; right: 8px; width: auto; max-width: none; max-height: min(42svh, 320px); padding: 18px 14px 12px 14px; border-left: none; border-top: 4px solid #135EEF; border-radius: 14px; box-shadow: 0 -6px 24px rgba(0,0,0,0.18); }
+  .result-box.ligne-mode { border-top-color: #135EEF; max-height: min(34svh, 260px); }
+  .result-box.ligne-mode.ligne-details-open { max-height: min(50svh, 390px); }
+  .result-box::before { content: ''; display: block; width: 40px; height: 4px; background: #d8d8d8; border-radius: 2px; margin: -4px auto 8px; }
+  .close-result { width: 36px; height: 36px; font-size: 18px; top: 8px; right: 8px; }
+  body.map-panel-open .map-legend, body.line-panel-collapsed .map-legend { opacity: 0; pointer-events: none; transform: translateY(8px); }
+  .map-legend { bottom: 12px; left: 12px; padding: 8px 12px; font-size: 10px; }
+  .main-container { min-height: 480px !important; }
+  .poi-btn { padding: 10px 14px; font-size: 13px; min-height: 40px; }
+  .poi-container { gap: 6px; padding: 4px 0; }
+  .ligne-dir-tab { padding: 11px 8px; font-size: 12px; min-height: 44px; }
+  .ligne-clear-btn { padding: 12px 16px; min-height: 44px; }
+  .ligne-card { padding: 14px 10px; }
+  .ligne-badge { width: 48px; height: 48px; font-size: 15px; }
+  .ligne-actions { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+  .ligne-actions .ligne-clear-btn { justify-content: center; width: 100%; }
+  .ligne-actions .ligne-clear-btn:only-child { grid-column: 1 / -1; }
+  .ligne-map-toggle { background: #111827; border-color: #111827; color: #fff; }
+  .ligne-map-toggle:hover { background: #000; color: #fff; }
+  .ligne-reopen-btn { bottom: max(12px, env(safe-area-inset-bottom)); max-width: calc(100% - 24px); }
+  .stops-toggle { display: flex; align-items: center; justify-content: space-between; width: 100%; padding: 12px 14px; min-height: 44px; background: #f4f6f8; border: 1px solid #e0e4e8; border-radius: 10px; cursor: pointer; font-size: 12px; font-weight: 600; color: #444; margin-top: 12px; }
+  .stops-toggle:hover { border-color: #135EEF; }
+  .stops-toggle-arrow { transition: transform 0.2s; }
+  .stops-toggle.open .stops-toggle-arrow { transform: rotate(180deg); }
+  .ligne-mobile-details { border-top: 1px solid #eef1f4; margin-top: 10px; padding-top: 10px; }
+  .horaires-section { padding: 18px 14px; }
+  .horaires-header .ligne-badge { width: 40px; height: 40px; font-size: 14px; }
+  .horaires-title h3 { font-size: 15px; }
+  .horaires-tabs { width: 100%; margin-left: 0; margin-top: 10px; }
+  .horaires-tab { flex: 1; }
+  .horaires-summary { grid-template-columns: 1fr 1fr; gap: 8px; }
+  .horaires-summary > :nth-child(3) { grid-column: 1 / -1; }
+  .horaires-stat-value { font-size: 16px; }
+  .horaires-departures { grid-template-columns: repeat(auto-fill, minmax(64px, 1fr)); }
+  body.map-panel-open .mapboxgl-ctrl-bottom-right { display: none; }
+}
+@media (max-width: 420px) {
+  .poi-btn { padding: 9px 12px; font-size: 12px; }
+  .horaires-summary { grid-template-columns: 1fr; }
+  .horaires-summary > :nth-child(3) { grid-column: auto; }
+  .result-box { max-height: min(44svh, 340px); }
+  .result-box.ligne-mode { max-height: min(36svh, 270px); }
+  .result-box.ligne-mode.ligne-details-open { max-height: min(54svh, 400px); }
+}
+</style>
+</head>
+<body>
+<div class="main-container">
+  <div class="map-wrapper" id="map-wrapper-id">
+    <div id="map"></div>
+    <div class="geocoder-container">
+      <div id="geocoder"></div>
+      <div class="poi-container">
+        <button class="poi-btn lignes-btn" id="btn-lignes-fixes" type="button" onclick="mostrarLignesFixes()"></button>
+        <button class="poi-btn" type="button" onclick="mostrarOpcionesPOI('Walmart')" data-i18n="poiWalmart"></button>
+        <button class="poi-btn" type="button" onclick="mostrarOpcionesPOI('Santé')" data-i18n="poiSante"></button>
+        <button class="poi-btn" type="button" onclick="mostrarOpcionesPOI('Résidences')" data-i18n="poiRes"></button>
+        <button class="poi-btn" type="button" onclick="mostrarOpcionesPOI('Loisirs')" data-i18n="poiLoisirs"></button>
+      </div>
+    </div>
+    <div class="map-legend">
+      <div style="font-weight:600; margin-bottom:5px; color:#111827;" id="lg-title"></div>
+      <div class="legend-item"><span class="dot" style="background:#135EEF;"></span> <span id="lg-ref"></span></div>
+      <div class="legend-item"><span class="dot" style="background:#D50000;"></span> <span id="lg-sel"></span></div>
+      <div class="legend-item"><span class="dot" style="background:#FFC107;"></span> <span id="lg-stop"></span></div>
+      <div class="legend-item" id="legend-ligne" style="display:none;"><span class="dot" id="legend-ligne-dot" style="background:#135EEF;"></span> <span id="legend-ligne-label"></span></div>
+    </div>
+    <div id="result-box" class="result-box">
+      <button class="close-result" type="button" onclick="limpiarBusqueda()" id="btn-close-panel">✕</button>
+      <div id="result-content"></div>
+    </div>
+    <button id="ligne-reopen-btn" class="ligne-reopen-btn" type="button" onclick="showLignePanelFromMap()">
+      ↑ <span id="ligne-reopen-label"></span>
+    </button>
+  </div>
+</div>
+<section id="horaires-section" class="horaires-section" style="display:none;" aria-live="polite">
+  <div class="horaires-inner" id="horaires-inner"></div>
+</section>
+<script src="/carte/data.js"></script>
+<script src="/carte/app.js"></script>
+</body>
+</html>

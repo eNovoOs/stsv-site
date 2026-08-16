@@ -1,20 +1,59 @@
 ---
 import Base from '../layouts/Base.astro';
 import PageHero from './PageHero.astro';
-import { useTranslations, type Locale } from '../i18n/ui';
+import { useTranslations, path, type Locale } from '../i18n/ui';
 import { contact } from '../data/site';
 import { stops as c } from '../data/content';
-import illus from '../assets/images/illus-carte-arrets.png';
-import { Image } from 'astro:assets';
 
 interface Props { locale: Locale }
 const { locale } = Astro.props;
 const t = useTranslations(locale);
+
+const mapTitle = {
+  fr: 'Carte interactive des arrêts',
+  en: 'Interactive stop map',
+  es: 'Mapa interactivo de paradas',
+}[locale];
+
+const mapHint = {
+  fr: 'Cherchez une adresse ou un lieu, affichez une ligne fixe et son horaire, ou cliquez sur un arrêt pour voir son numéro — c’est celui à donner lors d’une réservation.',
+  en: 'Search an address or a place, display a fixed line and its schedule, or click a stop to see its number — that is the one to give when booking.',
+  es: 'Busca una dirección o un lugar, muestra una línea fija y su horario, o haz clic en una parada para ver su número — es el que debes dar al reservar.',
+}[locale];
+
+const openFull = {
+  fr: 'Ouvrir la carte en plein écran',
+  en: 'Open the map full screen',
+  es: 'Abrir el mapa a pantalla completa',
+}[locale];
 ---
+
 <Base locale={locale} page="stops" title={c.meta.title[locale]} description={c.meta.description[locale]}>
   <PageHero title={c.h1[locale]} lead={c.lead[locale]} />
 
-  <section class="section">
+  <section class="section map-section">
+    <div class="wrap">
+      <h2 class="visually-hidden">{mapTitle}</h2>
+      <p class="map-hint">{mapHint}</p>
+      <div class="map-frame">
+        <iframe
+          src={`/carte/?lang=${locale}`}
+          title={mapTitle}
+          loading="lazy"
+          allow="geolocation"
+          referrerpolicy="no-referrer-when-downgrade"
+        ></iframe>
+      </div>
+      <p class="map-full">
+        <a href={`/carte/?lang=${locale}`} target="_blank" rel="noopener">
+          {openFull}
+          <span class="visually-hidden"> {t('a11y.newTab')}</span>
+        </a>
+      </p>
+    </div>
+  </section>
+
+  <section class="section section--air">
     <div class="wrap grid grid--3">
       {c.features.map((f) => (
         <article class="card">
@@ -25,21 +64,28 @@ const t = useTranslations(locale);
     </div>
   </section>
 
-  <section class="section section--air">
-    <div class="wrap cta2">
-      <div>
-        <h2>{c.ctaTitle[locale]}</h2>
-        <p>{c.ctaBody[locale]}</p>
+  <section class="section">
+    <div class="wrap">
+      <h2>{c.ctaTitle[locale]}</h2>
+      <p>{c.ctaBody[locale]}</p>
+      <div class="cta-row">
         <a class="btn btn--primary" href={contact.bookingUrl} target="_blank" rel="noopener">{t('cta.bookLong')}</a>
+        <a class="btn btn--ghost" href={path('reservation', locale)}>{t('nav.reservation')}</a>
       </div>
-      <Image src={illus} alt="" widths={[280, 420]} sizes="(min-width: 800px) 30vw, 60vw" loading="lazy" />
     </div>
   </section>
 </Base>
+
 <style>
+  .map-hint { max-width: var(--wrap-text); color: var(--gray-600); font-size: .95rem; margin-bottom: var(--sp-4); }
+  .map-frame {
+    border: 1px solid #E8ECF3; border-radius: var(--radius-lg); overflow: hidden;
+    box-shadow: var(--shadow-sm); background: var(--gray-air);
+  }
+  .map-frame iframe { display: block; width: 100%; height: min(78vh, 820px); min-height: 560px; border: 0; }
+  .map-full { margin-top: var(--sp-3); font-size: .88rem; }
   .feat__title { font-size: var(--step-1); margin-bottom: var(--sp-2); }
   .card p { margin: 0; color: var(--gray-600); font-size: var(--step--1); }
-  .cta2 { display: grid; gap: var(--sp-6); align-items: center; }
-  .cta2 :global(img) { justify-self: center; max-width: 320px; height: auto; }
-  @media (min-width: 800px) { .cta2 { grid-template-columns: 1.4fr 1fr; } }
+  .cta-row { display: flex; flex-wrap: wrap; gap: var(--sp-3); margin-top: var(--sp-4); }
+  @media (max-width: 700px) { .map-frame iframe { height: 74vh; min-height: 480px; } }
 </style>
