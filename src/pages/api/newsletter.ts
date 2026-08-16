@@ -19,7 +19,7 @@ export const POST: APIRoute = async ({ request }) => {
   }
 
   try {
-    await forward(result.data);
+    await forward('newsletter', result.data);
   } catch (err) {
     console.error('[newsletter]', err);
     return new Response(JSON.stringify({ error: 'upstream' }), { status: 502 });

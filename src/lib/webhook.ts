@@ -1,7 +1,13 @@
 /**
- * Envoi des soumissions de formulaire vers le webhook eNovoOs.
- * Configurer STSV_WEBHOOK_URL (et STSV_WEBHOOK_SECRET si requis) dans Vercel.
+ * Envoi des soumissions de formulaire vers les webhooks eNovoOs.
+ *
+ * Chaque formulaire a sa propre URL. Les valeurs sont des variables
+ * d'environnement Vercel — elles ne sont jamais dans le dépôt :
+ *   STSV_WEBHOOK_CONTACT     → formulaire « Nous joindre »
+ *   STSV_WEBHOOK_NEWSLETTER  → formulaire « Infolettre »
+ *   STSV_WEBHOOK_SECRET      → optionnel, en-tête X-STSV-Signature
  */
+export type Kind = 'contact' | 'newsletter';
 export type Payload = Record<string, unknown>;
 
 const MAX = { name: 120, email: 160, phone: 40, subject: 160, message: 4000 };
@@ -14,7 +20,7 @@ export function isEmail(v: string): boolean {
   return /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(v);
 }
 
-export function validate(body: Payload, kind: 'contact' | 'newsletter') {
+export function validate(body: Payload, kind: Kind) {
   // Honeypot : un bot remplit le champ caché.
   if (clean(body.company, 80)) return { ok: false as const, reason: 'spam' };
 
@@ -39,18 +45,35 @@ export function validate(body: Payload, kind: 'contact' | 'newsletter') {
   };
 }
 
-export async function forward(data: Payload) {
-  const url = import.meta.env.STSV_WEBHOOK_URL;
-  if (!url) throw new Error('STSV_WEBHOOK_URL manquant');
+function endpointFor(kind: Kind): string | undefined {
+  const env = import.meta.env;
+  const specific = kind === 'contact' ? env.STSV_WEBHOOK_CONTACT : env.STSV_WEBHOOK_NEWSLETTER;
+  // STSV_WEBHOOK_URL sert de repli si une seule URL est configurée.
+  return specific || env.STSV_WEBHOOK_URL;
+}
+
+export async function forward(kind: Kind, data: Payload) {
+  const url = endpointFor(kind);
+  if (!url) throw new Error(`Webhook non configuré pour « ${kind} »`);
+
   const secret = import.meta.env.STSV_WEBHOOK_SECRET;
 
-  const res = await fetch(url, {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-      ...(secret ? { 'X-STSV-Signature': secret } : {}),
-    },
-    body: JSON.stringify({ ...data, source: 'stsv.ca', receivedAt: new Date().toISOString() }),
-  });
-  if (!res.ok) throw new Error('webhook ' + res.status);
+  // Le workflow ne doit pas rester bloqué si l'API tarde à répondre.
+  const controller = new AbortController();
+  const timer = setTimeout(() => controller.abort(), 10_000);
+
+  try {
+    const res = await fetch(url, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        ...(secret ? { 'X-STSV-Signature': secret } : {}),
+      },
+      body: JSON.stringify({ ...data, source: 'stsv.ca', receivedAt: new Date().toISOString() }),
+      signal: controller.signal,
+    });
+    if (!res.ok) throw new Error(`webhook ${res.status}`);
+  } finally {
+    clearTimeout(timer);
+  }
 }

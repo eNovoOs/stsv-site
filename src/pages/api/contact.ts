@@ -19,7 +19,7 @@ export const POST: APIRoute = async ({ request }) => {
   }
 
   try {
-    await forward(result.data);
+    await forward('contact', result.data);
   } catch (err) {
     console.error('[contact]', err);
     return new Response(JSON.stringify({ error: 'upstream' }), { status: 502 });

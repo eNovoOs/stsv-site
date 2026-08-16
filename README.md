@@ -54,12 +54,18 @@ Les slugs sont traduits (`/services`, `/en/services`, `/es/servicios`) et défin
 `/contact` et `/infolettre` postent vers `/api/contact` et `/api/newsletter`,
 qui relaient vers le webhook eNovoOs.
 
-Variables d'environnement à définir dans Vercel :
+Chaque formulaire a son propre webhook. Variables à définir dans Vercel
+(Settings → Environment Variables) — jamais dans le dépôt :
 
 | Variable | Rôle |
 |---|---|
-| `STSV_WEBHOOK_URL` | URL du webhook eNovoOs (obligatoire) |
-| `STSV_WEBHOOK_SECRET` | Envoyé dans l'en-tête `X-STSV-Signature` (optionnel) |
+| `STSV_WEBHOOK_CONTACT` | Webhook eNovoOs du formulaire « Nous joindre » |
+| `STSV_WEBHOOK_NEWSLETTER` | Webhook eNovoOs de l'infolettre |
+| `STSV_WEBHOOK_SECRET` | Optionnel — envoyé dans l'en-tête `X-STSV-Signature` |
+
+`STSV_WEBHOOK_URL` reste accepté comme repli si une seule URL est configurée.
+Les appels ont un délai d'attente de 10 secondes : si eNovoOs ne répond pas,
+l'usager voit un message d'erreur avec le numéro de téléphone plutôt qu'une page figée.
 
 Charge utile envoyée :
 
