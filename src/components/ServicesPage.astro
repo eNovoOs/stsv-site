@@ -5,7 +5,7 @@ import FareTable from './FareTable.astro';
 import { useTranslations, path, type Locale } from '../i18n/ui';
 import { lines, fares, contact } from '../data/site';
 import { services as c } from '../data/content';
-import hero from '../assets/images/hero-services.jpg';
+import hero from '../assets/images/card-lignes-fixes.jpg';
 
 interface Props { locale: Locale }
 const { locale } = Astro.props;
@@ -17,7 +17,12 @@ const lineLabel = { fr: 'Ligne', en: 'Line', es: 'Línea' }[locale];
     title={c.h1[locale]}
     lead={c.lead[locale]}
     image={hero}
-    imageAlt={{ fr: 'Usagers à bord d’un véhicule de la STSV', en: 'Passengers aboard an STSV vehicle', es: 'Usuarios a bordo de un vehículo de la STSV' }[locale]}
+    focus={50}
+    imageAlt={{
+      fr: 'Un minibus de la ligne 10 stationné au bord de l’eau, à Salaberry-de-Valleyfield',
+      en: 'A line 10 minibus parked by the water in Salaberry-de-Valleyfield',
+      es: 'Un minibús de la línea 10 estacionado junto al agua, en Salaberry-de-Valleyfield',
+    }[locale]}
   />
 
   <section class="section">
