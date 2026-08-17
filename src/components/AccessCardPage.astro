@@ -3,13 +3,23 @@ import Base from '../layouts/Base.astro';
 import PageHero from './PageHero.astro';
 import { useTranslations, path, type Locale } from '../i18n/ui';
 import { accessCard as c } from '../data/content';
+import hero from '../assets/images/hero-accueil.jpg';
 
 interface Props { locale: Locale }
 const { locale } = Astro.props;
 const t = useTranslations(locale);
 ---
 <Base locale={locale} page="accessCard" title={c.meta.title[locale]} description={c.meta.description[locale]}>
-  <PageHero title={c.h1[locale]} />
+  <PageHero
+    title={c.h1[locale]}
+    image={hero}
+    focus={55}
+    imageAlt={{
+      fr: 'Un autobus de la ligne 99 circule dans une rue commerçante de Salaberry-de-Valleyfield',
+      en: 'A line 99 bus travelling along a shopping street in Salaberry-de-Valleyfield',
+      es: 'Un autobús de la línea 99 circula por una calle comercial de Salaberry-de-Valleyfield',
+    }[locale]}
+  />
 
   <section class="section">
     <div class="wrap prose">
