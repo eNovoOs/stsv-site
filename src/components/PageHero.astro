@@ -38,10 +38,12 @@ const { title, lead, image, imageAlt = '', focus = 42 } = Astro.props;
     </div>
   </section>
 ) : (
-  <section class="phero phero--plain">
+  <section class="phero phero--band">
     <div class="wrap">
-      <h1>{title}</h1>
-      {lead && <p class="phero__lead">{lead}</p>}
+      <div class="phero__frame phero__frame--band">
+        <h1>{title}</h1>
+      </div>
+      {lead && <p class="phero__lead phero__lead--under">{lead}</p>}
       <slot name="cta" />
     </div>
   </section>
@@ -79,8 +81,22 @@ const { title, lead, image, imageAlt = '', focus = 42 } = Astro.props;
     .phero__frame { aspect-ratio: 2.6 / 1; min-height: 300px; }
   }
 
-  .phero--plain { padding-block: var(--sp-7) var(--sp-2); text-align: center; }
-  .phero--plain h1 { margin-bottom: var(--sp-4); }
+  /* Pages sans photo : même cadre, même hauteur, fond de marque.
+     L'en-tête garde ainsi la même forme d'une page à l'autre, que la STSV
+     dispose ou non d'une image pour le sujet traité. */
+  .phero--band { padding-top: var(--sp-5); }
+  .phero__frame--band {
+    background: var(--blue);
+    background-image:
+      radial-gradient(ellipse 70% 120% at 12% 0%, rgba(69, 195, 207, .34), transparent 62%),
+      radial-gradient(ellipse 60% 130% at 92% 108%, rgba(189, 209, 0, .20), transparent 60%);
+    place-items: center;
+  }
+  .phero__frame--band h1 {
+    grid-area: 1 / 1; color: var(--white); text-align: center; margin: 0;
+    padding: var(--sp-6) var(--sp-5); text-wrap: balance;
+  }
+
   .phero__lead {
     font-size: 1rem; color: var(--gray-600); margin: 0 auto; max-width: 62ch; line-height: 1.6;
   }

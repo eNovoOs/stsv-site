@@ -1,6 +1,7 @@
 ---
 import Base from '../layouts/Base.astro';
 import PageHero from './PageHero.astro';
+import hero from '../assets/images/hero-documents.jpg';
 import DocList from './DocList.astro';
 import { useTranslations, type Locale } from '../i18n/ui';
 import { documentsPage as c } from '../data/content';
@@ -13,7 +14,16 @@ const count = documents.length;
 const countLabel = { fr: 'documents', en: 'documents', es: 'documentos' }[locale];
 ---
 <Base locale={locale} page="documents" title={c.meta.title[locale]} description={c.meta.description[locale]}>
-  <PageHero title={c.h1[locale]} lead={c.lead[locale]} />
+  <PageHero
+    title={c.h1[locale]}
+    lead={c.lead[locale]}
+    image={hero}
+    imageAlt={{
+      fr: 'Deux personnes se serrent la main au-dessus d’un bureau couvert de documents',
+      en: 'Two people shaking hands over a desk covered with documents',
+      es: 'Dos personas se dan la mano sobre un escritorio cubierto de documentos',
+    }[locale]}
+  />
   <section class="section">
     <div class="wrap"><DocList locale={locale} /></div>
   </section>
