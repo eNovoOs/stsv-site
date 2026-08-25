@@ -102,6 +102,22 @@ const { title, lead, image, imageAlt = '', focus = 42 } = Astro.props;
       radial-gradient(ellipse 60% 130% at 92% 108%, rgba(189, 209, 0, .20), transparent 60%);
     place-items: center;
   }
+
+  /* Le symbole de la marque en filigrane. Sans lui, le bandeau des pages
+     sans photo n'est qu'un aplat bleu : la marque occupe l'espace plutôt
+     que de le laisser vide. Décoratif, donc invisible aux lecteurs d'écran. */
+  .phero__frame--band::after {
+    content: '';
+    position: absolute; inset: 0;
+    background: url('/brand/symbole-stsv.png') no-repeat;
+    background-position: right -4% center;
+    background-size: auto 58%;
+    opacity: .13;
+    pointer-events: none;
+  }
+  @media (max-width: 700px) {
+    .phero__frame--band::after { background-position: right -14% center; background-size: auto 46%; }
+  }
   .phero__frame--band h1 {
     color: var(--white); text-align: center; margin: 0;
     padding: var(--sp-6) var(--sp-5); text-wrap: balance;
