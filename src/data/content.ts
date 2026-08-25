@@ -560,21 +560,21 @@ export const about = {
   h1: { fr: 'Qui sommes-nous ?', en: 'About us', es: '¿Quiénes somos?' },
   facts: {
     fr: [
-      'La STSV offre un service de transport collectif à la demande dans les municipalités de Saint-Polycarpe, Saint-Zotique, Les Coteaux, Coteau-du-Lac, Salaberry-de-Valleyfield, Les Cèdres et Pointe-des-Cascades.',
+      'La STSV offre un service de transport collectif à la demande dans les municipalités de Saint-Polycarpe, Saint-Zotique, Les Coteaux, Coteau-du-Lac et Salaberry-de-Valleyfield, ainsi qu’aux résidents et résidentes de Sainte-Martine, Les Cèdres et Pointe-des-Cascades.',
       'La STSV offre un service de transport adapté dans les municipalités de Rivière-Beaudette, Saint-Polycarpe, Saint-Zotique, Les Coteaux, Coteau-du-Lac, Salaberry-de-Valleyfield, Saint-Louis-de-Gonzague, Saint-Stanislas-de-Kostka, Saint-Étienne-de-Beauharnois et Saint-Télesphore.',
       'Le transport collectif à la demande est disponible de 5 h 20 à 00 h 30, 7 jours sur 7.',
       'La STSV offre également un service sur des lignes fixes sans réservation : la ligne 99 vers la gare de Vaudreuil et la ligne 10 pour le circuit du centre-ville. La ligne 30 vers Beauharnois est sur réservation.',
       'Puisqu’il s’agit de transport collectif, la STSV favorise le jumelage. Il peut y avoir jusqu’à 3 personnes dans un même véhicule.',
     ],
     en: [
-      'STSV runs an on-demand public transit service in Saint-Polycarpe, Saint-Zotique, Les Coteaux, Coteau-du-Lac, Salaberry-de-Valleyfield, Les Cèdres and Pointe-des-Cascades.',
+      'STSV runs an on-demand public transit service in Saint-Polycarpe, Saint-Zotique, Les Coteaux, Coteau-du-Lac and Salaberry-de-Valleyfield, as well as for residents of Sainte-Martine, Les Cèdres and Pointe-des-Cascades.',
       'STSV runs an adapted transportation service in Rivière-Beaudette, Saint-Polycarpe, Saint-Zotique, Les Coteaux, Coteau-du-Lac, Salaberry-de-Valleyfield, Saint-Louis-de-Gonzague, Saint-Stanislas-de-Kostka, Saint-Étienne-de-Beauharnois and Saint-Télesphore.',
       'On-demand transit runs from 5:20 a.m. to 12:30 a.m., 7 days a week.',
       'STSV also runs fixed lines with no reservation: line 99 to the Vaudreuil station and line 10 for the downtown loop. Line 30 to Beauharnois is by reservation.',
       'As a shared service, STSV pairs trips when possible. There may be up to 3 passengers in the same vehicle.',
     ],
     es: [
-      'La STSV ofrece transporte colectivo a demanda en Saint-Polycarpe, Saint-Zotique, Les Coteaux, Coteau-du-Lac, Salaberry-de-Valleyfield, Les Cèdres y Pointe-des-Cascades.',
+      'La STSV ofrece transporte colectivo a demanda en Saint-Polycarpe, Saint-Zotique, Les Coteaux, Coteau-du-Lac y Salaberry-de-Valleyfield, así como a las personas residentes de Sainte-Martine, Les Cèdres y Pointe-des-Cascades.',
       'La STSV ofrece transporte adaptado en Rivière-Beaudette, Saint-Polycarpe, Saint-Zotique, Les Coteaux, Coteau-du-Lac, Salaberry-de-Valleyfield, Saint-Louis-de-Gonzague, Saint-Stanislas-de-Kostka, Saint-Étienne-de-Beauharnois y Saint-Télesphore.',
       'El transporte a demanda funciona de 5:20 a 00:30, los 7 días de la semana.',
       'La STSV también opera líneas fijas sin reserva: la línea 99 hacia la estación de Vaudreuil y la línea 10 para el circuito del centro. La línea 30 hacia Beauharnois es con reserva.',
