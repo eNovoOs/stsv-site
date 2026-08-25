@@ -173,6 +173,9 @@ button.pill[aria-pressed="true"] { background: var(--blue); color: var(--white);
      source de verite, pour qu'un arret ajoute ou deplace n'ait pas a etre
      saisi deux fois. -->
 <script src="/carte/data.js"></script>
-<script src="./app.js"></script>
+<!-- Chemins absolus : la page est servie sans barre oblique finale
+     (/carte-arrets-interne), et « ./app.js » resoudrait alors vers la
+     racine du site. -->
+<script src="/carte-arrets-interne/app.js"></script>
 </body>
 </html>

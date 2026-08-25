@@ -26,6 +26,7 @@ const I18N = {
     close: 'Fermer',
     noSector: 'Secteur non précisé',
     stopWord: 'Arrêt',
+    dataFail: 'Les données des arrêts ne se sont pas chargées. Rechargez la page ; si cela persiste, prévenez RevUp CMO.',
   },
   en: {
     title: 'Internal stop map — STSV',
@@ -42,6 +43,7 @@ const I18N = {
     close: 'Close',
     noSector: 'Sector not specified',
     stopWord: 'Stop',
+    dataFail: 'The stop data did not load. Reload the page; if it persists, tell RevUp CMO.',
   },
   es: {
     title: 'Mapa interno de paradas — STSV',
@@ -58,9 +60,18 @@ const I18N = {
     close: 'Cerrar',
     noSector: 'Sector no especificado',
     stopWord: 'Parada',
+    dataFail: 'Los datos de las paradas no se cargaron. Recarga la página; si persiste, avisa a RevUp CMO.',
   },
 };
 const L = I18N[LANG] || I18N.fr;
+
+/* Si data.js n'a pas ete charge, tout ce qui suit echoue en silence et la page
+   n'est qu'un rectangle gris. Mieux vaut le dire que laisser deviner. */
+if (typeof PARADAS === 'undefined') {
+  document.getElementById('map').innerHTML =
+    `<p style="max-width:34ch;margin:22vh auto 0;text-align:center;font:500 15px/1.6 Poppins,sans-serif;color:#4B5563">${L.dataFail}</p>`;
+  throw new Error('PARADAS introuvable : /carte/data.js ne s\'est pas charge');
+}
 
 document.title = L.title;
 document.getElementById('page-title').textContent = L.title;
