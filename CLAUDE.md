@@ -69,6 +69,35 @@ un autobús que no viene.
 **Nunca prometas fiabilidad absoluta.** Nada de «siempre a tiempo» ni «sin
 retrasos».
 
+## Voz de marca
+
+La misión de la STSV es «éliminer le stress des déplacements». Todo lo que se
+escribe sirve a eso: que alguien encuentre su horario y se vaya tranquilo.
+
+**Cálido sin ser almibarado.** Se dice lo esencial, no se halaga.
+**Claro sin ser simplista.** Vocabulario corriente, nunca infantilizante.
+**Inclusivo sin ser paternalista.** El usuario decide; nosotros informamos.
+**Local, no genérico.** Topónimos reales, horarios reales, paradas reales.
+
+El tono cambia según el contexto. En servicio cotidiano: práctico y rápido. Ante
+una perturbación: transparente y orientado a la solución — primero se nombra el
+problema, después se da la alternativa. En campaña: más humano, sin perder
+precisión.
+
+**Regla de oro:** si el mensaje no cabe en una frase clara en los tres idiomas,
+es demasiado largo.
+
+Fuera: anglicismos innecesarios en francés («on board» → «à bord»), frases
+corporativas vacías del tipo «solution multicanale» o «expérience utilisateur de
+premier plan», y emojis en cualquier texto del sitio.
+
+## El sitio anterior
+
+El sitio antiguo, alojado en GoHighLevel, está archivado íntegro en
+**`eNovoOs/STSV`** — HTML, imágenes y PDFs tal como se servían. Sirve para
+comprobar cómo era algo antes de la migración. Es archivo: se consulta, no se
+modifica.
+
 ## Secretos
 
 Ningún secreto entra en el repositorio. Las URLs de los webhooks viven como
@@ -139,6 +168,20 @@ dado lecturas engañosas. Para saber qué tiene GitHub de verdad:
 ```bash
 git ls-remote origin main | cut -c1-7
 ```
+
+## A quién preguntar
+
+Cuando falte un dato operativo — un horario, una tarifa, un número de parada, el
+teléfono de una línea — la respuesta la tiene la STSV, no el repositorio.
+
+**Pregunta a RevUp CMO** (`media@revupcmo.com`), que es quien lleva la relación
+con el cliente y traslada la consulta. **No escribas directamente a la STSV.**
+Una entidad pública necesita un único interlocutor, y las respuestas quedan
+registradas en un sitio.
+
+Esto vale también para las decisiones de diseño que afecten a lo que ve el
+usuario. Un cambio de copy o de imagen en una web institucional se aprueba, no
+se improvisa.
 
 ## Fuera de alcance
 
