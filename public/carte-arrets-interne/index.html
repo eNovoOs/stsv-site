@@ -6,8 +6,8 @@
 <title>Carte interne des arrêts — STSV</title>
 
 <!-- Page interne : elle n'est liée depuis aucune page du site et ne doit pas
-     etre indexee. Elle reste toutefois accessible a qui connait l'adresse :
-     ce n'est pas une protection, seulement une absence de reference. -->
+     être indexée. Elle reste toutefois accessible à qui connaît l'adresse :
+     ce n'est pas une protection, seulement une absence de référence. -->
 <meta name="robots" content="noindex, nofollow">
 
 <link href='https://api.mapbox.com/mapbox-gl-js/v3.1.2/mapbox-gl.css' rel='stylesheet' />
@@ -22,16 +22,17 @@
 @font-face{font-family:Poppins;font-style:normal;font-weight:500;font-display:swap;src:url(/fonts/poppins-latin-500-normal.woff2) format('woff2')}
 @font-face{font-family:Poppins;font-style:normal;font-weight:600;font-display:swap;src:url(/fonts/poppins-latin-600-normal.woff2) format('woff2')}
 @font-face{font-family:Poppins;font-style:normal;font-weight:700;font-display:swap;src:url(/fonts/poppins-latin-700-normal.woff2) format('woff2')}
-/* JetBrains Mono : reservee aux donnees techniques — ici les numeros d'arret. */
+/* JetBrains Mono : réservée aux données techniques — ici les numéros d'arrêt. */
 @font-face{font-family:'JetBrains Mono';font-style:normal;font-weight:400;font-display:swap;src:url(/fonts/jetbrains-mono-latin-400-normal.woff2) format('woff2')}
 @font-face{font-family:'JetBrains Mono';font-style:normal;font-weight:700;font-display:swap;src:url(/fonts/jetbrains-mono-latin-700-normal.woff2) format('woff2')}
 
 :root {
   --blue: #135EEF;
   --blue-dark: #0B3FB4;
-  --cyan: #45C3CF;
+  --red: #D50000;
   --ink: #111827;
   --gray-600: #4B5563;
+  --gray-500: #6B7280;
   --gray-100: #E5E7EB;
   --gray-air: #F5F9FC;
   --white: #fff;
@@ -43,7 +44,6 @@ html, body { overflow-x: hidden; }
 button, input { font: inherit; }
 button { touch-action: manipulation; }
 
-/* Visible seulement pour les lecteurs d'ecran. */
 .sr-only {
   position: absolute; width: 1px; height: 1px;
   padding: 0; margin: -1px; overflow: hidden;
@@ -51,7 +51,7 @@ button { touch-action: manipulation; }
 }
 
 .shell { position: relative; height: 100vh; height: 100svh; min-height: 540px; width: 100%; isolation: isolate; }
-#map { position: absolute; inset: 0; background: #e5e5e5; }
+#map { position: absolute; inset: 0; background: #e8eef5; }
 
 /* -------- Recherche -------- */
 .search-zone {
@@ -70,7 +70,7 @@ button { touch-action: manipulation; }
 .hint strong { color: var(--ink); font-weight: 600; }
 .hint .num { font-family: 'JetBrains Mono', monospace; font-weight: 700; color: var(--blue); }
 
-/* -------- Compteur + bascule des numeros -------- */
+/* -------- Compteur + bascule des numéros -------- */
 .tools {
   position: absolute; top: 18px; right: 18px; z-index: 110;
   display: grid; gap: 8px; justify-items: end;
@@ -85,7 +85,7 @@ button.pill { cursor: pointer; color: var(--ink); }
 button.pill:hover { color: var(--blue); }
 button.pill[aria-pressed="true"] { background: var(--blue); color: var(--white); }
 
-/* -------- Panneau d'information -------- */
+/* -------- Panneau -------- */
 .panel {
   position: absolute; bottom: 18px; left: 18px; z-index: 120;
   width: min(340px, calc(100vw - 36px));
@@ -94,7 +94,14 @@ button.pill[aria-pressed="true"] { background: var(--blue); color: var(--white);
   border-left: 6px solid var(--blue);
   display: none;
 }
-.panel[data-open] { display: block; }
+.panel[data-mode] { display: block; }
+/* Le liseré reprend la couleur du repère concerné : rouge pour un arrêt,
+   bleu pour un lieu. La légende dit la même chose. */
+.panel[data-mode="arret"] { border-left-color: var(--red); }
+.panel[data-mode="lieu"]  { border-left-color: var(--blue); }
+.panel[data-mode="arret"] .mode-lieu,
+.panel[data-mode="lieu"]  .mode-arret { display: none; }
+
 .panel__x {
   position: absolute; top: 8px; right: 8px; width: 30px; height: 30px;
   border: 0; background: var(--gray-air); border-radius: 50%; cursor: pointer;
@@ -103,15 +110,33 @@ button.pill[aria-pressed="true"] { background: var(--blue); color: var(--white);
 .panel__x:hover { color: var(--ink); }
 .panel__eyebrow {
   font-size: 10px; font-weight: 600; letter-spacing: .1em; text-transform: uppercase;
-  color: var(--gray-600); margin-bottom: 4px;
+  color: var(--gray-500); margin-bottom: 4px; padding-right: 26px;
 }
 .panel__num {
   font-family: 'JetBrains Mono', monospace; font-weight: 700;
-  font-size: 34px; line-height: 1; color: var(--blue); margin-bottom: 10px;
+  font-size: 34px; line-height: 1; color: var(--red); margin-bottom: 10px;
 }
 .panel__name { font-size: 15px; font-weight: 600; line-height: 1.35; margin-bottom: 4px; }
-.panel__sector { font-size: 12px; color: var(--gray-600); margin-bottom: 14px; }
+.panel__sector { font-size: 12px; color: var(--gray-600); }
+
+/* Bloc « arrêt le plus proche », affiché quand on a cherché un lieu. */
+.near { margin-top: 14px; padding-top: 13px; border-top: 1px solid var(--gray-100); }
+.near__label {
+  font-size: 10px; font-weight: 600; letter-spacing: .1em; text-transform: uppercase;
+  color: var(--gray-500); margin-bottom: 6px;
+}
+.near__head { display: flex; align-items: baseline; gap: 9px; margin-bottom: 3px; }
+.near__num {
+  font-family: 'JetBrains Mono', monospace; font-weight: 700;
+  font-size: 26px; line-height: 1; color: var(--red);
+}
+.near__dist { font-family: 'JetBrains Mono', monospace; font-size: 12px; font-weight: 500; color: var(--gray-600); }
+.near__name { font-size: 13px; font-weight: 500; line-height: 1.35; }
+.near__via { margin-top: 7px; font-size: 11px; line-height: 1.4; color: var(--gray-500); font-style: italic; }
+.near__via:empty { display: none; }
+
 .panel__copy {
+  margin-top: 14px;
   display: inline-flex; align-items: center; gap: 7px;
   background: var(--blue); color: var(--white); border: 0; border-radius: 8px;
   padding: 9px 14px; font-size: 13px; font-weight: 500; cursor: pointer;
@@ -119,7 +144,7 @@ button.pill[aria-pressed="true"] { background: var(--blue); color: var(--white);
 .panel__copy:hover { background: var(--blue-dark); }
 .panel__copy[data-done] { background: #17794A; }
 
-/* -------- Legende -------- */
+/* -------- Légende -------- */
 .legend {
   position: absolute; bottom: 18px; right: 18px; z-index: 100;
   background: rgba(255,255,255,.96); border-radius: 10px; padding: 10px 13px;
@@ -155,10 +180,31 @@ button.pill[aria-pressed="true"] { background: var(--blue); color: var(--white);
 
   <aside class="panel" id="panel" aria-live="polite">
     <button class="panel__x" type="button" id="panel-close" aria-label="Fermer">✕</button>
-    <p class="panel__eyebrow" id="panel-eyebrow"></p>
-    <p class="panel__num" id="panel-num"></p>
-    <p class="panel__name" id="panel-name"></p>
-    <p class="panel__sector" id="panel-sector"></p>
+
+    <!-- Un arrêt : cliqué sur la carte, ou trouvé par son numéro -->
+    <div class="mode-arret">
+      <p class="panel__eyebrow" id="stop-eyebrow"></p>
+      <p class="panel__num" id="stop-num"></p>
+      <p class="panel__name" id="stop-name"></p>
+      <p class="panel__sector" id="stop-sector"></p>
+    </div>
+
+    <!-- Un lieu de référence, avec l'arrêt qui le dessert -->
+    <div class="mode-lieu">
+      <p class="panel__eyebrow" id="place-eyebrow"></p>
+      <p class="panel__name" id="place-name"></p>
+      <p class="panel__sector" id="place-addr"></p>
+      <div class="near">
+        <p class="near__label" id="near-label"></p>
+        <div class="near__head">
+          <span class="near__num" id="near-num"></span>
+          <span class="near__dist" id="near-dist"></span>
+        </div>
+        <p class="near__name" id="near-name"></p>
+        <p class="near__via" id="near-via"></p>
+      </div>
+    </div>
+
     <button class="panel__copy" type="button" id="panel-copy"></button>
   </aside>
 
@@ -169,12 +215,12 @@ button.pill[aria-pressed="true"] { background: var(--blue); color: var(--white);
   </div>
 </div>
 
-<!-- Les arrets viennent du meme fichier que la carte publique : une seule
-     source de verite, pour qu'un arret ajoute ou deplace n'ait pas a etre
+<!-- Les arrêts viennent du même fichier que la carte publique : une seule
+     source de vérité, pour qu'un arrêt ajouté ou déplacé n'ait pas à être
      saisi deux fois. -->
 <script src="/carte/data.js"></script>
 <!-- Chemins absolus : la page est servie sans barre oblique finale
-     (/carte-arrets-interne), et « ./app.js » resoudrait alors vers la
+     (/carte-arrets-interne), et « ./app.js » résoudrait alors vers la
      racine du site. -->
 <script src="/carte-arrets-interne/app.js"></script>
 </body>
