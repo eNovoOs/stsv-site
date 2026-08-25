@@ -203,6 +203,10 @@ const btnCopier = document.getElementById('panel-copy');
 
 function ouvrirArret(props, recentrer = false) {
   arretChoisi = props;
+  /* Un arret et un lieu recherche ne coexistent pas : sans cela, cliquer une
+     pastille apres une recherche laissait le point bleu sous l'anneau rouge,
+     et le repere semblait pointer deux choses a la fois. */
+  if (epingleLieu) { epingleLieu.remove(); epingleLieu = null; }
   document.getElementById('panel-num').textContent = props.numero;
   document.getElementById('panel-name').textContent = props.nom;
   document.getElementById('panel-sector').textContent = props.secteur || L.noSector;
@@ -322,7 +326,6 @@ document.getElementById('geocoder').appendChild(geocodeur.onAdd(map));
 geocodeur.on('result', (e) => {
   const [lng, lat] = e.result.geometry.coordinates;
   if (e.result.stsvArret) {
-    if (epingleLieu) { epingleLieu.remove(); epingleLieu = null; }
     ouvrirArret(e.result.stsvArret, true);
   } else {
     fermerPanneau();
