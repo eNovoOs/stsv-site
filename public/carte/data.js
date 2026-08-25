@@ -4,21 +4,29 @@
 
 const MAPBOX_TOKEN = 'pk.eyJ1IjoiaWpjb3J0ZXMiLCJhIjoiY21qYWd2MzcwMDVvMDNlb20ycmVtbW42aiJ9.ifeLXh_ELRyymRwLIh2G8Q';
 
+/* Lieux de reference pour la recherche.
+   Attention : plusieurs positions saisies a la main etaient fausses de 0,4 a
+   1,9 km — le repere tombait dans une rue voisine. Celles qui portent un
+   commentaire « position de l'arret NNN » ont ete reprises de l'arret qui
+   declare la meme adresse dans PARADAS_RAW, dont les coordonnees viennent de
+   l'export du systeme de reservation. Ce sont donc des positions de trottoir,
+   a quelques metres du batiment.
+   Ne pas saisir une position a l'estime : la verifier contre un arret. */
 const POIS_DATABASE = [
-  { nombre: 'Walmart Supercentre Valleyfield', lat: 45.2678, lng: -74.1167, cat: 'Walmart', desc: 'Blvd Mgr-Langlois' },
+  { nombre: 'Walmart Supercentre Valleyfield', lat: 45.269882, lng: -74.120798, cat: 'Walmart', desc: 'Blvd Mgr-Langlois' },  // position de l'arret 260, meme adresse
   { nombre: 'Walmart Supercentre Vaudreuil', lat: 45.3941, lng: -74.0485, cat: 'Walmart', desc: 'Vaudreuil-Dorion' },
   { nombre: 'Hôpital du Suroît', lat: 45.2555, lng: -74.1332, cat: 'Santé', desc: 'Hôpital général' },
-  { nombre: 'CLSC', lat: 45.2533, lng: -74.1287, cat: 'Santé', desc: '71 Rue Maden' },
+  { nombre: 'CLSC', lat: 45.264626, lng: -74.130018, cat: 'Santé', desc: '71 Rue Maden' },  // position de l'arret 216, meme adresse
   { nombre: 'Clinique Havre-Santé', lat: 45.2635, lng: -74.1205, cat: 'Santé', desc: '521 Bd du Havre' },
-  { nombre: 'Clinique médicale des bâtisseurs', lat: 45.2323, lng: -74.1245, cat: 'Santé', desc: '616 Chem. Larocque' },
-  { nombre: 'Clinique Médi-Val', lat: 45.2588, lng: -74.1352, cat: 'Santé', desc: '408 Rue Jeanne-Mance' },
+  { nombre: 'Clinique médicale des bâtisseurs', lat: 45.234425, lng: -74.119436, cat: 'Santé', desc: '616 Chem. Larocque' },  // position de l'arret 606, meme adresse
+  { nombre: 'Clinique Médi-Val', lat: 45.242813, lng: -74.125495, cat: 'Santé', desc: '408 Rue Jeanne-Mance' },  // position de l'arret 600, meme adresse
   { nombre: 'SRSOR Salaberry', lat: 45.2512, lng: -74.1385, cat: 'Santé', desc: '310 Rue Salaberry O' },
   { nombre: 'CHSLD La Maison des Aînés', lat: 45.2471, lng: -74.1205, cat: 'Résidences', desc: '1 Rue des Aînés' },
   { nombre: 'Joie de Vivre', lat: 45.2750, lng: -74.1305, cat: 'Résidences', desc: '748 Av. de Grande Île' },
-  { nombre: 'La Tourellière', lat: 45.2562, lng: -74.1378, cat: 'Résidences', desc: '45 Rue Buntin' },
+  { nombre: 'La Tourellière', lat: 45.260147, lng: -74.127381, cat: 'Résidences', desc: '45 Rue Buntin' },  // position de l'arret 224, meme adresse
   { nombre: 'Le Signature Valleyfield', lat: 45.2598, lng: -74.1302, cat: 'Résidences', desc: '2 Rue Fabre' },
   { nombre: 'Les Cotonniers', lat: 45.2568, lng: -74.1382, cat: 'Résidences', desc: '39 Rue Buntin' },
-  { nombre: 'Moulin de la source', lat: 45.2485, lng: -74.1450, cat: 'Résidences', desc: '226 Rue Montcalm' },
+  { nombre: 'Moulin de la source', lat: 45.250491, lng: -74.136122, cat: 'Résidences', desc: '226 Rue Montcalm' },  // position de l'arret 355, meme adresse
   { nombre: 'Club de Curling Valleyfield', lat: 45.2558, lng: -74.1293, cat: 'Loisirs', desc: '19 Rue Maden' },
   { nombre: 'Place Valleyfield', lat: 45.2395, lng: -74.1050, cat: 'Loisirs', desc: '1700 Rue Tougas' },
   { nombre: 'Toujours Mikes', lat: 45.2575, lng: -74.1325, cat: 'Loisirs', desc: '1 Rue Dufferin' }
