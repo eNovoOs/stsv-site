@@ -158,9 +158,9 @@ export const reservation = {
         es: 'Por teléfono con un agente',
       },
       body: {
-        fr: 'Appelez au moins une heure à l’avance. Un agent répond entre 6 h 30 et 18 h 00 du lundi au vendredi, et de 8 h 00 à 16 h 00 le samedi. Fermé le dimanche.',
-        en: 'Call at least one hour ahead. An agent answers between 6:30 a.m. and 6:00 p.m. Monday to Friday, and 8:00 a.m. to 4:00 p.m. on Saturday. Closed Sunday.',
-        es: 'Llama al menos con una hora de anticipación. Un agente responde entre las 6:30 y las 18:00 de lunes a viernes, y de 8:00 a 16:00 los sábados. Cerrado los domingos.',
+        fr: 'Appelez au moins une heure à l’avance. Un agent répond entre 6 h 30 et 18 h 00 du lundi au vendredi, et de 9 h 00 à 17 h 00 le samedi. Fermé le dimanche.',
+        en: 'Call at least one hour ahead. An agent answers between 6:30 a.m. and 6:00 p.m. Monday to Friday, and 9:00 a.m. to 5:00 p.m. on Saturday. Closed Sunday.',
+        es: 'Llama al menos con una hora de anticipación. Un agente responde entre las 6:30 y las 18:00 de lunes a viernes, y de 9:00 a 17:00 los sábados. Cerrado los domingos.',
       },
     },
     {
@@ -561,22 +561,22 @@ export const about = {
   facts: {
     fr: [
       'La STSV offre un service de transport collectif à la demande dans les municipalités de Saint-Polycarpe, Saint-Zotique, Les Coteaux, Coteau-du-Lac, Salaberry-de-Valleyfield, Les Cèdres et Pointe-des-Cascades.',
-      'La STSV offre un service de transport adapté dans les municipalités de Rivière-Beaudette, Saint-Polycarpe, Saint-Zotique, Les Coteaux, Coteau-du-Lac, Salaberry-de-Valleyfield, Saint-Louis-de-Gonzague, Saint-Stanislas-de-Kostka et Saint-Étienne-de-Beauharnois.',
-      'Le transport collectif à la demande est disponible de 5 h 20 à 00 h 15, 7 jours sur 7.',
+      'La STSV offre un service de transport adapté dans les municipalités de Rivière-Beaudette, Saint-Polycarpe, Saint-Zotique, Les Coteaux, Coteau-du-Lac, Salaberry-de-Valleyfield, Saint-Louis-de-Gonzague, Saint-Stanislas-de-Kostka, Saint-Étienne-de-Beauharnois et Saint-Télesphore.',
+      'Le transport collectif à la demande est disponible de 5 h 20 à 00 h 30, 7 jours sur 7.',
       'La STSV offre également un service sur des lignes fixes sans réservation : la ligne 99 vers la gare de Vaudreuil et la ligne 10 pour le circuit du centre-ville. La ligne 30 vers Beauharnois est sur réservation.',
       'Puisqu’il s’agit de transport collectif, la STSV favorise le jumelage. Il peut y avoir jusqu’à 3 personnes dans un même véhicule.',
     ],
     en: [
       'STSV runs an on-demand public transit service in Saint-Polycarpe, Saint-Zotique, Les Coteaux, Coteau-du-Lac, Salaberry-de-Valleyfield, Les Cèdres and Pointe-des-Cascades.',
-      'STSV runs an adapted transportation service in Rivière-Beaudette, Saint-Polycarpe, Saint-Zotique, Les Coteaux, Coteau-du-Lac, Salaberry-de-Valleyfield, Saint-Louis-de-Gonzague, Saint-Stanislas-de-Kostka and Saint-Étienne-de-Beauharnois.',
-      'On-demand transit runs from 5:20 a.m. to 12:15 a.m., 7 days a week.',
+      'STSV runs an adapted transportation service in Rivière-Beaudette, Saint-Polycarpe, Saint-Zotique, Les Coteaux, Coteau-du-Lac, Salaberry-de-Valleyfield, Saint-Louis-de-Gonzague, Saint-Stanislas-de-Kostka, Saint-Étienne-de-Beauharnois and Saint-Télesphore.',
+      'On-demand transit runs from 5:20 a.m. to 12:30 a.m., 7 days a week.',
       'STSV also runs fixed lines with no reservation: line 99 to the Vaudreuil station and line 10 for the downtown loop. Line 30 to Beauharnois is by reservation.',
       'As a shared service, STSV pairs trips when possible. There may be up to 3 passengers in the same vehicle.',
     ],
     es: [
       'La STSV ofrece transporte colectivo a demanda en Saint-Polycarpe, Saint-Zotique, Les Coteaux, Coteau-du-Lac, Salaberry-de-Valleyfield, Les Cèdres y Pointe-des-Cascades.',
-      'La STSV ofrece transporte adaptado en Rivière-Beaudette, Saint-Polycarpe, Saint-Zotique, Les Coteaux, Coteau-du-Lac, Salaberry-de-Valleyfield, Saint-Louis-de-Gonzague, Saint-Stanislas-de-Kostka y Saint-Étienne-de-Beauharnois.',
-      'El transporte a demanda funciona de 5:20 a 00:15, los 7 días de la semana.',
+      'La STSV ofrece transporte adaptado en Rivière-Beaudette, Saint-Polycarpe, Saint-Zotique, Les Coteaux, Coteau-du-Lac, Salaberry-de-Valleyfield, Saint-Louis-de-Gonzague, Saint-Stanislas-de-Kostka, Saint-Étienne-de-Beauharnois y Saint-Télesphore.',
+      'El transporte a demanda funciona de 5:20 a 00:30, los 7 días de la semana.',
       'La STSV también opera líneas fijas sin reserva: la línea 99 hacia la estación de Vaudreuil y la línea 10 para el circuito del centro. La línea 30 hacia Beauharnois es con reserva.',
       'Al ser transporte colectivo, la STSV promueve el viaje compartido. Puede haber hasta 3 personas en un mismo vehículo.',
     ],
@@ -723,9 +723,9 @@ export const contactPage = {
   phoneTitle: { fr: 'Par téléphone', en: 'By phone', es: 'Por teléfono' },
   hoursTitle: { fr: 'Heures du service de réservation', en: 'Reservation service hours', es: 'Horario del servicio de reservas' },
   hours: {
-    fr: ['Lundi au vendredi : 6 h 30 à 18 h 00', 'Samedi : 8 h 00 à 16 h 00', 'Dimanche : fermé'],
-    en: ['Monday to Friday: 6:30 a.m. to 6:00 p.m.', 'Saturday: 8:00 a.m. to 4:00 p.m.', 'Sunday: closed'],
-    es: ['Lunes a viernes: 6:30 a 18:00', 'Sábado: 8:00 a 16:00', 'Domingo: cerrado'],
+    fr: ['Lundi au vendredi : 6 h 30 à 18 h 00', 'Samedi : 9 h 00 à 17 h 00', 'Dimanche : fermé'],
+    en: ['Monday to Friday: 6:30 a.m. to 6:00 p.m.', 'Saturday: 9:00 a.m. to 5:00 p.m.', 'Sunday: closed'],
+    es: ['Lunes a viernes: 6:30 a 18:00', 'Sábado: 9:00 a 17:00', 'Domingo: cerrado'],
   },
   adaptedTitle: { fr: 'Transport adapté', en: 'Adapted transportation', es: 'Transporte adaptado' },
   adaptedBody: {

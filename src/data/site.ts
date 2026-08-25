@@ -289,13 +289,16 @@ export const territory = {
     'Saint-Louis-de-Gonzague',
     'Saint-Stanislas-de-Kostka',
     'Saint-Étienne-de-Beauharnois',
+    'Saint-Télesphore',
   ],
 };
 
+/* Dernier départ à 00 h 30, conformément à la grille du PDF
+   « Communobus — réservation et billetterie ». */
 export const communobusHours = {
-  fr: 'De 5 h 20 à 00 h 15, 7 jours sur 7.',
-  en: 'From 5:20 a.m. to 12:15 a.m., 7 days a week.',
-  es: 'De 5:20 a 00:15, los 7 días de la semana.',
+  fr: 'De 5 h 20 à 00 h 30, 7 jours sur 7.',
+  en: 'From 5:20 a.m. to 12:30 a.m., 7 days a week.',
+  es: 'De 5:20 a 00:30, los 7 días de la semana.',
 };
 
 /* ------------------------------------------------------------------
