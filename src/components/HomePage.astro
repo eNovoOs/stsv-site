@@ -2,7 +2,7 @@
 import { Image } from 'astro:assets';
 import Base from '../layouts/Base.astro';
 import { useTranslations, path, type Locale } from '../i18n/ui';
-import { contact, banner } from '../data/site';
+import { contact, banner, isExpired, todayUTC } from '../data/site';
 
 import heroImg from '../assets/images/hero-valleyfield.jpg';
 import cardLignes from '../assets/images/card-lignes-fixes.jpg';
@@ -87,8 +87,8 @@ const heroAlt = {
         </div>
       </div>
 
-      {banner.active && (
-        <p class="hero__alert">
+      {banner.active && !isExpired(banner, todayUTC()) && (
+        <p class="hero__alert" data-until={banner.until}>
           <span class="hero__alert-tag">{banner.eyebrow[locale]}</span>
           {banner.title[locale]}
         </p>

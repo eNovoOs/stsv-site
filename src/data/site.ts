@@ -48,7 +48,38 @@ export type Notice = {
   body: L10n;
   ctaLabel?: L10n;
   ctaHref?: string;
+  /**
+   * Dernier jour d'affichage, au format AAAA-MM-JJ. Absent : l'avis reste
+   * jusqu'à ce qu'une main le désactive.
+   */
+  until?: string;
 };
+
+/** Date du jour en AAAA-MM-JJ, UTC — celle dont dispose la construction. */
+export function todayUTC(): string {
+  return new Date().toISOString().slice(0, 10);
+}
+
+/**
+ * Un avis est-il échu ?
+ *
+ * `until` est le dernier jour d'affichage : « 2026-10-12 » reste visible le
+ * 12 octobre et disparaît le 13. Les chaînes AAAA-MM-JJ se comparent comme
+ * des dates, sans passer par un fuseau.
+ *
+ * Le site est construit à l'avance : ce filtre ne retire l'avis qu'au
+ * déploiement suivant. Un second contrôle tourne donc dans le navigateur, à
+ * l'heure locale du visiteur — c'est lui qui fait tenir l'échéance quand
+ * personne ne redéploie. D'où la marge d'un jour ici : la construction tourne
+ * en UTC, où le 13 commence quatre heures avant minuit au Québec, et elle ne
+ * doit pas retirer un avis encore valide pour un usager.
+ */
+export function isExpired(notice: { until?: string }, today: string, graceDays = 1): boolean {
+  if (!notice.until) return false;
+  const limite = new Date(`${notice.until}T00:00:00Z`);
+  limite.setUTCDate(limite.getUTCDate() + graceDays);
+  return today > limite.toISOString().slice(0, 10);
+}
 
 /** Bandeau rouge en haut de page. Laisser `active: false` s'il n'y a rien. */
 export const banner: Notice = {
@@ -69,10 +100,10 @@ export const banner: Notice = {
 
 export const notices: Notice[] = [
   {
-    /* A retirer apres le 12 octobre 2026 : passe cette date, l'avis annonce
-       des conges deja passes. Rien ne l'expire tout seul. */
     id: 'holiday-schedule-fall-2026',
     active: true,
+    /* Action de grace est le dernier des deux conges annonces. */
+    until: '2026-10-12',
     tone: 'info',
     eyebrow: { fr: 'Jours fériés', en: 'Holidays', es: 'Días festivos' },
     title: {

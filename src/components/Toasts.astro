@@ -4,26 +4,32 @@
  * Une seule apparition par session, pour tout le site : changer de page ou
  * de langue ne les fait pas revenir. Chaque carte est fermable au clavier.
  */
-import { notices, banner } from '../data/site';
+import { notices, banner, isExpired, todayUTC } from '../data/site';
 import { useTranslations, path, type Locale } from '../i18n/ui';
 
 interface Props { locale: Locale }
 const { locale } = Astro.props;
 const t = useTranslations(locale);
-const live = notices.filter((n) => n.active);
+
+/* Échéance : un avis dont la date `until` est passée ne sort même pas du
+   HTML. Le contrôle est repris côté navigateur, plus bas, parce que le site
+   est construit à l'avance. */
+const today = todayUTC();
+const live = notices.filter((n) => n.active && !isExpired(n, today));
+const bannerLive = banner.active && !isExpired(banner, today);
 
 /* Clé de session : change automatiquement si un avis est ajouté, retiré ou modifié,
    pour que les nouveaux avis réapparaissent même si la session est déjà ouverte. */
-const noticeVersion = live.map((n) => n.id).join('|') + '#' + (banner.active ? banner.id : '');
+const noticeVersion = live.map((n) => n.id).join('|') + '#' + (bannerLive ? banner.id : '');
 
 const closeLabel = { fr: 'Fermer cet avis', en: 'Dismiss this notice', es: 'Cerrar este aviso' }[locale];
 const panelLabel = { fr: 'Avis de service', en: 'Service notices', es: 'Avisos de servicio' }[locale];
 ---
 
-{(live.length > 0 || banner.active) && (
+{(live.length > 0 || bannerLive) && (
   <aside class="toasts" aria-label={panelLabel} data-version={noticeVersion} hidden>
     {live.map((n) => (
-      <article class="toast" data-toast={n.id}>
+      <article class="toast" data-toast={n.id} data-until={n.until}>
         <button class="toast__x" type="button" aria-label={closeLabel} data-close={n.id}>
           <svg width="12" height="12" viewBox="0 0 14 14" aria-hidden="true"><path d="M1 1l12 12M13 1L1 13" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
         </button>
@@ -150,9 +156,33 @@ const panelLabel = { fr: 'Avis de service', en: 'Service notices', es: 'Avisos d
    * changer de page ou de langue ne les fait pas revenir. Ils réapparaissent
    * si le contenu des avis change (nouvelle version) ou à la session suivante.
    */
+  /**
+   * Deuxième garde-fou, côté navigateur.
+   *
+   * Le site est statique : sans ceci, un avis échu resterait affiché jusqu'au
+   * prochain déploiement — c'est ainsi que le détour de la rue Main est resté
+   * en ligne après la fin des travaux. On compare ici à la date locale du
+   * visiteur, la seule qui compte pour lui. `until` est inclusif.
+   */
+  const maintenant = new Date();
+  const jour = [
+    maintenant.getFullYear(),
+    String(maintenant.getMonth() + 1).padStart(2, '0'),
+    String(maintenant.getDate()).padStart(2, '0'),
+  ].join('-');
+
+  document.querySelectorAll<HTMLElement>('[data-until]').forEach((el) => {
+    const until = el.dataset.until;
+    if (until && jour > until) el.remove();
+  });
+
   const panel = document.querySelector<HTMLElement>('.toasts');
 
-  if (panel) {
+  /* Si l'échéance a emporté tous les avis, le panneau n'a plus de raison
+     d'être : on s'aligne sur ce que la construction aurait produit. */
+  if (panel && panel.querySelectorAll('[data-toast]').length === 0) panel.remove();
+
+  if (panel && panel.isConnected) {
     const version = panel.dataset.version ?? '';
     const KEY = 'stsv-notices';
 
