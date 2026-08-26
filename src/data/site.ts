@@ -149,10 +149,13 @@ export const notices: Notice[] = [
       en: 'Sainte-Martine service',
       es: 'Servicio a Sainte-Martine',
     },
+    /* Le service a ouvert le 17 aout 2026. La formulation au futur annoncait
+       encore une date passee : elle passe au present. « Sur reservation » et la
+       direction viennent du PDF de l'horaire. */
     body: {
-      fr: 'Dès le 17 août 2026, les citoyens de Sainte-Martine peuvent utiliser le transport collectif.',
-      en: 'Starting 17 August 2026, Sainte-Martine residents can use public transit.',
-      es: 'A partir del 17 de agosto de 2026, los habitantes de Sainte-Martine pueden usar el transporte colectivo.',
+      fr: 'Le transport collectif à la demande dessert désormais Sainte-Martine, sur réservation, en direction de Valleyfield.',
+      en: 'On-demand public transit now serves Sainte-Martine, by reservation, towards Valleyfield.',
+      es: 'El transporte colectivo a demanda ya llega a Sainte-Martine, con reserva, en dirección a Valleyfield.',
     },
     ctaLabel: { fr: 'Voir l’horaire', en: 'View the schedule', es: 'Ver el horario' },
     ctaHref: '/documents/Horaire-Sainte-Martine_des-17-aout-2026.pdf',
