@@ -53,7 +53,10 @@ export type Notice = {
 /** Bandeau rouge en haut de page. Laisser `active: false` s'il n'y a rien. */
 export const banner: Notice = {
   id: 'main-street-closure',
-  active: true,
+  /* Retire le 26 aout 2026 a la demande de la STSV : le detour n'etait plus
+     d'actualite et l'avis est reste en ligne. Le texte est conserve, il
+     resservira si la rue Main ferme de nouveau. */
+  active: false,
   tone: 'alert',
   eyebrow: { fr: 'Détour', en: 'Detour', es: 'Desvío' },
   title: {
@@ -65,6 +68,24 @@ export const banner: Notice = {
 };
 
 export const notices: Notice[] = [
+  {
+    /* A retirer apres le 12 octobre 2026 : passe cette date, l'avis annonce
+       des conges deja passes. Rien ne l'expire tout seul. */
+    id: 'holiday-schedule-fall-2026',
+    active: true,
+    tone: 'info',
+    eyebrow: { fr: 'Jours fériés', en: 'Holidays', es: 'Días festivos' },
+    title: {
+      fr: 'Fête du travail et Action de grâce',
+      en: 'Labour Day and Thanksgiving',
+      es: 'Día del Trabajo y Acción de Gracias',
+    },
+    body: {
+      fr: 'Les 7 septembre et 12 octobre, le service régulier circule : Communobus et lignes 10, 30 et 99. Le service de réservation est ouvert de 8 h à 16 h.',
+      en: 'On 7 September and 12 October, regular service runs: Communobus and lines 10, 30 and 99. The reservation service is open from 8 a.m. to 4 p.m.',
+      es: 'El 7 de septiembre y el 12 de octubre, el servicio regular circula: Communobus y líneas 10, 30 y 99. El servicio de reservas abre de 8:00 a 16:00.',
+    },
+  },
   {
     id: 'line-30-new-route',
     active: true,
