@@ -164,9 +164,20 @@ const servicesLabel = { fr: 'Services', en: 'Services', es: 'Servicios' }[locale
   }
   .mnav__child a { padding-left: var(--sp-4); font-weight: 400; }
 
-  @media (min-width: 1100px) {
+  /* La nav horizontale s'affichait des 1100 px alors qu'elle n'y tient dans
+     aucune des trois langues : il faut 1159 px en francais, 1111 en anglais et
+     1255 en espagnol, ou les libelles sont les plus longs. En dessous, la barre
+     debordait — sur toutes les pages espagnoles jusqu'a 1280 px. Le seuil passe
+     donc a 1300 px, ou la langue la plus large garde 45 px de marge ; entre les
+     deux, le menu escamotable prend le relais. */
+  /* « Réserver » garde son propre seuil, celui qu'il avait avant que celui de
+     la nav ne monte. Laisse dans le seuil de la nav, le bouton aurait disparu
+     entre 1100 et 1300 px, ou il s'affichait : c'est l'action principale du
+     site, elle n'a pas a se cacher derriere un menu. */
+  @media (min-width: 1100px) { .hdr__cta { display: inline-flex; } }
+
+  @media (min-width: 1300px) {
     .hdr__nav { display: flex; }
-    .hdr__cta { display: inline-flex; }
     .hdr__burger { display: none; }
     .mnav { display: none !important; }
   }

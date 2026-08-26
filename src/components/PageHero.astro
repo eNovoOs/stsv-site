@@ -61,6 +61,12 @@ const { title, lead, image, imageAlt = '', focus = 42 } = Astro.props;
     border-radius: var(--radius-hero); overflow: hidden;
     aspect-ratio: 3 / 2;
     min-height: 220px;
+    /* Sans largeur explicite, `min-height` prend le dessus et c'est la hauteur
+       qui dicte la largeur via le ratio : 220 x 1,5 = 330 px dans un cadre de
+       280 px a 320 px de viewport. Dix pages sur onze debordaient, largeur a
+       laquelle WCAG demande justement que le contenu se reflue. Avec
+       `width: 100%`, le cadre suit son conteneur et grandit en hauteur. */
+    width: 100%;
   }
 
   /* La photo et le voile sont hors flux : ils habillent le cadre sans peser
