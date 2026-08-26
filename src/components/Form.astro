@@ -1,6 +1,6 @@
 ---
 import { useTranslations, type Locale } from '../i18n/ui';
-import { contactSubjects } from '../data/site';
+import { contact, contactSubjects } from '../data/site';
 interface Props {
   locale: Locale;
   kind: 'contact' | 'newsletter';
@@ -17,7 +17,7 @@ const copy = {
     consentNews: 'J’accepte de recevoir l’infolettre de la STSV. Désabonnement en tout temps.',
     ok: 'Merci. Votre message a été envoyé.',
     okNews: 'Merci. Votre abonnement est confirmé.',
-    err: 'Envoi impossible pour le moment. Réessayez ou appelez le 450 370-0600.',
+    err: `Envoi impossible pour le moment. Réessayez ou appelez le ${contact.phoneDisplay}.`,
     sending: 'Envoi en cours…',
   },
   en: {
@@ -28,7 +28,7 @@ const copy = {
     consentNews: 'I agree to receive the STSV newsletter. Unsubscribe anytime.',
     ok: 'Thank you. Your message has been sent.',
     okNews: 'Thank you. Your subscription is confirmed.',
-    err: 'Could not send right now. Try again or call 450 370-0600.',
+    err: `Could not send right now. Try again or call ${contact.phoneDisplay}.`,
     sending: 'Sending…',
   },
   es: {
@@ -39,7 +39,7 @@ const copy = {
     consentNews: 'Acepto recibir el boletín de la STSV. Puedo cancelar cuando quiera.',
     ok: 'Gracias. Tu mensaje fue enviado.',
     okNews: 'Gracias. Tu suscripción está confirmada.',
-    err: 'No se pudo enviar ahora. Inténtalo de nuevo o llama al 450 370-0600.',
+    err: `No se pudo enviar ahora. Inténtalo de nuevo o llama al ${contact.phoneDisplay}.`,
     sending: 'Enviando…',
   },
 }[locale];
@@ -108,12 +108,17 @@ const isContact = kind === 'contact';
   .frm__hp { position: absolute; left: -9999px; width: 1px; height: 1px; overflow: hidden; }
   .frm__row { display: grid; gap: var(--sp-4); }
   @media (min-width: 640px) { .frm__row { grid-template-columns: 1fr 1fr; } }
-  .field { display: grid; gap: .4rem; }
+  /* Meme piege que la grille de la page : un element de grille ne descend pas
+     sous son minimum intrinseque, et un `input` en porte un, herite de son
+     attribut `size`. Sans `min-width: 0`, la rangee de deux champs restait
+     large de 762 px et debordait du formulaire a toutes les largeurs. */
+  .field { display: grid; gap: .4rem; min-width: 0; }
   .field__label { font-size: var(--step--1); font-weight: 600; }
   .field__label em { color: var(--blue); font-style: normal; }
   input[type='text'], input[type='email'], input[type='tel'], textarea, select {
     font: inherit; font-size: var(--step-0); color: var(--ink);
     padding: .8rem 1rem; min-height: 50px;
+    min-width: 0; width: 100%;
     background: var(--white); border: 1px solid var(--gray-100); border-radius: var(--radius);
     transition: border-color .15s ease, box-shadow .15s ease;
   }

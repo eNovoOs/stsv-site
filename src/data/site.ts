@@ -6,8 +6,14 @@ export type L10n = Record<Locale, string>;
    Coordonnées et liens externes
    ------------------------------------------------------------------ */
 export const contact = {
+  /* Deux lignes distinctes, confirmees par la STSV le 26 aout 2026 :
+     le 0600 pour le transport collectif et le Communobus, le 0155 pour le
+     transport adapte. Ne pas les intervertir — un usager du transport adapte
+     qui compose le 0600 tombe au mauvais guichet. */
   phoneDisplay: '450 370-0600',
   phoneHref: 'tel:+14503700600',
+  phoneAdaptedDisplay: '450 370-0155',
+  phoneAdaptedHref: 'tel:+14503700155',
   bookingUrl: 'https://taxibusvalleyfield.accestaxi.com/index.aspx',
   facebook: 'https://www.facebook.com/stsvtransport/',
   transitIos: 'https://apps.apple.com/us/app/transit-subway-bus-times/id498151501',
@@ -112,9 +118,13 @@ export const notices: Notice[] = [
       es: 'Día del Trabajo y Acción de Gracias',
     },
     body: {
-      fr: 'Les 7 septembre et 12 octobre, le service régulier circule : Communobus et lignes 10, 30 et 99. Le service de réservation est ouvert de 8 h à 16 h.',
-      en: 'On 7 September and 12 October, regular service runs: Communobus and lines 10, 30 and 99. The reservation service is open from 8 a.m. to 4 p.m.',
-      es: 'El 7 de septiembre y el 12 de octubre, el servicio regular circula: Communobus y líneas 10, 30 y 99. El servicio de reservas abre de 8:00 a 16:00.',
+      /* La STSV precise que le changement porte sur la billetterie et les
+         heures de l'agent : c'est donc ce qui vient en premier. Le service
+         lui-meme circule normalement. Rien sur le transport adapte, faute
+         d'information. */
+      fr: 'Le service de réservation est ouvert de 8 h à 16 h les 7 septembre et 12 octobre. Le service régulier circule : Communobus et lignes 10, 30 et 99.',
+      en: 'The reservation service is open from 8 a.m. to 4 p.m. on 7 September and 12 October. Regular service runs: Communobus and lines 10, 30 and 99.',
+      es: 'El servicio de reservas abre de 8:00 a 16:00 el 7 de septiembre y el 12 de octubre. El servicio regular circula: Communobus y líneas 10, 30 y 99.',
     },
   },
   {
@@ -433,6 +443,14 @@ export const documents: Doc[] = [
       fr: 'Communobus — réservation et billetterie',
       en: 'Communobus — reservation and ticketing',
       es: 'Communobus — reserva y boletería',
+    },
+    /* Le document imprime le 450 370-0155, qui est la ligne du transport
+       adapte. Tant qu'il n'est pas reedite, la note donne le bon numero au
+       moment du telechargement. */
+    note: {
+      fr: 'Réservation du Communobus : 450 370-0600',
+      en: 'Communobus booking: 450 370-0600',
+      es: 'Reserva del Communobus: 450 370-0600',
     },
   },
   {

@@ -65,6 +65,18 @@ const agency = {
         },
       ],
     },
+    /* Le transport adapté a sa propre ligne. Sans ce second point de contact,
+       les moteurs et les assistants ne connaissent que celle du collectif et
+       orientent tout le monde au même endroit. Pas d'horaire déclaré ici : la
+       STSV ne nous l'a pas transmis. */
+    {
+      '@type': 'ContactPoint',
+      telephone: '+1-450-370-0155',
+      contactType: 'reservations',
+      name: { fr: 'Transport adapté', en: 'Adapted transportation', es: 'Transporte adaptado' }[locale],
+      email: 'ta@stsv.ca',
+      availableLanguage: ['French', 'English', 'Spanish'],
+    },
   ],
   potentialAction: {
     '@type': 'ReserveAction',

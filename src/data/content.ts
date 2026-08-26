@@ -363,6 +363,11 @@ export const adapted = {
     en: 'Send your request by email to:',
     es: 'Envía tu solicitud por correo electrónico a:',
   },
+  phoneNote: {
+    fr: 'Par téléphone, le transport adapté a sa propre ligne :',
+    en: 'By phone, adapted transportation has its own line:',
+    es: 'Por teléfono, el transporte adaptado tiene su propia línea:',
+  },
   emails: ['ta@stsv.ca', 'houellet@stsv.ca'],
   territoryTitle: { fr: 'Territoires couverts', en: 'Service area', es: 'Territorios cubiertos' },
   onTerritory: {
@@ -721,6 +726,13 @@ export const contactPage = {
     es: '¿Una pregunta sobre un viaje, una reserva o el transporte adaptado? Escríbenos o llámanos.',
   },
   phoneTitle: { fr: 'Par téléphone', en: 'By phone', es: 'Por teléfono' },
+  /* Deux numeros coexistent : sans mention du service, un usager du transport
+     adapte compose celui du collectif. */
+  phoneFor: {
+    fr: 'Transport collectif et Communobus',
+    en: 'Public transit and Communobus',
+    es: 'Transporte colectivo y Communobus',
+  },
   hoursTitle: { fr: 'Heures du service de réservation', en: 'Reservation service hours', es: 'Horario del servicio de reservas' },
   hours: {
     fr: ['Lundi au vendredi : 6 h 30 à 18 h 00', 'Samedi : 9 h 00 à 17 h 00', 'Dimanche : fermé'],

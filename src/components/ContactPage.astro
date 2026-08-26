@@ -30,11 +30,13 @@ const t = useTranslations(locale);
         <div class="card">
           <h2>{c.phoneTitle[locale]}</h2>
           <a class="phone mono" href={contact.phoneHref}>{contact.phoneDisplay}</a>
+          <p class="phone__for">{c.phoneFor[locale]}</p>
           <h3 class="h-sm">{c.hoursTitle[locale]}</h3>
           <ul class="hours mono">{c.hours[locale].map((h) => <li>{h}</li>)}</ul>
         </div>
         <div class="card">
           <h2>{c.adaptedTitle[locale]}</h2>
+          <a class="phone mono" href={contact.phoneAdaptedHref}>{contact.phoneAdaptedDisplay}</a>
           <p>{c.adaptedBody[locale]}</p>
           <ul class="mails">
             {adapted.emails.map((e) => <li><a class="mono" href={`mailto:${e}`}>{e}</a></li>)}
@@ -54,8 +56,17 @@ const t = useTranslations(locale);
   .card h2 { font-size: var(--step-1); margin-bottom: var(--sp-3); }
   .phone { display: inline-block; font-size: var(--step-2); font-weight: 700; color: var(--blue); text-decoration: none; margin-bottom: var(--sp-4); }
   .phone:hover { text-decoration: underline; }
+  /* Le numero seul ne dit pas a quel service il repond : la mention evite
+     qu'un usager du transport adapte appelle la ligne du collectif. */
+  .phone__for { margin: calc(var(--sp-4) * -1 + .2rem) 0 var(--sp-4); font-size: var(--step--1); color: var(--gray-600); }
   .h-sm { font-size: var(--step-0); margin-bottom: var(--sp-2); }
   .hours { list-style: none; margin: 0; padding: 0; display: grid; gap: .3rem; font-size: var(--step--1); color: var(--gray-600); }
   .mails { list-style: none; margin: 0; padding: 0; display: grid; gap: .3rem; }
+  /* `1fr` vaut `minmax(auto, 1fr)` : le minimum intrinseque du formulaire —
+     deux champs cote a cote, plus leurs marges — depassait la part de sa
+     colonne et poussait la grille hors du cadre. Dix pixels de debordement
+     horizontal a 1280 et 1366, les deux largeurs d'ecran les plus courantes.
+     `min-width: 0` laisse les colonnes se reduire pour de bon. */
+  .ct__info, .ct__form { min-width: 0; }
   @media (min-width: 900px) { .ct { grid-template-columns: 1fr 1.3fr; gap: var(--sp-7); } }
 </style>

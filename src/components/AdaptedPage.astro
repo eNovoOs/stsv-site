@@ -4,6 +4,7 @@ import PageHero from './PageHero.astro';
 import FareTable from './FareTable.astro';
 import DocList from './DocList.astro';
 import { useTranslations, type Locale } from '../i18n/ui';
+import { contact } from '../data/site';
 import { adapted as c, adaptedFares, adaptedFareNote } from '../data/content';
 import hero from '../assets/images/hero-transport-adapte.jpg';
 
@@ -28,6 +29,10 @@ const t = useTranslations(locale);
         {c.emails.map((e, i) => (
           <>{i > 0 && ' · '}<a href={`mailto:${e}`} class="mono">{e}</a></>
         ))}
+      </p>
+      <p class="note">
+        {c.phoneNote[locale]}{' '}
+        <a href={contact.phoneAdaptedHref} class="mono">{contact.phoneAdaptedDisplay}</a>
       </p>
       <DocList locale={locale} only={['adapted']} />
     </div>

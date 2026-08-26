@@ -21,7 +21,7 @@ const POIS_DATABASE = [
   { nombre: 'Clinique médicale des bâtisseurs', lat: 45.234425, lng: -74.119436, cat: 'Santé', desc: '616 Chem. Larocque', viaArret: 606 },  // position de l'arret 606, meme adresse
   { nombre: 'Clinique Médi-Val', lat: 45.242813, lng: -74.125495, cat: 'Santé', desc: '408 Rue Jeanne-Mance', viaArret: 600 },  // position de l'arret 600, meme adresse
   { nombre: 'SRSOR Salaberry', lat: 45.2512, lng: -74.1385, cat: 'Santé', desc: '310 Rue Salaberry O' },
-  { nombre: 'CHSLD La Maison des Aînés', lat: 45.2471, lng: -74.1205, cat: 'Résidences', desc: '1 Rue des Aînés' },
+  { nombre: 'CHSLD La Maison des Aînés (Valleyfield)', lat: 45.2471, lng: -74.1205, cat: 'Résidences', desc: '1 Rue des Aînés' },  // la STSV confirme deux etablissements homonymes ; l'autre est l'arret 2112, secteur St-Timothee. Adresse a confirmer.
   { nombre: 'Joie de Vivre', lat: 45.2750, lng: -74.1305, cat: 'Résidences', desc: '748 Av. de Grande Île' },
   { nombre: 'La Tourellière', lat: 45.260147, lng: -74.127381, cat: 'Résidences', desc: '45 Rue Buntin', viaArret: 224 },  // position de l'arret 224, meme adresse
   { nombre: 'Le Signature Valleyfield', lat: 45.2598, lng: -74.1302, cat: 'Résidences', desc: '2 Rue Fabre' },
