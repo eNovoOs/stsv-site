@@ -186,7 +186,10 @@ const PARADAS_RAW = [
 {"id":2847,"nom":"Centre de formation professionnelle (445 Rue Jacques-Cartier)","position_gps":{"Latitude":45.2385464873911,"Longitude":-74.1161429605625},"secteur":"Valleyfield - 600","numero":"622"},
 {"id":2848,"nom":"Laroche & Académie","position_gps":{"Latitude":45.250196,"Longitude":-74.123659},"secteur":"Valleyfield - 600","numero":"624"},
 {"id":2852,"nom":"Laroche & Isabella","position_gps":{"Latitude":45.251026,"Longitude":-74.121984},"secteur":"Valleyfield - 600","numero":"632"},
-{"id":2853,"nom":"Viau & Boul. Ste-Marie","position_gps":{"Latitude":45.24653,"Longitude":-74.119303},"secteur":"Valleyfield - 600","numero":"634"},
+/* Arret 634 « Viau & Boul. Ste-Marie » retire le 26 aout 2026 a la demande
+   de la STSV. L'enregistrement est conserve ici : si l'arret revient, il
+   suffit de decommenter la ligne.
+   {"id":2853,"nom":"Viau & Boul. Ste-Marie","position_gps":{"Latitude":45.24653,"Longitude":-74.119303},"secteur":"Valleyfield - 600","numero":"634"}, */
 {"id":2854,"nom":"Trudeau & Huntingdon","position_gps":{"Latitude":45.244916,"Longitude":-74.115893},"secteur":"Valleyfield - 600","numero":"636"},
 {"id":2855,"nom":"Larin & Cholette","position_gps":{"Latitude":45.24366,"Longitude":-74.112971},"secteur":"Valleyfield - 600","numero":"638"},
 {"id":2856,"nom":"Carrière & Louis VI Major","position_gps":{"Latitude":45.242205,"Longitude":-74.109979},"secteur":"Valleyfield - 600","numero":"640"},
