@@ -125,6 +125,13 @@ const servicesLabel = { fr: 'Services', en: 'Services', es: 'Servicios' }[locale
     background: var(--white); border: 1px solid var(--gray-100);
     border-radius: var(--radius); box-shadow: var(--shadow-md); display: none;
   }
+  /* Les .3rem entre le bouton et le panneau sont hors du <li> : en les
+     traversant, la souris quittait le menu, `mouseleave` fermait le panneau
+     et l'entree visee disparaissait avant le clic. Cette bande transparente
+     rattache l'espace au panneau, donc au <li> : le survol ne se rompt plus. */
+  .hdr__sub::before {
+    content: ''; position: absolute; left: 0; right: 0; top: calc(-.3rem - 1px); height: calc(.3rem + 1px);
+  }
   .has-sub[data-open='true'] .hdr__sub { display: block; }
   .hdr__sub a {
     display: block; padding: .55rem .7rem; border-radius: 6px;

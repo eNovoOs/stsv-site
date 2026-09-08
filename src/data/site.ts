@@ -454,15 +454,6 @@ export const documents: Doc[] = [
     },
   },
   {
-    file: 'Communobus-infos-reservation.pdf',
-    category: 'communobus',
-    title: {
-      fr: 'Communobus — informations de réservation',
-      en: 'Communobus — reservation information',
-      es: 'Communobus — información de reserva',
-    },
-  },
-  {
     file: 'Description-du-service.pdf',
     category: 'communobus',
     title: {
