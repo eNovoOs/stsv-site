@@ -27,9 +27,29 @@ export const routes = {
   tutorials: { fr: 'tutoriels', en: 'tutorials', es: 'tutoriales' },
   contact: { fr: 'contact', en: 'contact', es: 'contacto' },
   newsletter: { fr: 'infolettre', en: 'newsletter', es: 'boletin' },
+  /* Page de campagne étudiante : elle n'existe qu'en français, d'où le même
+     slug partout. Voir `pageLocales` plus bas. */
+  cegep: { fr: 'cegep', en: 'cegep', es: 'cegep' },
 } as const;
 
 export type RouteKey = keyof typeof routes;
+
+/**
+ * Pages qui n'existent pas dans les trois langues.
+ *
+ * La page /cegep accompagne une campagne au Cégep de Valleyfield, francophone :
+ * elle est rédigée en français seulement. Sans cette liste, le sélecteur de
+ * langue et les balises hreflang pointeraient vers /en/cegep et /es/cegep,
+ * qui n'existent pas.
+ */
+const pageLocales: Partial<Record<RouteKey, readonly Locale[]>> = {
+  cegep: ['fr'],
+};
+
+/** Langues dans lesquelles une page existe réellement. */
+export function localesFor(key: RouteKey): readonly Locale[] {
+  return pageLocales[key] ?? locales;
+}
 
 /** Construit un chemin absolu pour une page dans une langue donnée. */
 export function path(key: RouteKey, locale: Locale): string {

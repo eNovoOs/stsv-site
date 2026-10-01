@@ -817,3 +817,96 @@ export const newsletterPage = {
     },
   ],
 };
+
+/* ------------------------------ Cégep ----------------------------- */
+/* Page de campagne pour les futurs cégépiens, accessible par son URL
+   (/cegep) et par code QR, hors du menu. Elle existe en français
+   seulement : le public visé est celui du Cégep de Valleyfield, et le
+   tutoiement est voulu pour ce public.
+
+   Aucun prix, arrêt ni numéro n'est écrit ici : ils viennent de
+   `site.ts` (fares, cegepStops, lines, contact), pour que la page ne
+   puisse pas contredire /services. Les conditions d'admissibilité et la
+   preuve à fournir ne figurent pas encore dans nos sources : la page
+   renvoie vers le Cégep et la STSV plutôt que de les supposer. */
+export const cegep = {
+  meta: {
+    title: 'Aller au Cégep de Valleyfield en autobus — STSV',
+    description:
+      'Lignes et arrêts qui desservent le Cégep de Valleyfield, tarif étudiant et premiers pas avec la STSV : tout pour préparer ton trajet.',
+  },
+  eyebrow: 'Cégep de Valleyfield',
+  h1: 'Ton trajet vers le cégep commence ici.',
+  lead: 'Découvre comment te rendre au Cégep de Valleyfield avec la STSV, consulter les horaires et profiter du tarif étudiant.',
+  ctaTrip: 'Trouver mon trajet',
+  ctaFare: 'Voir le tarif étudiant',
+
+  /* Les trois réponses en un coup d'œil, avant le détail. */
+  quick: {
+    busTitle: 'En autobus?',
+    busBody: 'Oui. Les lignes 10, 30 et 99 s’arrêtent au Cégep.',
+    fareTitle: 'Tarif étudiant',
+    fareSuffix: 'pour les étudiants du Cégep de Valleyfield',
+    stepsTitle: 'Pour commencer',
+    stepsBody: 'Trois étapes, de l’horaire à l’arrêt.',
+  },
+
+  tripTitle: 'Comment me rendre au cégep?',
+  tripLead: 'Trois lignes fixes desservent le Cégep. Repère ton arrêt, puis vérifie l’heure de passage dans l’horaire de ta ligne.',
+  stopsTitle: 'Les arrêts du Cégep',
+  stopLabel: 'Arrêt',
+  linesTitle: 'Les lignes',
+  lineNotes: {
+    '10': 'Le Cégep dans les deux sens, sans réservation.',
+    '30': 'Sur réservation : le trajet n’est effectué que si au moins une personne a réservé.',
+    '99': 'Relie le Cégep à la gare de Vaudreuil, sans réservation.',
+  } as Record<string, string>,
+  plannerTitle: 'Planifie ton trajet avec Transit',
+  plannerBody: 'Entre ta destination dans l’application Transit : elle te propose un itinéraire en transport en commun et affiche les départs en temps réel.',
+  plannerGuide: 'Mode d’emploi de Transit (PDF)',
+  mapTitle: 'Carte des arrêts',
+  mapBody: 'Tous les arrêts du réseau sur une carte, avec leur numéro.',
+  mapCta: 'Ouvrir la carte',
+  communobusTitle: 'Tu n’habites pas près d’une ligne?',
+  /* Heures et numéro d'arrêt ajoutés par la page, depuis site.ts. */
+  communobusLead: 'Le Communobus circule sur réservation.',
+  communobusStop: 'Au moment de réserver, on te demande un numéro d’arrêt : celui de l’entrée principale du Cégep est le',
+  communobusCta: 'Comment réserver',
+
+  fareTitle: 'Quel tarif étudiant s’applique à moi?',
+  fareName: 'Étudiant Cégep de Valleyfield',
+  fareSame: 'Le même prix que tu te déplaces dans ta municipalité (titre A) ou d’une municipalité à l’autre (titre B).',
+  fareCard: 'Le titre se charge sur la carte ACCÈS, qui contient tous les titres de transport de la STSV.',
+  fareWhoTitle: 'Qui y a droit',
+  fareWhoBody: 'Les étudiantes et étudiants du Cégep de Valleyfield. Les conditions et la preuve d’inscription à présenter sont précisées par le Cégep et la STSV.',
+  fareWhoLink: 'Page Transport en commun du Cégep',
+  fareGetTitle: 'Obtenir et recharger ton titre',
+  fareGetBody: 'Ton titre étudiant se charge sur ta carte ACCÈS, et c’est en la rechargeant que tu le renouvelles. Le tutoriel vidéo montre comment faire.',
+  fareGetLink: 'Tutoriel : recharger la carte ACCÈS',
+  fareOtherTitle: 'Tu n’étudies pas au Cégep de Valleyfield?',
+  fareOtherBody: 'La grille tarifaire complète présente les autres titres, dont le tarif réduit. Appelle la STSV pour savoir lequel s’applique à toi.',
+  fareTableLink: 'Voir la grille tarifaire complète',
+
+  stepsTitle: 'Ton premier trajet, en quelques étapes',
+  steps: [
+    {
+      title: 'Trouve ton trajet et vérifie ton départ.',
+      body: 'Consulte l’horaire de ta ligne ou l’application Transit. Sur la ligne 30, réserve ton passage.',
+    },
+    {
+      title: 'Procure-toi le titre de transport approprié.',
+      body: 'Le titre étudiant se charge sur ta carte ACCÈS.',
+    },
+    {
+      title: 'Présente-toi à ton arrêt et utilise ton titre selon les instructions du service.',
+      body: 'Les lignes 10 et 99 ne demandent pas de réservation : tu te présentes à l’arrêt à l’heure prévue à l’horaire.',
+    },
+  ],
+
+  helpTitle: 'Besoin d’un coup de main?',
+  helpPhoneFor: 'Transport collectif et Communobus',
+  helpHoursTitle: 'Heures du service de réservation',
+  helpContact: 'Écrire à la STSV',
+  faqTitle: 'Questions fréquentes',
+  back: 'Retour à l’accueil de la STSV',
+};

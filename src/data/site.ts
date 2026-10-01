@@ -19,6 +19,9 @@ export const contact = {
   transitIos: 'https://apps.apple.com/us/app/transit-subway-bus-times/id498151501',
   transitAndroid:
     'https://play.google.com/store/apps/details?id=com.thetransitapp.droid',
+  /* Page officielle du Cégep sur le transport en commun : c'est elle qui
+     précise les conditions du tarif étudiant. */
+  cegepTransit: 'https://www.cegepvalleyfield.ca/le-cegep/grand-public/transport-en-commun/',
 };
 
 
@@ -247,6 +250,39 @@ export const lines: Line[] = [
 ];
 
 /* ------------------------------------------------------------------
+   Arrêts du Cégep de Valleyfield
+   Noms recopiés de l'horaire « lignes 10, 30 et 99 » (en vigueur depuis le
+   3 novembre 2025) ; numéros tirés du catalogue de la carte des arrêts
+   (public/carte/data.js). Les deux sources concordent. La ligne 10 ne passe
+   pas au même arrêt dans les deux sens : vers Mgr-Langlois, elle s'arrête à
+   l'entrée principale, pas rue Saint-Thomas.
+   ------------------------------------------------------------------ */
+export type CegepStop = {
+  number: string;
+  name: string;
+  serves: { line: string; direction?: L10n }[];
+};
+
+export const cegepStops: CegepStop[] = [
+  {
+    number: '410',
+    name: 'Rue Saint-Thomas / face à la bibliothèque du Cégep',
+    serves: [
+      { line: '10', direction: { fr: 'direction Centre-ville', en: 'towards Downtown', es: 'dirección Centro' } },
+      { line: '30' },
+      { line: '99' },
+    ],
+  },
+  {
+    number: '404',
+    name: 'Collège de Valleyfield, entrée principale (169, rue Champlain)',
+    serves: [
+      { line: '10', direction: { fr: 'direction Mgr-Langlois', en: 'towards Mgr-Langlois', es: 'dirección Mgr-Langlois' } },
+    ],
+  },
+];
+
+/* ------------------------------------------------------------------
    Grille tarifaire — source : stsv.ca, section « Description des services »
    ------------------------------------------------------------------ */
 export type FareRow = { label: L10n; regular: string; reduced?: string };
@@ -320,6 +356,19 @@ export const fares: FareTable[] = [
     ],
   },
 ];
+
+/** Libellé FR qui repère la ligne du tarif étudiant dans `fares`. */
+export const studentFareLabel = 'Étudiant Cégep Valleyfield';
+
+/**
+ * Tarif étudiant du Cégep, lu dans la grille plutôt que recopié : la page
+ * /cegep affiche ainsi toujours le même prix que /services.
+ */
+export function studentFare(tableId: string): string | undefined {
+  return fares
+    .find((t) => t.id === tableId)
+    ?.rows.find((r) => r.label.fr === studentFareLabel)?.regular;
+}
 
 export const fareHeadings: { label: L10n; regular: L10n; reduced: L10n } = {
   label: {

@@ -1,0 +1,323 @@
+---
+/**
+ * Page de campagne /cegep — futurs cégépiens du Cégep de Valleyfield.
+ * Hors menu, français seulement (voir `pageLocales` dans i18n/ui.ts).
+ * Prix, arrêts, lignes et coordonnées viennent tous de data/site.ts.
+ */
+import Base from '../layouts/Base.astro';
+import PageHero from './PageHero.astro';
+import Accordion from './Accordion.astro';
+import { path } from '../i18n/ui';
+import { lines, cegepStops, studentFare, contact, documents, communobusHours } from '../data/site';
+import { cegep as c, contactPage } from '../data/content';
+
+const locale = 'fr';
+
+const priceA = studentFare('fare-a');
+const priceB = studentFare('fare-b');
+/* Les deux grilles affichent aujourd'hui le même prix. Si elles divergent un
+   jour, la page affiche les deux plutôt que d'en taire un. */
+const samePrice = priceA === priceB;
+
+/* L'arrêt de l'entrée principale : celui que l'on donne en réservant. */
+const mainEntrance = cegepStops.find((s) => s.name.includes('entrée principale'));
+const cegepLines = lines.filter((l) => cegepStops.some((s) => s.serves.some((x) => x.line === l.number)));
+const schedule = documents.find((d) => d.file === lines.find((l) => l.number === '10')?.schedule.split('/').pop());
+
+const faq = [
+  {
+    question: 'Quelles lignes s’arrêtent au Cégep?',
+    answer: `Les lignes 10, 30 et 99 s’arrêtent rue Saint-Thomas, face à la bibliothèque du Cégep (arrêt 410). En direction de Mgr-Langlois, la ligne 10 s’arrête plutôt à l’entrée principale, au 169, rue Champlain (arrêt 404).`,
+  },
+  {
+    question: 'Combien coûte le titre étudiant?',
+    answer: samePrice
+      ? `${priceA} pour les étudiantes et étudiants du Cégep de Valleyfield, que le déplacement reste dans la même municipalité ou non.`
+      : `${priceA} dans la même municipalité (titre A) et ${priceB} d’une municipalité à l’autre (titre B), pour les étudiantes et étudiants du Cégep de Valleyfield.`,
+  },
+  {
+    question: 'Comment obtenir le tarif étudiant?',
+    answer: `Le titre étudiant se charge sur la carte ACCÈS. Pour les conditions et la preuve d’inscription à présenter, consulte la page Transport en commun du Cégep ou appelle la STSV au ${contact.phoneDisplay}.`,
+  },
+  {
+    question: 'Où consulter les horaires?',
+    answer: `Les horaires des lignes 10, 30 et 99 sont réunis dans un seul document PDF${schedule?.note ? `, ${schedule.note.fr.charAt(0).toLowerCase()}${schedule.note.fr.slice(1)}` : ''}. L’application Transit affiche aussi les départs en temps réel.`,
+  },
+  {
+    question: 'Dois-je réserver mon trajet?',
+    answer: `Non pour les lignes 10 et 99 : tu te présentes à l’arrêt. Oui pour la ligne 30 et pour le Communobus, qui circulent sur réservation, par téléphone au ${contact.phoneDisplay}, par texto ou en ligne.`,
+  },
+];
+---
+<Base locale={locale} page="cegep" title={c.meta.title} description={c.meta.description} faq={faq} toasts={false}>
+  <PageHero title={c.h1} lead={c.lead}>
+    <div class="hero-cta" slot="cta">
+      <a class="btn btn--primary btn--big" href="#trajet">{c.ctaTrip}</a>
+      <a class="btn btn--lime btn--big" href="#tarif">{c.ctaFare}</a>
+    </div>
+  </PageHero>
+
+  <!-- Les trois questions du public, avec leur réponse courte -->
+  <section class="section section--tight" aria-label="En bref">
+    <div class="wrap">
+      <ul class="quick">
+        <li class="quick__item">
+          <a href="#trajet">
+            <span class="quick__k">{c.quick.busTitle}</span>
+            <span class="quick__v">{c.quick.busBody}</span>
+          </a>
+        </li>
+        <li class="quick__item">
+          <a href="#tarif">
+            <span class="quick__k">{c.quick.fareTitle}</span>
+            <span class="quick__v"><strong class="mono">{priceA}</strong> {c.quick.fareSuffix}</span>
+          </a>
+        </li>
+        <li class="quick__item">
+          <a href="#etapes">
+            <span class="quick__k">{c.quick.stepsTitle}</span>
+            <span class="quick__v">{c.quick.stepsBody}</span>
+          </a>
+        </li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- 1. Se rendre au cégep -->
+  <section class="section section--air" aria-labelledby="trajet">
+    <div class="wrap">
+      <h2 id="trajet">{c.tripTitle}</h2>
+      <p>{c.tripLead}</p>
+
+      <h3>{c.stopsTitle}</h3>
+      <ul class="stops">
+        {cegepStops.map((s) => (
+          <li class="card stop">
+            <span class="stop__num mono">{c.stopLabel} {s.number}</span>
+            <p class="stop__name">{s.name}</p>
+            <ul class="stop__lines" aria-label="Lignes">
+              {s.serves.map((x) => (
+                <li><span class="chip mono">{x.line}</span>{x.direction && <span class="stop__dir">{x.direction.fr}</span>}</li>
+              ))}
+            </ul>
+          </li>
+        ))}
+      </ul>
+
+      <h3>{c.linesTitle}</h3>
+      <ul class="lines">
+        {cegepLines.map((l) => (
+          <li class="card line">
+            <span class="line__num mono" aria-hidden="true">{l.number}</span>
+            <div class="line__body">
+              <p class="line__name">Ligne {l.number} — {l.name.fr}</p>
+              {c.lineNotes[l.number] && <p class="line__note">{c.lineNotes[l.number]}</p>}
+            </div>
+            <a class="btn btn--file line__btn" href={l.schedule}>
+              Horaire de la ligne {l.number} <span class="visually-hidden">(PDF)</span>
+            </a>
+          </li>
+        ))}
+      </ul>
+      {schedule?.note && <p class="small">{schedule.title.fr} : {schedule.note.fr.toLowerCase()}.</p>}
+
+      <div class="tools">
+        <div class="card tool">
+          <h3>{c.plannerTitle}</h3>
+          <p>{c.plannerBody}</p>
+          <div class="btn-row">
+            <a class="btn btn--primary" href={contact.transitIos} target="_blank" rel="noopener">App Store <span class="visually-hidden">(nouvel onglet)</span></a>
+            <a class="btn btn--primary" href={contact.transitAndroid} target="_blank" rel="noopener">Google Play <span class="visually-hidden">(nouvel onglet)</span></a>
+          </div>
+          <a class="tool__link" href="/documents/Application-Transit.pdf">{c.plannerGuide}</a>
+        </div>
+        <div class="card tool">
+          <h3>{c.mapTitle}</h3>
+          <p>{c.mapBody}</p>
+          <a class="btn btn--ghost" href={path('stops', locale)}>{c.mapCta}</a>
+        </div>
+        <div class="card tool">
+          <h3>{c.communobusTitle}</h3>
+          <p>{c.communobusLead} {communobusHours.fr} {c.communobusStop} <span class="mono">{mainEntrance?.number}</span>.</p>
+          <a class="btn btn--ghost" href={path('reservation', locale)}>{c.communobusCta}</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 2. Tarif étudiant -->
+  <section class="section" aria-labelledby="tarif">
+    <div class="wrap">
+      <h2 id="tarif">{c.fareTitle}</h2>
+
+      <div class="fare">
+        <div class="fare__price">
+          <p class="fare__name">{c.fareName}</p>
+          {samePrice ? (
+            <p class="fare__amount mono">{priceA}</p>
+          ) : (
+            <p class="fare__amount fare__amount--two mono">
+              <span>Titre A : {priceA}</span><span>Titre B : {priceB}</span>
+            </p>
+          )}
+        </div>
+        <div class="fare__text">
+          {samePrice && <p>{c.fareSame}</p>}
+          <p>{c.fareCard}</p>
+        </div>
+      </div>
+
+      <div class="grid grid--3 fare-info">
+        <div class="card">
+          <h3>{c.fareWhoTitle}</h3>
+          <p>{c.fareWhoBody}</p>
+          <a href={contact.cegepTransit} target="_blank" rel="noopener">{c.fareWhoLink} <span class="visually-hidden">(nouvel onglet)</span></a>
+        </div>
+        <div class="card">
+          <h3>{c.fareGetTitle}</h3>
+          <p>{c.fareGetBody}</p>
+          <a href={path('tutorials', locale)}>{c.fareGetLink}</a>
+        </div>
+        <div class="card">
+          <h3>{c.fareOtherTitle}</h3>
+          <p>{c.fareOtherBody}</p>
+          <a href={`${path('services', locale)}#tarifs`}>{c.fareTableLink}</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 3. Premier trajet -->
+  <section class="section section--air" aria-labelledby="etapes">
+    <div class="wrap">
+      <h2 id="etapes">{c.stepsTitle}</h2>
+      <ol class="steps">
+        {c.steps.map((s, i) => (
+          <li class="card step">
+            <span class="step__n mono" aria-hidden="true">{i + 1}</span>
+            <div>
+              <h3 class="step__title">{s.title}</h3>
+              <p>{s.body}</p>
+            </div>
+          </li>
+        ))}
+      </ol>
+    </div>
+  </section>
+
+  <!-- 4. Aide -->
+  <section class="section" aria-labelledby="aide">
+    <div class="wrap">
+      <h2 id="aide">{c.helpTitle}</h2>
+      <div class="help">
+        <div class="card help__phone">
+          <p class="help__for">{c.helpPhoneFor}</p>
+          <a class="btn btn--primary btn--big help__tel mono" href={contact.phoneHref}>
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M22 16.9v3a2 2 0 0 1-2.2 2 19.8 19.8 0 0 1-8.6-3.1 19.5 19.5 0 0 1-6-6A19.8 19.8 0 0 1 2.1 4.2 2 2 0 0 1 4.1 2h3a2 2 0 0 1 2 1.7c.1.9.4 1.8.7 2.7a2 2 0 0 1-.5 2.1L8 9.8a16 16 0 0 0 6 6l1.3-1.3a2 2 0 0 1 2.1-.4c.9.3 1.8.6 2.7.7a2 2 0 0 1 1.7 2z"/></svg>
+            {contact.phoneDisplay}
+          </a>
+          <p class="help__hours-title">{c.helpHoursTitle}</p>
+          <ul class="help__hours">
+            {contactPage.hours.fr.map((h) => <li>{h}</li>)}
+          </ul>
+          <a class="help__link" href={path('contact', locale)}>{c.helpContact}</a>
+        </div>
+        <div class="help__faq">
+          <h3>{c.faqTitle}</h3>
+          <Accordion items={faq.map((f) => ({ q: f.question, a: f.answer }))} />
+        </div>
+      </div>
+
+      <p class="back"><a href={path('home', locale)}>← {c.back}</a></p>
+    </div>
+  </section>
+</Base>
+
+<style>
+  /* Même colonne que le chapô de PageHero, centré à --wrap-text. */
+  .hero-cta { display: flex; flex-wrap: wrap; gap: var(--sp-3); margin: var(--sp-5) auto 0; max-width: var(--wrap-text); }
+  .btn--big { min-height: 56px; font-size: 1rem; font-weight: 600; padding-inline: 1.6rem; }
+  @media (max-width: 520px) { .hero-cta .btn { flex: 1 1 100%; } }
+
+  .section--tight { padding-block: var(--sp-5) var(--sp-6); }
+
+  .quick { list-style: none; margin: 0; padding: 0; display: grid; gap: var(--sp-3); }
+  @media (min-width: 820px) { .quick { grid-template-columns: repeat(3, 1fr); gap: var(--sp-4); } }
+  .quick__item a {
+    display: grid; gap: .2rem; height: 100%;
+    padding: var(--sp-4) var(--sp-5); border-radius: var(--radius-lg);
+    background: var(--gray-air); border-left: 6px solid var(--lime);
+    color: var(--ink); text-decoration: none;
+  }
+  .quick__item a:hover { background: #EAF1FB; color: var(--ink); }
+  .quick__k { font-weight: 700; color: var(--blue-dark); }
+  .quick__v { font-size: var(--step--1); }
+  .quick__v strong { font-size: 1rem; }
+
+  .small { font-size: var(--step--1); color: var(--gray-600); }
+
+  .stops { list-style: none; margin: 0 0 var(--sp-6); padding: 0; display: grid; gap: var(--sp-4); }
+  @media (min-width: 820px) { .stops { grid-template-columns: repeat(2, 1fr); } }
+  .stop__num { display: inline-block; background: var(--blue); color: var(--white); font-weight: 700; font-size: var(--step--1); padding: .3rem .7rem; border-radius: 6px; }
+  .stop__name { font-weight: 600; font-size: var(--step-1); margin: var(--sp-3) 0; }
+  .stop__lines { list-style: none; margin: 0; padding: 0; display: grid; gap: var(--sp-2); }
+  .stop__lines li { display: flex; align-items: center; gap: .45rem; }
+  .chip { display: inline-grid; place-items: center; min-width: 2.4rem; height: 2rem; padding: 0 .5rem; border-radius: 999px; background: var(--lime); color: var(--black); font-weight: 700; font-size: .9rem; }
+  .stop__dir { font-size: var(--step--1); color: var(--gray-600); }
+
+  .lines { list-style: none; margin: 0 0 var(--sp-3); padding: 0; display: grid; gap: var(--sp-3); }
+  .line { display: grid; grid-template-columns: auto minmax(0, 1fr); gap: var(--sp-3) var(--sp-4); align-items: center; }
+  .line__num { display: grid; place-items: center; width: 3rem; height: 3rem; border-radius: 10px; background: var(--blue); color: var(--white); font-weight: 700; font-size: 1.15rem; }
+  .line__name { font-weight: 600; margin: 0; }
+  .line__note { margin: .2rem 0 0; font-size: var(--step--1); color: var(--gray-600); }
+  .line__btn { grid-column: 1 / -1; min-height: 48px; }
+  @media (min-width: 820px) {
+    .line { grid-template-columns: auto minmax(0, 1fr) auto; }
+    .line__btn { grid-column: auto; }
+  }
+
+  .tools { display: grid; gap: var(--sp-4); margin-top: var(--sp-6); }
+  @media (min-width: 900px) { .tools { grid-template-columns: repeat(3, 1fr); } }
+  .tool { display: flex; flex-direction: column; align-items: flex-start; }
+  .tool h3 { font-size: var(--step-1); }
+  .tool p { font-size: .95rem; }
+  .tool > .btn { margin-top: auto; }
+  .btn-row { display: flex; flex-wrap: wrap; gap: var(--sp-3); margin-bottom: var(--sp-3); }
+  .tool__link { font-size: .95rem; }
+
+  .fare {
+    display: grid; gap: var(--sp-5); align-items: center;
+    padding: var(--sp-5); border-radius: var(--radius-lg);
+    background: var(--blue); color: var(--white); margin-bottom: var(--sp-6);
+  }
+  @media (min-width: 820px) { .fare { grid-template-columns: auto minmax(0, 1fr); gap: var(--sp-7); padding: var(--sp-6) var(--sp-7); } }
+  .fare__name { margin: 0 0 .2rem; font-weight: 600; color: var(--cyan-on-blue); }
+  .fare__amount { margin: 0; font-size: clamp(2.6rem, 2rem + 3vw, 3.6rem); font-weight: 700; line-height: 1.1; }
+  .fare__amount--two { display: grid; font-size: var(--step-2); }
+  .fare__text p { margin: 0 0 var(--sp-3); }
+  .fare__text p:last-child { margin: 0; }
+  .fare-info h3 { font-size: var(--step-1); }
+  .fare-info p { font-size: .95rem; }
+
+  .steps { list-style: none; margin: 0; padding: 0; display: grid; gap: var(--sp-4); counter-reset: none; }
+  @media (min-width: 900px) { .steps { grid-template-columns: repeat(3, 1fr); } }
+  .step { display: grid; grid-template-columns: auto minmax(0, 1fr); gap: var(--sp-4); align-items: start; }
+  .step__n { display: grid; place-items: center; width: 2.6rem; height: 2.6rem; border-radius: 50%; background: var(--lime); color: var(--black); font-weight: 700; font-size: 1.1rem; }
+  .step__title { font-size: 1.05rem; margin-bottom: var(--sp-2); }
+  .step p { margin: 0; font-size: .95rem; color: var(--gray-600); }
+
+  .help { display: grid; gap: var(--sp-6); align-items: start; }
+  @media (min-width: 900px) { .help { grid-template-columns: minmax(0, 1fr) minmax(0, 2fr); } }
+  .help__for { margin: 0 0 var(--sp-3); font-weight: 600; }
+  .help__tel { width: 100%; font-family: var(--font-mono); font-size: 1.15rem; margin-bottom: var(--sp-5); }
+  .help__hours-title { margin: 0 0 var(--sp-2); font-weight: 600; font-size: .95rem; }
+  .help__hours { margin: 0 0 var(--sp-4); padding-left: 1.1rem; font-size: .95rem; color: var(--gray-600); }
+
+  .back { margin-top: var(--sp-7); }
+  .back a { font-weight: 600; }
+
+  /* Liens texte : une cible tactile d'au moins 48 px, comme les boutons. */
+  .tool__link, .fare-info a, .help__link, .back a {
+    display: inline-flex; align-items: center; min-height: 48px;
+  }
+</style>

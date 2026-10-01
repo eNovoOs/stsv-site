@@ -5,7 +5,7 @@ import Footer from '../components/Footer.astro';
 import Topbar from '../components/Topbar.astro';
 import Toasts from '../components/Toasts.astro';
 import Schema from '../components/Schema.astro';
-import { htmlLang, locales, useTranslations, type Locale, type RouteKey, path } from '../i18n/ui';
+import { htmlLang, localesFor, useTranslations, type Locale, type RouteKey, path } from '../i18n/ui';
 
 interface Props {
   locale: Locale;
@@ -14,12 +14,20 @@ interface Props {
   description: string;
   faq?: { question: string; answer: string }[];
   noindex?: boolean;
+  /**
+   * Avis flottants et rappel de l'infolettre. Une page d'arrivée par code QR
+   * s'en passe : sur téléphone, ils couvrent l'en-tête au premier affichage.
+   */
+  toasts?: boolean;
 }
 
-const { locale, page, title, description, faq, noindex = false } = Astro.props;
+const { locale, page, title, description, faq, noindex = false, toasts = true } = Astro.props;
 const t = useTranslations(locale);
 const site = Astro.site ?? new URL('https://stsv.ca');
 const canonical = new URL(path(page, locale), site).href;
+/* hreflang ne déclare que les versions qui existent : une alternative
+   vers une 404 est ignorée, voire pénalisée, par les moteurs. */
+const alternates = localesFor(page);
 const ogImage = new URL(`/brand/og-${locale}.png`, site).href;
 ---
 
@@ -35,11 +43,11 @@ const ogImage = new URL(`/brand/og-${locale}.png`, site).href;
 
     {
       !noindex &&
-        locales.map((l) => (
+        alternates.map((l) => (
           <link rel="alternate" hreflang={htmlLang[l]} href={new URL(path(page, l), site).href} />
         ))
     }
-    {!noindex && <link rel="alternate" hreflang="x-default" href={new URL(path(page, 'fr'), site).href} />}
+    {!noindex && alternates.includes('fr') && <link rel="alternate" hreflang="x-default" href={new URL(path(page, 'fr'), site).href} />}
 
     <meta property="og:type" content="website" />
     <meta property="og:site_name" content="STSV" />
@@ -75,7 +83,7 @@ const ogImage = new URL(`/brand/og-${locale}.png`, site).href;
     <main id="main">
       <slot />
     </main>
-    <Toasts locale={locale} />
+    {toasts && <Toasts locale={locale} />}
     <Footer locale={locale} />
   </body>
 </html>

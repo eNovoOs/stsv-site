@@ -1,10 +1,14 @@
 ---
 /** Bandeau bleu supérieur : slogan à gauche, sélecteur de langue à droite. */
-import { locales, localeNames, path, useTranslations, type Locale, type RouteKey } from '../i18n/ui';
+import { locales, localeNames, localesFor, path, useTranslations, type Locale, type RouteKey } from '../i18n/ui';
 
 interface Props { locale: Locale; page: RouteKey }
 const { locale, page } = Astro.props;
 const t = useTranslations(locale);
+/* Une page absente dans une langue renvoie vers l'accueil de cette langue
+   plutôt que vers une 404. */
+const available = localesFor(page);
+const hrefFor = (l: Locale) => path(available.includes(l) ? page : 'home', l);
 
 const slogan = {
   fr: 'Éliminez le stress de vos déplacements, appelez la STSV',
@@ -25,7 +29,7 @@ const slogan = {
       <ul class="lang__menu" id="lang-menu">
         {locales.map((l) => (
           <li>
-            <a href={path(page, l)} hreflang={l} aria-current={l === locale ? 'true' : undefined}>
+            <a href={hrefFor(l)} hreflang={l} aria-current={l === locale ? 'true' : undefined}>
               {localeNames[l]}
             </a>
           </li>

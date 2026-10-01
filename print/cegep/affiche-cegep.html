@@ -1,0 +1,73 @@
+<!doctype html>
+<html lang="fr-CA">
+<head>
+<meta charset="utf-8">
+<title>Affiche — Tu viens au cégep? — STSV</title>
+<!--
+  Source de l'affiche A4. Le PDF se régénère avec :
+    node print/cegep/build-poster.cjs
+  Le code QR est inséré tel quel depuis qr-stsv-cegep.svg : ne rien poser
+  dessus, et garder la zone blanche qui l'entoure (zone de silence).
+-->
+<style>
+  @font-face { font-family: Poppins; font-weight: 400; src: url(../../public/fonts/poppins-latin-400-normal.woff2) format('woff2'); }
+  @font-face { font-family: Poppins; font-weight: 600; src: url(../../public/fonts/poppins-latin-600-normal.woff2) format('woff2'); }
+  @font-face { font-family: Poppins; font-weight: 700; src: url(../../public/fonts/poppins-latin-700-normal.woff2) format('woff2'); }
+  @font-face { font-family: 'JetBrains Mono'; font-weight: 700; src: url(../../public/fonts/jetbrains-mono-latin-700-normal.woff2) format('woff2'); }
+
+  @page { size: A4; margin: 0; }
+  :root { --blue: #135EEF; --blue-dark: #0B3FB4; --lime: #BDD100; --cyan-on-blue: #CFF2F6; --ink: #0E1420; }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; }
+  body { font-family: Poppins, sans-serif; color: var(--ink); -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+
+  .page { width: 210mm; height: 297mm; position: relative; overflow: hidden; display: flex; flex-direction: column; }
+
+  .top { padding: 16mm 16mm 0; }
+  .logo { width: 62mm; height: auto; display: block; }
+
+  .head { padding: 14mm 16mm 0; }
+  h1 { margin: 0; font-size: 54pt; line-height: 1.05; font-weight: 700; color: var(--blue-dark); letter-spacing: -.01em; }
+  .sub { margin: 6mm 0 0; font-size: 21pt; line-height: 1.3; font-weight: 600; max-width: 178mm; }
+
+  .qr-zone { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 6mm 16mm; }
+  .scan { margin: 0 0 7mm; font-size: 17pt; font-weight: 600; text-align: center; }
+  /* Liseré lime autour d'un carré blanc : le cadre décore, la zone de
+     silence du code (4 modules) reste blanche à l'intérieur. */
+  .qr-frame { padding: 4mm; border-radius: 6mm; background: var(--lime); }
+  .qr-frame .qr { display: block; width: 108mm; height: 108mm; background: #fff; border-radius: 3mm; padding: 2mm; }
+  .qr-frame .qr svg, .qr-frame .qr img { display: block; width: 100%; height: 100%; }
+  .url { margin: 6mm 0 0; font-family: 'JetBrains Mono', monospace; font-weight: 700; font-size: 30pt; letter-spacing: -.01em; color: var(--blue-dark); }
+
+  .foot { background: var(--blue); color: #fff; padding: 9mm 16mm 11mm; position: relative; }
+  .foot::after {
+    content: ''; position: absolute; right: -8mm; top: 50%; width: 60mm; height: 50mm; transform: translateY(-50%);
+    background: url(../../public/brand/symbole-stsv.png) no-repeat right center / contain; opacity: .14;
+  }
+  .foot p { margin: 0; position: relative; z-index: 1; }
+  .foot .org { font-weight: 600; font-size: 12pt; }
+</style>
+</head>
+<body>
+  <div class="page">
+    <div class="top">
+      <img class="logo" src="../../public/brand/logo-stsv.png" alt="STSV">
+    </div>
+
+    <div class="head">
+      <h1>Tu viens au cégep?</h1>
+      <p class="sub">Découvre ton trajet et ton tarif étudiant.</p>
+    </div>
+
+    <div class="qr-zone">
+      <p class="scan">Scanne ici pour préparer tes déplacements.</p>
+      <div class="qr-frame"><div class="qr"><img src="qr-stsv-cegep.svg" alt="Code QR vers stsv.ca/cegep"></div></div>
+      <p class="url">stsv.ca/cegep</p>
+    </div>
+
+    <div class="foot">
+      <p class="org">Société de transport de Salaberry-de-Valleyfield</p>
+    </div>
+  </div>
+</body>
+</html>
