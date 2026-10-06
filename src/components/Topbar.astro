@@ -1,6 +1,7 @@
 ---
 /** Bandeau bleu supérieur : slogan à gauche, sélecteur de langue à droite. */
 import { locales, localeNames, localesFor, path, useTranslations, type Locale, type RouteKey } from '../i18n/ui';
+import { ticketOffice } from '../data/site';
 
 interface Props { locale: Locale; page: RouteKey }
 const { locale, page } = Astro.props;
@@ -15,11 +16,18 @@ const slogan = {
   en: 'Take the stress out of your commute, call STSV',
   es: 'Olvídate del estrés de tus traslados, llama a la STSV',
 }[locale];
+const hours = ticketOffice.summary[locale];
 ---
 
 <div class="topbar">
   <div class="wrap topbar__inner">
-    <p class="topbar__slogan">{slogan}</p>
+    {/* Les deux messages occupent la même cellule de grille : le bandeau garde
+        la hauteur du plus long et ne saute pas à chaque alternance. Sans JS,
+        seul le slogan reste visible ; les heures sont aussi sur Nous joindre. */}
+    <div class="topbar__msgs" data-rotator>
+      <p class="topbar__slogan is-active">{slogan}</p>
+      <p class="topbar__slogan">{hours}</p>
+    </div>
 
     <div class="lang">
       <button type="button" class="lang__btn" aria-expanded="false" aria-controls="lang-menu">
@@ -45,8 +53,21 @@ const slogan = {
     display: flex; align-items: center; justify-content: space-between; gap: var(--sp-4);
     min-height: var(--topbar-h);
   }
+  .topbar__msgs { display: grid; min-width: 0; }
   .topbar__slogan {
+    grid-area: 1 / 1;
     margin: 0; font-size: .75rem; font-weight: 600; line-height: 1.3;
+    opacity: 0; visibility: hidden;
+    transition: opacity .4s ease, visibility 0s linear .4s;
+  }
+  /* `visibility: hidden` retire aussi le message inactif des lecteurs d'écran :
+     un seul des deux est lu à la fois, sans région `aria-live` qui interromprait. */
+  .topbar__slogan.is-active {
+    opacity: 1; visibility: visible;
+    transition: opacity .4s ease, visibility 0s;
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .topbar__slogan, .topbar__slogan.is-active { transition: none; }
   }
 
   .lang { position: relative; flex: 0 0 auto; }
@@ -78,6 +99,31 @@ const slogan = {
 </style>
 
 <script>
+  /* Alternance slogan / heures de la billetterie. Immobile si l'usager a
+     demandé moins d'animation, et en pause tant que la souris ou le clavier
+     est dans le bandeau : un texte qui change sous les yeux se lit mal. */
+  const rotator = document.querySelector<HTMLElement>('[data-rotator]');
+  const msgs = rotator ? Array.from(rotator.children) as HTMLElement[] : [];
+  const calm = window.matchMedia('(prefers-reduced-motion: reduce)');
+  if (rotator && msgs.length > 1) {
+    const bar = rotator.closest<HTMLElement>('.topbar')!;
+    let paused = false;
+    let current = 0;
+    const show = (i: number) => {
+      msgs[current].classList.remove('is-active');
+      current = i;
+      msgs[current].classList.add('is-active');
+    };
+    bar.addEventListener('mouseenter', () => { paused = true; });
+    bar.addEventListener('mouseleave', () => { paused = false; });
+    bar.addEventListener('focusin', () => { paused = true; });
+    bar.addEventListener('focusout', () => { paused = false; });
+    window.setInterval(() => {
+      if (paused || calm.matches || document.hidden) return;
+      show((current + 1) % msgs.length);
+    }, 6000);
+  }
+
   const box = document.querySelector<HTMLElement>('.lang');
   const btn = box?.querySelector('button');
   const close = () => { if (box) box.dataset.open = 'false'; btn?.setAttribute('aria-expanded', 'false'); };

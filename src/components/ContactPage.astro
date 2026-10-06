@@ -5,7 +5,7 @@ import Form from './Form.astro';
 import hero from '../assets/images/hero-contact.jpg';
 import { useTranslations, type Locale } from '../i18n/ui';
 import { contactPage as c, adapted } from '../data/content';
-import { contact } from '../data/site';
+import { contact, ticketOffice } from '../data/site';
 
 interface Props { locale: Locale }
 const { locale } = Astro.props;
@@ -33,6 +33,10 @@ const t = useTranslations(locale);
           <p class="phone__for">{c.phoneFor[locale]}</p>
           <h3 class="h-sm">{c.hoursTitle[locale]}</h3>
           <ul class="hours mono">{c.hours[locale].map((h) => <li>{h}</li>)}</ul>
+        </div>
+        <div class="card">
+          <h2>{ticketOffice.title[locale]}</h2>
+          <ul class="hours mono">{ticketOffice.lines[locale].map((h) => <li>{h}</li>)}</ul>
         </div>
         <div class="card">
           <h2>{c.adaptedTitle[locale]}</h2>

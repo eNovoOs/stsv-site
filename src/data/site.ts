@@ -415,6 +415,24 @@ export const communobusHours = {
   es: 'De 5:20 a 00:30, los 7 días de la semana.',
 };
 
+/* Heures confirmées par la STSV (via RevUp CMO). Une seule source : la page
+   Nous joindre affiche `lines`, le bandeau supérieur affiche `summary`, pour
+   qu'aucun des deux ne puisse dériver de l'autre. Distinct des heures du
+   service de réservation par téléphone, qui ne changent pas. */
+export const ticketOffice = {
+  title: { fr: 'Heures de la billetterie', en: 'Ticket office hours', es: 'Horario de la taquilla' },
+  lines: {
+    fr: ['Lundi au jeudi : 10 h 00 à 17 h 00', 'Vendredi au dimanche : fermé'],
+    en: ['Monday to Thursday: 10:00 a.m. to 5:00 p.m.', 'Friday to Sunday: closed'],
+    es: ['Lunes a jueves: 10:00 a 17:00', 'Viernes a domingo: cerrada'],
+  },
+  summary: {
+    fr: 'Billetterie : du lundi au jeudi, de 10 h à 17 h. Fermée du vendredi au dimanche.',
+    en: 'Ticket office: Monday to Thursday, 10 a.m. to 5 p.m. Closed Friday to Sunday.',
+    es: 'Taquilla: de lunes a jueves, de 10:00 a 17:00. Cerrada de viernes a domingo.',
+  },
+};
+
 /* ------------------------------------------------------------------
    Documents — les fichiers vivent dans /public/documents
    ------------------------------------------------------------------ */
