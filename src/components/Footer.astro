@@ -1,6 +1,6 @@
 ---
 import { useTranslations, path, type Locale } from '../i18n/ui';
-import { contact, privacyDoc } from '../data/site';
+import { contact, privacyDoc, ticketOffice } from '../data/site';
 interface Props { locale: Locale }
 const { locale } = Astro.props;
 const t = useTranslations(locale);
@@ -14,6 +14,11 @@ const year = new Date().getFullYear();
       <a class="ftr__social" href={contact.facebook} target="_blank" rel="noopener" aria-label={t('footer.social')}>
         <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M22 12.06C22 6.5 17.52 2 12 2S2 6.5 2 12.06c0 5 3.66 9.15 8.44 9.94v-7.03H7.9v-2.9h2.54V9.85c0-2.52 1.5-3.91 3.77-3.91 1.1 0 2.24.2 2.24.2v2.46h-1.26c-1.24 0-1.63.78-1.63 1.57v1.89h2.78l-.45 2.9h-2.33V22c4.78-.79 8.44-4.94 8.44-9.94Z"/></svg>
       </a>
+    </div>
+    <div class="ftr__office">
+      <p class="ftr__office-title">{ticketOffice.title[locale]}</p>
+      <ul>{ticketOffice.lines[locale].map((h) => <li>{h}</li>)}</ul>
+      <address>{ticketOffice.address}</address>
     </div>
     <nav class="ftr__links" aria-label={t('home.quickLinks')}>
       <a href={path('contact', locale)}>{t('nav.contact')}</a>
@@ -30,12 +35,16 @@ const year = new Date().getFullYear();
   .ftr__copy { margin: var(--sp-4) 0 var(--sp-3); font-size: .82rem; color: var(--gray-600); }
   .ftr__social { display: inline-flex; color: var(--ink-900); }
   .ftr__social:hover { color: var(--blue); }
+  .ftr__office { font-size: .82rem; color: var(--gray-600); }
+  .ftr__office-title { margin: 0 0 .4rem; font-size: .88rem; font-weight: 600; color: var(--ink-900); }
+  .ftr__office ul { list-style: none; margin: 0 0 .5rem; padding: 0; display: grid; gap: .2rem; }
+  .ftr__office address { font-style: normal; max-width: 22ch; }
   .ftr__links { display: grid; gap: .9rem; justify-items: start; }
   .ftr__links a { font-size: .88rem; color: var(--ink-900); text-decoration: none; }
   .ftr__links a:hover { color: var(--blue); text-decoration: underline; }
   .ftr__phone { color: var(--blue) !important; font-weight: 500; }
   @media (min-width: 800px) {
-    .ftr__inner { grid-template-columns: 1fr auto; }
+    .ftr__inner { grid-template-columns: 1fr auto auto; gap: var(--sp-7); }
     .ftr__links { justify-items: end; text-align: right; }
   }
 </style>

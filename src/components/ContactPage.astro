@@ -37,6 +37,7 @@ const t = useTranslations(locale);
         <div class="card">
           <h2>{ticketOffice.title[locale]}</h2>
           <ul class="hours mono">{ticketOffice.lines[locale].map((h) => <li>{h}</li>)}</ul>
+          <address class="addr">{ticketOffice.address}</address>
         </div>
         <div class="card">
           <h2>{c.adaptedTitle[locale]}</h2>
@@ -65,6 +66,7 @@ const t = useTranslations(locale);
   .phone__for { margin: calc(var(--sp-4) * -1 + .2rem) 0 var(--sp-4); font-size: var(--step--1); color: var(--gray-600); }
   .h-sm { font-size: var(--step-0); margin-bottom: var(--sp-2); }
   .hours { list-style: none; margin: 0; padding: 0; display: grid; gap: .3rem; font-size: var(--step--1); color: var(--gray-600); }
+  .addr { margin-top: var(--sp-3); font-style: normal; font-size: var(--step--1); color: var(--gray-600); }
   .mails { list-style: none; margin: 0; padding: 0; display: grid; gap: .3rem; }
   /* `1fr` vaut `minmax(auto, 1fr)` : le minimum intrinseque du formulaire —
      deux champs cote a cote, plus leurs marges — depassait la part de sa

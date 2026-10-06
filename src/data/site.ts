@@ -420,6 +420,9 @@ export const communobusHours = {
    qu'aucun des deux ne puisse dériver de l'autre. Distinct des heures du
    service de réservation par téléphone, qui ne changent pas. */
 export const ticketOffice = {
+  /* Adresse confirmée par RevUp CMO ; le code postal vient du PDF
+     « Communobus — réservation et billetterie ». Odonyme : identique partout. */
+  address: '57, rue Ste-Cécile, Salaberry-de-Valleyfield (Québec) J6T 1L6',
   title: { fr: 'Heures de la billetterie', en: 'Ticket office hours', es: 'Horario de la taquilla' },
   lines: {
     fr: ['Lundi au jeudi : 10 h 00 à 17 h 00', 'Vendredi au dimanche : fermé'],
