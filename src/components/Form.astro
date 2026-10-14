@@ -3,7 +3,7 @@ import { useTranslations, type Locale } from '../i18n/ui';
 import { contact, contactSubjects } from '../data/site';
 interface Props {
   locale: Locale;
-  kind: 'contact' | 'newsletter';
+  kind: 'contact' | 'newsletter' | 'recruitment';
 }
 const { locale, kind } = Astro.props;
 const t = useTranslations(locale);
@@ -45,6 +45,12 @@ const copy = {
 }[locale];
 
 const isContact = kind === 'contact';
+const isRecruitment = kind === 'recruitment';
+const jobCopy = {
+  fr: { experience: 'Votre expérience de conduite', availability: 'Vos disponibilités', consent: 'J’accepte que la STSV utilise ces renseignements pour traiter ma candidature et me contacter.', submit: 'Envoyer ma candidature', ok: 'Merci. Votre candidature a été transmise.' },
+  en: { experience: 'Your driving experience', availability: 'Your availability', consent: 'I agree that STSV may use this information to review my application and contact me.', submit: 'Submit my application', ok: 'Thank you. Your application has been forwarded.' },
+  es: { experience: 'Tu experiencia de conducción', availability: 'Tu disponibilidad', consent: 'Acepto que STSV use esta información para evaluar mi candidatura y contactarme.', submit: 'Enviar mi candidatura', ok: 'Gracias. Tu candidatura se ha enviado.' },
+}[locale];
 ---
 
 <form class="frm" data-form={kind} action={`/api/${kind}`} method="POST" novalidate>
@@ -88,17 +94,34 @@ const isContact = kind === 'contact';
     </>
   )}
 
+  {isRecruitment && (
+    <>
+      <label class="field">
+        <span class="field__label">{copy.phone}</span>
+        <input type="tel" name="phone" autocomplete="tel" inputmode="tel" maxlength="40" />
+      </label>
+      <label class="field">
+        <span class="field__label">{jobCopy.experience} <em aria-hidden="true">*</em></span>
+        <textarea name="experience" rows="4" required maxlength="3000"></textarea>
+      </label>
+      <label class="field">
+        <span class="field__label">{jobCopy.availability} <em aria-hidden="true">*</em></span>
+        <textarea name="availability" rows="3" required maxlength="1000"></textarea>
+      </label>
+    </>
+  )}
+
   <label class="check">
     <input type="checkbox" name="consent" required />
-    <span>{isContact ? copy.consent : copy.consentNews}</span>
+    <span>{isRecruitment ? jobCopy.consent : isContact ? copy.consent : copy.consentNews}</span>
   </label>
 
   <button class="btn btn--primary frm__submit" type="submit">
-    {isContact ? copy.submit : copy.subscribe}
+    {isRecruitment ? jobCopy.submit : isContact ? copy.submit : copy.subscribe}
   </button>
 
   <p class="frm__status" role="status" aria-live="polite"
-     data-ok={isContact ? copy.ok : copy.okNews}
+     data-ok={isRecruitment ? jobCopy.ok : isContact ? copy.ok : copy.okNews}
      data-err={copy.err}
      data-sending={copy.sending}></p>
 </form>

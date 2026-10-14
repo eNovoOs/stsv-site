@@ -8,8 +8,9 @@
  *   STSV_WEBHOOK_SECRET      → optionnel, en-tête X-STSV-Signature
  */
 import { contactSubjects } from '../data/site';
+import { recruitmentRecipient } from '../data/recruitment';
 
-export type Kind = 'contact' | 'newsletter';
+export type Kind = 'contact' | 'newsletter' | 'recruitment';
 
 /** Sujets acceptés : on refuse tout ce qui n'est pas dans la liste. */
 const SUBJECTS = contactSubjects.map((s) => s.value);
@@ -40,6 +41,20 @@ export function validate(body: Payload, kind: Kind) {
     return { ok: true as const, data: { kind, locale, name, email } };
   }
 
+  if (kind === 'recruitment') {
+    const experience = clean(body.experience, 3000);
+    const availability = clean(body.availability, 1000);
+    if (!experience || !availability) return { ok: false as const, reason: 'invalid' };
+    return {
+      ok: true as const,
+      data: { kind, locale, name, email, phone: clean(body.phone, MAX.phone),
+        subject: 'driver-application', experience, availability,
+        message: `${experience}\n\n${availability}`,
+        // Le destinataire est défini côté serveur, jamais par le candidat.
+        recipient: recruitmentRecipient },
+    };
+  }
+
   const subject = clean(body.subject, MAX.subject);
   const message = clean(body.message, MAX.message);
   if (!SUBJECTS.includes(subject) || !message) return { ok: false as const, reason: 'invalid' };
@@ -64,6 +79,8 @@ function env(name: string): string | undefined {
 }
 
 function endpointFor(kind: Kind): string | undefined {
+  // Aucun repli vers le contact : une candidature doit aller au recrutement.
+  if (kind === 'recruitment') return env('STSV_WEBHOOK_RECRUITMENT');
   const specific = kind === 'contact' ? env('STSV_WEBHOOK_CONTACT') : env('STSV_WEBHOOK_NEWSLETTER');
   // STSV_WEBHOOK_URL sert de repli si une seule URL est configurée.
   return specific || env('STSV_WEBHOOK_URL');

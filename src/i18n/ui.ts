@@ -26,6 +26,7 @@ export const routes = {
   documents: { fr: 'documents', en: 'documents', es: 'documentos' },
   tutorials: { fr: 'tutoriels', en: 'tutorials', es: 'tutoriales' },
   contact: { fr: 'contact', en: 'contact', es: 'contacto' },
+  recruitment: { fr: 'chauffeurs', en: 'drivers', es: 'conductores' },
   newsletter: { fr: 'infolettre', en: 'newsletter', es: 'boletin' },
   /* Page de campagne étudiante : elle n'existe qu'en français, d'où le même
      slug partout. Voir `pageLocales` plus bas. */

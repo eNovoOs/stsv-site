@@ -5,6 +5,7 @@
  * de langue ne les fait pas revenir. Chaque carte est fermable au clavier.
  */
 import { notices, banner, isExpired, todayUTC } from '../data/site';
+import { recruitment as r } from '../data/recruitment';
 import { useTranslations, path, type Locale } from '../i18n/ui';
 
 interface Props { locale: Locale }
@@ -46,8 +47,18 @@ const panelLabel = { fr: 'Avis de service', en: 'Service notices', es: 'Avisos d
           </div>
         </div>
         <p class="toast__body">{n.body[locale]}</p>
+        {n.id === 'driver-recruitment' && (
+          <details class="toast__details">
+            <summary>{{ fr: 'Voir les détails du poste', en: 'View job details', es: 'Ver detalles del puesto' }[locale]}</summary>
+            <p>{r.intro[locale]}</p>
+            <h3>{r.requirementsTitle[locale]}</h3>
+            <ul>{r.requirements.map((item) => <li>{item[locale]}</li>)}</ul>
+            <h3>{r.benefitsTitle[locale]}</h3>
+            <ul>{r.benefits.map((item) => <li>{item[locale]}</li>)}</ul>
+          </details>
+        )}
         {n.ctaHref && n.ctaLabel && (
-          <a class="toast__cta" href={n.ctaHref}>
+          <a class="toast__cta" href={n.id === 'driver-recruitment' ? `${path('recruitment', locale)}#postuler` : n.ctaHref}>
             {n.ctaLabel[locale]}
             <svg width="14" height="10" viewBox="0 0 16 12" aria-hidden="true"><path d="M10 1l5 5-5 5M15 6H1" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>
           </a>
@@ -123,6 +134,12 @@ const panelLabel = { fr: 'Avis de service', en: 'Service notices', es: 'Avisos d
     transition: background-color .15s ease;
   }
   .toast__cta:hover { background: var(--blue-dark); color: var(--white); }
+  .toast__details { font-size: .8rem; line-height: 1.5; margin-bottom: .9rem; color: var(--gray-600); }
+  .toast__details summary { cursor: pointer; color: var(--blue); font-weight: 600; }
+  .toast__details h3 { font-size: .85rem; margin: .8rem 0 .4rem; }
+  .toast__details p { margin: .6rem 0; }
+  .toast__details ul { padding-left: 1.2rem; margin: .4rem 0; }
+  .toast__details li { margin-bottom: .35rem; }
 
   /* Carte infolettre : liseré cyan/lime, flèche lime */
   .toast--news {

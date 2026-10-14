@@ -1,0 +1,43 @@
+---
+import Base from '../layouts/Base.astro';
+import PageHero from './PageHero.astro';
+import Form from './Form.astro';
+import { recruitment as r, recruitmentRecipient } from '../data/recruitment';
+import type { Locale } from '../i18n/ui';
+interface Props { locale: Locale }
+const { locale } = Astro.props;
+const lead = {
+  fr: 'Transport collectif et transport adapté. Aucun véhicule personnel requis.',
+  en: 'Public transit and adapted transportation. No personal vehicle required.',
+  es: 'Transporte colectivo y transporte adaptado. No se requiere vehículo personal.',
+}[locale];
+---
+<Base locale={locale} page="recruitment" title={r.title[locale]} description={lead} toasts={false}>
+  <PageHero title={r.title[locale]} lead={lead} />
+  <section class="section">
+    <div class="wrap recruitment">
+      <div>
+        <p>{r.intro[locale]}</p>
+        <h2>{r.requirementsTitle[locale]}</h2>
+        <ul>{r.requirements.map((item) => <li>{item[locale]}</li>)}</ul>
+        <h2>{r.benefitsTitle[locale]}</h2>
+        <ul>{r.benefits.map((item) => <li>{item[locale]}</li>)}</ul>
+      </div>
+      <div id="postuler" class="card">
+        <h2>{r.applyTitle[locale]}</h2>
+        <p>{r.apply[locale]}</p>
+        <Form locale={locale} kind="recruitment" />
+        <p class="direct"><a href={`mailto:${recruitmentRecipient}`}>{recruitmentRecipient}</a></p>
+      </div>
+    </div>
+  </section>
+</Base>
+<style>
+  .recruitment { display: grid; gap: var(--sp-6); align-items: start; }
+  .recruitment > div { min-width: 0; }
+  h2 { font-size: var(--step-1); margin: var(--sp-5) 0 var(--sp-3); }
+  .card h2 { margin-top: 0; }
+  li { margin-bottom: var(--sp-2); }
+  .direct { margin: var(--sp-4) 0 0; font-size: var(--step--1); overflow-wrap: anywhere; }
+  @media (min-width: 1000px) { .recruitment { grid-template-columns: 1fr 1.2fr; } }
+</style>

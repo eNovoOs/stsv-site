@@ -61,9 +61,20 @@ Chaque formulaire a son propre webhook. Variables à définir dans Vercel
 |---|---|
 | `STSV_WEBHOOK_CONTACT` | Webhook eNovoOs du formulaire « Nous joindre » |
 | `STSV_WEBHOOK_NEWSLETTER` | Webhook eNovoOs de l'infolettre |
+| `STSV_WEBHOOK_RECRUITMENT` | Webhook eNovoOs des candidatures chauffeurs, à acheminer à `houellet@stsv.ca` |
 | `STSV_WEBHOOK_SECRET` | Optionnel — envoyé dans l'en-tête `X-STSV-Signature` |
 
 `STSV_WEBHOOK_URL` reste accepté comme repli si une seule URL est configurée.
+Le recrutement n'utilise jamais ce repli ni le webhook de contact : son
+destinataire est distinct. Configurer l'automatisation et vérifier la réception
+d'une candidature avant d'activer la fenêtre de recrutement en production.
+Le formulaire `/chauffeurs` (EN : `/en/drivers`, ES : `/es/conductores`) envoie
+vers `/api/recruitment`. La charge utile comprend `kind: recruitment`,
+`subject: driver-application`, `recipient: houellet@stsv.ca`, `name`, `email`,
+`phone`, `experience`, `availability`, `message`, `locale`, `source` et `receivedAt`.
+L'automatisation doit envoyer ces renseignements par courriel au destinataire
+fixe indiqué ci-dessus. Un HTTP 200 du webhook confirme uniquement la prise
+en charge : vérifier également l'arrivée du courriel avant la mise en ligne.
 Les appels ont un délai d'attente de 10 secondes : si eNovoOs ne répond pas,
 l'usager voit un message d'erreur avec le numéro de téléphone plutôt qu'une page figée.
 
