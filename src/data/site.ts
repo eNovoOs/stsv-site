@@ -1,4 +1,5 @@
 import type { Locale } from '../i18n/ui';
+import { recruitment } from './recruitment';
 
 export type L10n = Record<Locale, string>;
 
@@ -108,6 +109,20 @@ export const banner: Notice = {
 };
 
 export const notices: Notice[] = [
+  {
+    id: 'driver-recruitment',
+    active: true,
+    tone: 'info',
+    eyebrow: { fr: 'Recrutement', en: 'Recruitment', es: 'Contratación' },
+    title: recruitment.title,
+    body: {
+      fr: 'Conduisez nos véhicules de transport collectif et adapté. Aucun véhicule personnel requis. Rémunération d’environ 30 $ de l’heure.',
+      en: 'Drive our public transit and adapted transportation vehicles. No personal vehicle required. Pay of approximately $30 per hour.',
+      es: 'Conduce nuestros vehículos de transporte colectivo y adaptado. No se requiere vehículo personal. Remuneración de aproximadamente 30 $ por hora.',
+    },
+    ctaLabel: recruitment.cta,
+    ctaHref: '/chauffeurs#postuler',
+  },
   {
     id: 'holiday-schedule-fall-2026',
     active: true,
