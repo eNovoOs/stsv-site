@@ -431,6 +431,19 @@ const PARADAS_RAW = [
 {"id":6274,"nom":"100 rue des Loisirs","position_gps":{"Latitude":45.30085875678547,"Longitude":-74.31016761188519},"secteur":"St-Polycarpe","numero":"6060"}
 ];
 
+/* Desserte Sainte-Martine : positions publiées dans les fiches GTFS STSV
+   de BusMaps, vérifiées le 14 octobre 2026.
+   https://busmaps.com/en/canada/public_transit-line-Ste-Martine-1506615299-4062381214
+   Identifiants locaux préfixés : aucun ID du système de réservation n'est supposé. */
+PARADAS_RAW.push(
+{"id":"sma-7010","nom":"St-Jean-Baptiste Est / Place Raquepas","position_gps":{"Latitude":45.262307,"Longitude":-73.787288},"secteur":"Sainte-Martine","numero":"7010"},
+{"id":"sma-7020","nom":"St-Joseph / De La Berge","position_gps":{"Latitude":45.258611,"Longitude":-73.792869},"secteur":"Sainte-Martine","numero":"7020"},
+{"id":"sma-7030","nom":"St-Joseph / rue Desrochers","position_gps":{"Latitude":45.247174,"Longitude":-73.803185},"secteur":"Sainte-Martine","numero":"7030"},
+{"id":"sma-7040","nom":"Chemin de la Beauce / Merisiers","position_gps":{"Latitude":45.262718,"Longitude":-73.793703},"secteur":"Sainte-Martine","numero":"7040"},
+{"id":"sma-7050","nom":"Maxi, Beauharnois","position_gps":{"Latitude":45.307741,"Longitude":-73.858796},"secteur":"Beauharnois","numero":"7050"},
+{"id":"sma-7060","nom":"Chemin de la Beauce / Ellice, Beauharnois","position_gps":{"Latitude":45.315635,"Longitude":-73.870775},"secteur":"Beauharnois","numero":"7060"}
+);
+
 const PARADAS = PARADAS_RAW
   .filter(p => p.position_gps && p.position_gps.Latitude && p.position_gps.Longitude)
   .map(p => ({ id: p.id, numero: p.numero, nombre: p.nom, lat: p.position_gps.Latitude, lng: p.position_gps.Longitude, secteur: p.secteur }));
