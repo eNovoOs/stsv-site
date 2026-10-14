@@ -132,7 +132,7 @@ export const notices: Notice[] = [
   },
   {
     id: 'line-30-new-route',
-    active: true,
+    active: false,
     tone: 'info',
     eyebrow: { fr: 'Ligne 30', en: 'Line 30', es: 'Línea 30' },
     title: {
