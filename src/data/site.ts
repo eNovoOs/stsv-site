@@ -425,14 +425,14 @@ export const ticketOffice = {
   address: '57, rue Ste-Cécile, Salaberry-de-Valleyfield (Québec) J6T 1L6',
   title: { fr: 'Heures de la billetterie', en: 'Ticket office hours', es: 'Horario de la taquilla' },
   lines: {
-    fr: ['Lundi au vendredi : 10 h 00 à 17 h 00', 'Samedi : 9 h 00 à 17 h 00', 'Dimanche : fermé'],
-    en: ['Monday to Friday: 10:00 a.m. to 5:00 p.m.', 'Saturday: 9:00 a.m. to 5:00 p.m.', 'Sunday: closed'],
-    es: ['Lunes a viernes: 10:00 a 17:00', 'Sábado: 9:00 a 17:00', 'Domingo: cerrada'],
+    fr: ['Lundi au jeudi : 10 h 00 à 17 h 00', 'Vendredi : fermé', 'Samedi : 9 h 00 à 17 h 00', 'Dimanche : fermé'],
+    en: ['Monday to Thursday: 10:00 a.m. to 5:00 p.m.', 'Friday: closed', 'Saturday: 9:00 a.m. to 5:00 p.m.', 'Sunday: closed'],
+    es: ['Lunes a jueves: 10:00 a 17:00', 'Viernes: cerrada', 'Sábado: 9:00 a 17:00', 'Domingo: cerrada'],
   },
   summary: {
-    fr: 'Billetterie : du lundi au vendredi, de 10 h à 17 h. Le samedi, de 9 h à 17 h. Fermée le dimanche.',
-    en: 'Ticket office: Monday to Friday, 10 a.m. to 5 p.m. Saturday, 9 a.m. to 5 p.m. Closed Sunday.',
-    es: 'Taquilla: de lunes a viernes, de 10:00 a 17:00. Sábados, de 9:00 a 17:00. Cerrada los domingos.',
+    fr: 'Billetterie : du lundi au jeudi, de 10 h à 17 h. Le samedi, de 9 h à 17 h. Fermée le vendredi et le dimanche.',
+    en: 'Ticket office: Monday to Thursday, 10 a.m. to 5 p.m. Saturday, 9 a.m. to 5 p.m. Closed Friday and Sunday.',
+    es: 'Taquilla: de lunes a jueves, de 10:00 a 17:00. Sábados, de 9:00 a 17:00. Cerrada los viernes y domingos.',
   },
 };
 
