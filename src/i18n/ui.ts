@@ -16,6 +16,7 @@ export const htmlLang: Record<Locale, string> = {
 
 /** Slugs par langue. La clé est l'identifiant interne de la page. */
 export const routes = {
+  schedules: { fr: 'horaires-et-trajets', en: 'schedules-and-routes', es: 'horarios-y-rutas' },
   home: { fr: '', en: '', es: '' },
   services: { fr: 'services', en: 'services', es: 'servicios' },
   stops: { fr: 'carte-des-arrets', en: 'map-of-our-stops', es: 'mapa-de-paradas' },

@@ -11,11 +11,9 @@ const t = useTranslations(locale);
 
 const communobus = [
   { label: t('nav.booking'), href: contact.bookingUrl, external: true },
+  { label: { fr: 'Horaires et trajets', en: 'Schedules and routes', es: 'Horarios y rutas' }[locale], href: path('schedules', locale), external: false },
   { label: t('nav.reservation'), href: path('reservation', locale), external: false },
   { label: t('nav.accessCard'), href: path('accessCard', locale), external: false },
-  { label: t('nav.line338'), href: '/documents/Horaire-ligne-338_v2.pdf', external: false },
-  { label: t('nav.sainteMartine'), href: '/documents/Horaire-Sainte-Martine_des-17-aout-2026.pdf', external: false },
-  { label: t('nav.schedules'), href: '/documents/Horaires-lignes-10-30-99_du-3-nov-2025_v2.pdf', external: false },
 ];
 
 /* Ordre repris du site d'origine */

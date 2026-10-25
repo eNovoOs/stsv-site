@@ -1,0 +1,23 @@
+---
+import Base from '../layouts/Base.astro';
+import { type Locale } from '../i18n/ui';
+const { locale } = Astro.props as { locale: Locale };
+const copy = {
+ fr: { title: 'Horaires et trajets', lead: 'Choisissez votre service pour consulter son horaire.', open: 'Consulter le PDF', names: ['Horaire Communobus', 'Lignes fixes — 10, 30 et 99', 'Ligne 338', 'Sainte-Martine'] },
+ en: { title: 'Schedules and routes', lead: 'Choose your service to view its schedule.', open: 'View PDF', names: ['Communobus schedule', 'Fixed routes — 10, 30 and 99', 'Route 338', 'Sainte-Martine'] },
+ es: { title: 'Horarios y rutas', lead: 'Seleccione su servicio para consultar el horario.', open: 'Ver PDF', names: ['Horario Communobus', 'Rutas fijas — 10, 30 y 99', 'Ruta 338', 'Sainte-Martine'] },
+}[locale];
+const files = ['Communobus-reservation-et-billetterie.pdf', 'Horaires-lignes-10-30-99_du-3-nov-2025_v2.pdf', 'Horaire-ligne-338_v2.pdf', 'Horaire-Sainte-Martine_des-17-aout-2026.pdf'];
+---
+<Base locale={locale} page="schedules" title={`${copy.title} — STSV`} description={copy.lead}>
+ <section class="wrap schedules">
+  <h1>{copy.title}</h1><p class="lead">{copy.lead}</p>
+  <div class="schedule-grid">{files.map((file, i) => <a class="schedule-card" href={`/documents/${file}`}><h2>{copy.names[i]}</h2><span>{copy.open} <span aria-hidden="true">→</span></span></a>)}</div>
+ </section>
+</Base>
+<style>
+.schedules{padding-top:clamp(3rem,7vw,6rem);padding-bottom:clamp(4rem,8vw,7rem)}
+h1{font-size:clamp(2rem,5vw,3.5rem);line-height:1.15;margin-bottom:1rem}.lead{font-size:1.125rem;margin-bottom:2.5rem;color:#475569}
+.schedule-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:1.25rem}.schedule-card{display:flex;flex-direction:column;justify-content:space-between;gap:2rem;padding:2rem;border:1px solid #dbe3ed;border-radius:1rem;text-decoration:none;color:#13283b;background:#fff;transition:box-shadow .2s,border-color .2s}.schedule-card:hover,.schedule-card:focus-visible{border-color:#135eef;box-shadow:0 8px 28px #135eef18}.schedule-card h2{font-size:1.35rem;margin:0}.schedule-card>span{color:#135eef;font-weight:600}
+@media(max-width:600px){.schedule-grid{grid-template-columns:1fr}.schedule-card{padding:1.5rem;gap:1.5rem}}
+</style>
