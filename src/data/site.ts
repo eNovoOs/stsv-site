@@ -109,6 +109,24 @@ export const banner: Notice = {
 
 export const notices: Notice[] = [
   {
+    id: 'line-10-downtown-reservation-december-2026',
+    active: true,
+    tone: 'info',
+    eyebrow: { fr: 'Avis de service', en: 'Service notice', es: 'Aviso de servicio' },
+    title: {
+      fr: 'Ligne 10 – Centre-ville : sur réservation',
+      en: 'Line 10 – Downtown: by reservation',
+      es: 'Línea 10 – Centro: con reserva',
+    },
+    body: {
+      fr: 'À partir du 1er décembre 2026, les arrêts de la ligne 10 – Centre-ville seront sur réservation.',
+      en: 'Starting December 1, 2026, stops on line 10 – Downtown will operate by reservation.',
+      es: 'A partir del 1 de diciembre de 2026, las paradas de la línea 10 – Centro funcionarán con reserva.',
+    },
+    ctaLabel: { fr: 'Réserver', en: 'Book a ride', es: 'Reservar' },
+    ctaHref: contact.bookingUrl,
+  },
+  {
     id: 'holiday-schedule-fall-2026',
     active: true,
     /* Action de grace est le dernier des deux conges annonces. */
@@ -425,14 +443,14 @@ export const ticketOffice = {
   address: '57, rue Ste-Cécile, Salaberry-de-Valleyfield (Québec) J6T 1L6',
   title: { fr: 'Heures de la billetterie', en: 'Ticket office hours', es: 'Horario de la taquilla' },
   lines: {
-    fr: ['Lundi au jeudi : 10 h 00 à 17 h 00', 'Vendredi : fermé', 'Samedi : 9 h 00 à 17 h 00', 'Dimanche : fermé'],
-    en: ['Monday to Thursday: 10:00 a.m. to 5:00 p.m.', 'Friday: closed', 'Saturday: 9:00 a.m. to 5:00 p.m.', 'Sunday: closed'],
-    es: ['Lunes a jueves: 10:00 a 17:00', 'Viernes: cerrada', 'Sábado: 9:00 a 17:00', 'Domingo: cerrada'],
+    fr: ['Lundi au jeudi : 10 h 00 à 17 h 00', 'Vendredi : fermé', 'Samedi : fermé', 'Dimanche : fermé'],
+    en: ['Monday to Thursday: 10:00 a.m. to 5:00 p.m.', 'Friday: closed', 'Saturday: closed', 'Sunday: closed'],
+    es: ['Lunes a jueves: 10:00 a 17:00', 'Viernes: cerrada', 'Sábado: cerrada', 'Domingo: cerrada'],
   },
   summary: {
-    fr: 'Billetterie : du lundi au jeudi, de 10 h à 17 h. Le samedi, de 9 h à 17 h. Fermée le vendredi et le dimanche.',
-    en: 'Ticket office: Monday to Thursday, 10 a.m. to 5 p.m. Saturday, 9 a.m. to 5 p.m. Closed Friday and Sunday.',
-    es: 'Taquilla: de lunes a jueves, de 10:00 a 17:00. Sábados, de 9:00 a 17:00. Cerrada los viernes y domingos.',
+    fr: 'Billetterie : du lundi au jeudi, de 10 h à 17 h. Fermée le vendredi, le samedi et le dimanche.',
+    en: 'Ticket office: Monday to Thursday, 10 a.m. to 5 p.m. Closed Friday, Saturday and Sunday.',
+    es: 'Taquilla: de lunes a jueves, de 10:00 a 17:00. Cerrada los viernes, sábados y domingos.',
   },
 };
 
