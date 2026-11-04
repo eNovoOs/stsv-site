@@ -110,7 +110,7 @@ export const banner: Notice = {
 export const notices: Notice[] = [
   {
     id: 'line-10-downtown-reservation-december-2026',
-    active: true,
+    active: false,
     tone: 'info',
     eyebrow: { fr: 'Avis de service', en: 'Service notice', es: 'Aviso de servicio' },
     title: {
