@@ -184,9 +184,9 @@ export const notices: Notice[] = [
        encore une date passee : elle passe au present. « Sur reservation » et la
        direction viennent du PDF de l'horaire. */
     body: {
-      fr: 'Le transport collectif à la demande dessert désormais Sainte-Martine, sur réservation, en direction de Valleyfield.',
-      en: 'On-demand public transit now serves Sainte-Martine, by reservation, towards Valleyfield.',
-      es: 'El transporte colectivo a demanda ya llega a Sainte-Martine, con reserva, en dirección a Valleyfield.',
+      fr: 'Le transport collectif à la demande vers Valleyfield est réservé aux résidentes et résidents de Sainte-Martine. Il faut réserver son déplacement.',
+      en: 'On-demand public transit to Valleyfield is available only to Sainte-Martine residents. A reservation is required.',
+      es: 'El transporte colectivo a demanda hacia Valleyfield es exclusivo para residentes de Sainte-Martine. Se requiere reserva.',
     },
     ctaLabel: { fr: 'Voir l’horaire', en: 'View the schedule', es: 'Ver el horario' },
     ctaHref: '/documents/Horaire-Sainte-Martine_des-17-aout-2026.pdf',
