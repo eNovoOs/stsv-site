@@ -1,13 +1,14 @@
 ---
 import Base from '../layouts/Base.astro';
+import { line99JanuarySchedule } from '../data/site';
 import { type Locale } from '../i18n/ui';
 const { locale } = Astro.props as { locale: Locale };
 const copy = {
- fr: { title: 'Horaires et trajets', lead: 'Choisissez votre service pour consulter son horaire.', open: 'Consulter le PDF', names: ['Horaire Communobus', 'Lignes fixes — 10, 30 et 99', 'Ligne 338', 'Sainte-Martine'] },
- en: { title: 'Schedules and routes', lead: 'Choose your service to view its schedule.', open: 'View PDF', names: ['Communobus schedule', 'Fixed routes — 10, 30 and 99', 'Route 338', 'Sainte-Martine'] },
- es: { title: 'Horarios y rutas', lead: 'Seleccione su servicio para consultar el horario.', open: 'Ver PDF', names: ['Horario Communobus', 'Rutas fijas — 10, 30 y 99', 'Ruta 338', 'Sainte-Martine'] },
+ fr: { title: 'Horaires et trajets', lead: 'Choisissez votre service pour consulter son horaire.', open: 'Consulter le PDF', names: ['Horaire Communobus', 'Lignes 10 et 30 · Ligne 99 jusqu’au 3 janvier 2027', 'Ligne 338', 'Sainte-Martine', 'Ligne 99 — dès le 4 janvier 2027'] },
+ en: { title: 'Schedules and routes', lead: 'Choose your service to view its schedule.', open: 'View PDF', names: ['Communobus schedule', 'Lines 10 and 30 · Line 99 through January 3, 2027', 'Route 338', 'Sainte-Martine', 'Line 99 — starting January 4, 2027'] },
+ es: { title: 'Horarios y rutas', lead: 'Seleccione su servicio para consultar el horario.', open: 'Ver PDF', names: ['Horario Communobus', 'Líneas 10 y 30 · Línea 99 hasta el 3 de enero de 2027', 'Ruta 338', 'Sainte-Martine', 'Línea 99 — desde el 4 de enero de 2027'] },
 }[locale];
-const files = ['Communobus-reservation-et-billetterie.pdf', 'Horaires-lignes-10-30-99_du-3-nov-2025_v2.pdf', 'Horaire-ligne-338_v2.pdf', 'Horaire-Sainte-Martine_des-17-aout-2026.pdf'];
+const files = ['Communobus-reservation-et-billetterie.pdf', 'Horaires-lignes-10-30-99_du-3-nov-2025_v2.pdf', 'Horaire-ligne-338_v2.pdf', 'Horaire-Sainte-Martine_des-17-aout-2026.pdf', line99JanuarySchedule];
 ---
 <Base locale={locale} page="schedules" title={`${copy.title} — STSV`} description={copy.lead}>
  <section class="wrap schedules">

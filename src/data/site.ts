@@ -107,7 +107,44 @@ export const banner: Notice = {
   body: { fr: '', en: '', es: '' },
 };
 
+export const line99JanuarySchedule = 'horaire-ligne-99-2027-01-04.pdf';
+
 export const notices: Notice[] = [
+  {
+    id: 'holiday-schedule-2026-2027',
+    active: true,
+    until: '2027-01-01',
+    tone: 'info',
+    eyebrow: { fr: 'Avis de service', en: 'Service notice', es: 'Aviso de servicio' },
+    title: {
+      fr: 'Horaire de la période des fêtes',
+      en: 'Holiday service schedule',
+      es: 'Horario del período festivo',
+    },
+    body: {
+      fr: 'Communibus et ligne 10 : horaire régulier. Ligne 99 : horaire réduit de fin de semaine. Billetterie fermée les 24 et 31 décembre 2026. Réservations par téléphone fermées le 25 décembre 2026 et le 1ᵉʳ janvier 2027.',
+      en: 'Communibus and line 10: regular schedule. Line 99: reduced weekend schedule. The ticket office is closed December 24 and 31, 2026. Phone reservations are unavailable December 25, 2026 and January 1, 2027.',
+      es: 'Communibus y línea 10: horario habitual. Línea 99: horario reducido de fin de semana. La taquilla estará cerrada el 24 y el 31 de diciembre de 2026. No habrá reservas por teléfono el 25 de diciembre de 2026 ni el 1 de enero de 2027.',
+    },
+  },
+  {
+    id: 'line-99-new-trips-january-2027',
+    active: true,
+    tone: 'info',
+    eyebrow: { fr: 'Ligne 99', en: 'Line 99', es: 'Línea 99' },
+    title: {
+      fr: 'Nouveaux trajets à compter du 4 janvier 2027',
+      en: 'New trips starting January 4, 2027',
+      es: 'Nuevos trayectos a partir del 4 de enero de 2027',
+    },
+    body: {
+      fr: 'Consultez le nouvel horaire de la ligne 99 entre Salaberry-de-Valleyfield et la gare de Vaudreuil.',
+      en: 'See the new line 99 schedule between Salaberry-de-Valleyfield and Vaudreuil station.',
+      es: 'Consulta el nuevo horario de la línea 99 entre Salaberry-de-Valleyfield y la estación de Vaudreuil.',
+    },
+    ctaLabel: { fr: 'Voir le nouvel horaire', en: 'View the new schedule', es: 'Ver el nuevo horario' },
+    ctaHref: `/documents/${line99JanuarySchedule}`,
+  },
   {
     id: 'line-10-downtown-reservation-december-2026',
     active: false,
@@ -483,6 +520,25 @@ export const docCategories: Record<DocCategory, L10n> = {
 
 export const documents: Doc[] = [
   {
+    file: line99JanuarySchedule,
+    category: 'schedules',
+    title: { fr: 'Nouvel horaire — ligne 99', en: 'New schedule — line 99', es: 'Nuevo horario — línea 99' },
+    note: {
+      fr: 'À compter du 4 janvier 2027',
+      en: 'Starting January 4, 2027',
+      es: 'A partir del 4 de enero de 2027',
+    },
+  },
+  {
+    file: 'decharge-parentale.pdf',
+    category: 'communobus',
+    title: {
+      fr: 'Décharge parentale — transport collectif d’un enfant mineur',
+      en: 'Parental consent form — public transit for a minor',
+      es: 'Formulario de consentimiento parental — transporte colectivo de menores',
+    },
+  },
+  {
     file: 'Horaires-lignes-10-30-99_du-3-nov-2025_v2.pdf',
     category: 'schedules',
     title: {
@@ -491,9 +547,9 @@ export const documents: Doc[] = [
       es: 'Horarios — líneas 10, 30 y 99',
     },
     note: {
-      fr: 'En vigueur depuis le 3 novembre 2025',
-      en: 'In effect since 3 November 2025',
-      es: 'Vigente desde el 3 de noviembre de 2025',
+      fr: 'Pour la ligne 99, cet horaire s’applique jusqu’au 3 janvier 2027.',
+      en: 'For line 99, this schedule applies through January 3, 2027.',
+      es: 'Para la línea 99, este horario se aplica hasta el 3 de enero de 2027.',
     },
   },
   {
